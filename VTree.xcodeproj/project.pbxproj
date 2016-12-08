@@ -71,6 +71,9 @@
 		1F3445191DF3A10500D792E3 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		1F3C63981DF4C687009F5399 /* RButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RButton.swift; sourceTree = "<group>"; };
 		1F3C63A01DF555B6009F5399 /* VTree+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VTree+Setup.swift"; sourceTree = "<group>"; };
+		1F433A981DF9B7D100DE4262 /* UniversalFramework_Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Base.xcconfig; sourceTree = "<group>"; };
+		1F433A991DF9B7D100DE4262 /* UniversalFramework_Framework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Framework.xcconfig; sourceTree = "<group>"; };
+		1F433A9A1DF9B7D100DE4262 /* UniversalFramework_Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Test.xcconfig; sourceTree = "<group>"; };
 		1F49DC351DDFECBB0036D22C /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 		1F49DC371DDFF26E0036D22C /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		1F5DECAB1DEAA16200BC6B1B /* KeyCacheSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCacheSpec.swift; sourceTree = "<group>"; };
@@ -110,9 +113,6 @@
 		48FB18AB1DD584520027B8B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48FB18B01DD584520027B8B1 /* VTreeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VTreeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		48FB18B71DD584520027B8B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		48FB18C41DD5858A0027B8B1 /* UniversalFramework_Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Base.xcconfig; sourceTree = "<group>"; };
-		48FB18C51DD5858A0027B8B1 /* UniversalFramework_Framework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Framework.xcconfig; sourceTree = "<group>"; };
-		48FB18C61DD5858A0027B8B1 /* UniversalFramework_Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Test.xcconfig; sourceTree = "<group>"; };
 		48FB18C91DD5865C0027B8B1 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Nimble.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48FB18CB1DD586630027B8B1 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Quick.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48FB18D01DD59A270027B8B1 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
@@ -155,6 +155,16 @@
 				1F3C63981DF4C687009F5399 /* RButton.swift */,
 			);
 			name = "Views (mutable)";
+			sourceTree = "<group>";
+		};
+		1F433A9B1DF9B7FA00DE4262 /* target xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				1F433A981DF9B7D100DE4262 /* UniversalFramework_Base.xcconfig */,
+				1F433A991DF9B7D100DE4262 /* UniversalFramework_Framework.xcconfig */,
+				1F433A9A1DF9B7D100DE4262 /* UniversalFramework_Test.xcconfig */,
+			);
+			name = "target xcconfigs";
 			sourceTree = "<group>";
 		};
 		1F49DC3A1DDFFCD90036D22C /* Patch */ = {
@@ -299,17 +309,6 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		48FB18C11DD5858A0027B8B1 /* mrackwitz/xcconfigs (for target) */ = {
-			isa = PBXGroup;
-			children = (
-				48FB18C41DD5858A0027B8B1 /* UniversalFramework_Base.xcconfig */,
-				48FB18C51DD5858A0027B8B1 /* UniversalFramework_Framework.xcconfig */,
-				48FB18C61DD5858A0027B8B1 /* UniversalFramework_Test.xcconfig */,
-			);
-			name = "mrackwitz/xcconfigs (for target)";
-			path = ../Carthage/Checkouts/xcconfigs;
-			sourceTree = "<group>";
-		};
 		48FB18C81DD5865C0027B8B1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,7 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				48FB18D31DD59A330027B8B1 /* project xcconfigs */,
-				48FB18C11DD5858A0027B8B1 /* mrackwitz/xcconfigs (for target) */,
+				1F433A9B1DF9B7FA00DE4262 /* target xcconfigs */,
 			);
 			path = Configurations;
 			sourceTree = "<group>";
@@ -713,7 +712,7 @@
 		};
 		48FB18BC1DD584520027B8B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 48FB18C51DD5858A0027B8B1 /* UniversalFramework_Framework.xcconfig */;
+			baseConfigurationReference = 1F433A991DF9B7D100DE4262 /* UniversalFramework_Framework.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -733,7 +732,7 @@
 		};
 		48FB18BD1DD584520027B8B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 48FB18C51DD5858A0027B8B1 /* UniversalFramework_Framework.xcconfig */;
+			baseConfigurationReference = 1F433A991DF9B7D100DE4262 /* UniversalFramework_Framework.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -752,7 +751,7 @@
 		};
 		48FB18BF1DD584520027B8B1 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 48FB18C61DD5858A0027B8B1 /* UniversalFramework_Test.xcconfig */;
+			baseConfigurationReference = 1F433A9A1DF9B7D100DE4262 /* UniversalFramework_Test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = UMBZ5WL247;
@@ -764,7 +763,7 @@
 		};
 		48FB18C01DD584520027B8B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 48FB18C61DD5858A0027B8B1 /* UniversalFramework_Test.xcconfig */;
+			baseConfigurationReference = 1F433A9A1DF9B7D100DE4262 /* UniversalFramework_Test.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = UMBZ5WL247;

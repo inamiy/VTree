@@ -1,4 +1,4 @@
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
     import UIKit
 #elseif os(macOS)
     import AppKit
@@ -7,7 +7,7 @@
 /// Simple Cocoa event source type that `VTree` interpets to make event-handler diffs.
 public enum CocoaEvent: Hashable
 {
-    #if os(iOS) || os(watchOS) || os(tvOS)
+    #if os(iOS) || os(tvOS)
     case control(UIControlEvents)
     #else
 //    case targetAction  // TODO: for NSButton
@@ -15,7 +15,7 @@ public enum CocoaEvent: Hashable
 
     public static func == (lhs: CocoaEvent, rhs: CocoaEvent) -> Bool
     {
-        #if os(iOS) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(tvOS)
             if case let (.control(l), .control(r)) = (lhs, rhs), l == r {
                 return true
             }
@@ -26,7 +26,7 @@ public enum CocoaEvent: Hashable
 
     public var hashValue: Int
     {
-        #if os(iOS) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(tvOS)
             if case let .control(controlEvents) = self {
                 return Int(controlEvents.rawValue)
             }

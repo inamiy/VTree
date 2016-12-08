@@ -1,4 +1,4 @@
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 
 /// Virtual tree node for `UIButton`.

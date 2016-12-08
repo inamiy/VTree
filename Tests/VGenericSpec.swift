@@ -1,4 +1,4 @@
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
 
 @testable import VTree
 import Quick

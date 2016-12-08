@@ -11,7 +11,7 @@ class LazyMapSpec: QuickSpec
 {
     override func spec()
     {
-        #if os(iOS) || os(watchOS) || os(tvOS)
+        #if os(iOS) || os(tvOS)
             it("no AnyVTree.map") {
                 var createdMsgs = [MyMsg]()
                 var updatedMsgs = [MyMsg]()

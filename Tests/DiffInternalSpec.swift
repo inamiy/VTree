@@ -60,7 +60,7 @@ class DiffInternalSpec: QuickSpec
                 expect(steps[3]) == [.replace(newChildren[0])]
             }
 
-            #if os(iOS) || os(watchOS) || os(tvOS)
+            #if os(iOS) || os(tvOS)
             it("handlers are added/changed/removed") {
 
                 let oldChildren: [AnyVTree<MyMsg>] = [

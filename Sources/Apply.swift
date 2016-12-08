@@ -1,4 +1,4 @@
-#if os(iOS) || os(watchOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
     import UIKit
 #elseif os(macOS)
     import AppKit
@@ -87,7 +87,7 @@ private func _applyStep<Msg: Message>(_ step: PatchStep<Msg>, to view: View) -> 
 
 private func _removeHandler(for cocoaEvent: CocoaEvent, in view: View)
 {
-    #if os(iOS) || os(watchOS) || os(tvOS)
+    #if os(iOS) || os(tvOS)
         if case let (.control(controlEvents), view as UIControl) = (cocoaEvent, view) {
             view.vtree.removeHandler(for: controlEvents)
             return
@@ -97,7 +97,7 @@ private func _removeHandler(for cocoaEvent: CocoaEvent, in view: View)
 
 private func _insertHandler<Msg: Message>(msg: Msg, for cocoaEvent: CocoaEvent, in view: View)
 {
-    #if os(iOS) || os(watchOS) || os(tvOS)
+    #if os(iOS) || os(tvOS)
         if case let (.control(controlEvents), view as UIControl) = (cocoaEvent, view) {
             view.vtree.addHandler(for: controlEvents) { _ in
                 Messenger.shared.send(AnyMsg(msg))
