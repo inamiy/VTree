@@ -54,7 +54,8 @@ Please see [Tests/DiffSpec.swift](Tests/DiffSpec.swift) for more examples.
 
 ## TODO
 
-- [ ] Handle more complicated cocoa events e.g. mouse, gesture, keyboard
+- [ ] Handle more complicated cocoa events e.g. mouse, gesture, keyboard.
+- [ ] Add better layouting system, e.g. CSS Flexbox.
 - [ ] Create more `VTree` concrete types for virtual `UI***View`.
 
 ## License
