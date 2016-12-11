@@ -8,8 +8,11 @@ public final class AnyVTree<Msg: Message>: VTree
     private let _children: [Any]
     private let _childrenTransform: (Any) -> AnyVTree<Msg>
 
-    private let _handlers: [CocoaEvent : Any]
+    private let _handlers: [SimpleEvent : Any]
     private let _handlersTransform: (Any) -> Msg
+
+    private let _gestures: [GestureEvent : Any]
+    private let _gesturesTransform: (Any) -> FuncBox<GestureContext, Msg>
 
     private let _createView: (@escaping (Msg) -> AnyMsg) -> View
 
@@ -26,12 +29,13 @@ public final class AnyVTree<Msg: Message>: VTree
         self._handlers = base.handlers
         self._handlersTransform = { $0 as! Base.MsgType }
 
+        self._gestures = base.gestures
+        self._gesturesTransform = { $0 as! FuncBox<GestureContext, Base.MsgType> }
+
         self._children = base.children
         self._childrenTransform = { $0 as! AnyVTree<Base.MsgType> }
 
-        self._createView = { msgMapper in
-            return base.createView { msgMapper($0) }
-        }
+        self._createView = base.createView
     }
 
     /// Private initializer for lazy `map`.
@@ -45,12 +49,16 @@ public final class AnyVTree<Msg: Message>: VTree
         if let base = base as? AnyVTree<Base.MsgType> {
             self._handlers = base._handlers
             self._handlersTransform = { transform(base._handlersTransform($0)) }
+            self._gestures = base._gestures
+            self._gesturesTransform = { base._gesturesTransform($0).map(transform) }
             self._children = base._children
             self._childrenTransform = { base._childrenTransform($0).map(transform) }
         }
         else {
             self._handlers = base.handlers
             self._handlersTransform = { transform($0 as! Base.MsgType) }
+            self._gestures = base.gestures
+            self._gesturesTransform = { ($0 as! FuncBox<GestureContext, Base.MsgType>).map(transform) }
             self._children = base.children
             self._childrenTransform = { ($0 as! AnyVTree<Base.MsgType>).map(transform) }
         }
@@ -60,10 +68,16 @@ public final class AnyVTree<Msg: Message>: VTree
         }
     }
 
-    public var handlers: [CocoaEvent : Msg]
+    public var handlers: HandlerMapping<Msg>
     {
         let transform = self._handlersTransform
         return self._handlers.map { ($0, transform($1)) }
+    }
+
+    public var gestures: GestureMapping<Msg>
+    {
+        let transform = self._gesturesTransform
+        return self._gestures.map { ($0, transform($1)) }
     }
 
     public var children: [AnyVTree<Msg>]

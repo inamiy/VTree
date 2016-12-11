@@ -70,6 +70,18 @@ private func _applyStep<Msg: Message>(_ step: PatchStep<Msg>, to view: View) -> 
             }
             return nil
 
+        case let .gestures(removes, updates, inserts):
+            for removeEvent in removes {
+                _removeGesture(for: removeEvent, in: view)
+            }
+            for update in updates {
+                _updateGesture(msgFunc: update.value, for: update.key, in: view)
+            }
+            for insert in inserts {
+                _insertGesture(msgFunc: insert.value, for: insert.key, in: view)
+            }
+            return nil
+
         case .removeChild:
             view.removeFromSuperview()
             return .some(nil)
@@ -85,20 +97,22 @@ private func _applyStep<Msg: Message>(_ step: PatchStep<Msg>, to view: View) -> 
     }
 }
 
-private func _removeHandler(for cocoaEvent: CocoaEvent, in view: View)
+// MARK: remove/insert handlers
+
+private func _removeHandler(for event: SimpleEvent, in view: View)
 {
     #if os(iOS) || os(tvOS)
-        if case let (.control(controlEvents), view as UIControl) = (cocoaEvent, view) {
+        if case let (.control(controlEvents), view as UIControl) = (event, view) {
             view.vtree.removeHandler(for: controlEvents)
             return
         }
     #endif
 }
 
-private func _insertHandler<Msg: Message>(msg: Msg, for cocoaEvent: CocoaEvent, in view: View)
+private func _insertHandler<Msg: Message>(msg: Msg, for event: SimpleEvent, in view: View)
 {
     #if os(iOS) || os(tvOS)
-        if case let (.control(controlEvents), view as UIControl) = (cocoaEvent, view) {
+        if case let (.control(controlEvents), view as UIControl) = (event, view) {
             view.vtree.addHandler(for: controlEvents) { _ in
                 Messenger.shared.send(AnyMsg(msg))
             }
@@ -107,11 +121,39 @@ private func _insertHandler<Msg: Message>(msg: Msg, for cocoaEvent: CocoaEvent, 
     #endif
 }
 
-private func _updateHandler<Msg: Message>(msg: Msg, for cocoaEvent: CocoaEvent, in view: View)
+private func _updateHandler<Msg: Message>(msg: Msg, for event: SimpleEvent, in view: View)
 {
-    _removeHandler(for: cocoaEvent, in: view)
-    _insertHandler(msg: msg, for: cocoaEvent, in: view)
+    _removeHandler(for: event, in: view)
+    _insertHandler(msg: msg, for: event, in: view)
 }
+
+// MARK: remove/insert gestures
+
+private func _removeGesture(for event: GestureEvent, in view: View)
+{
+    #if os(iOS) || os(tvOS)
+        view.vtree.removeGesture(for: event)
+    #endif
+}
+
+private func _insertGesture<Msg: Message>(msgFunc: FuncBox<GestureContext, Msg>, for event: GestureEvent, in view: View)
+{
+    #if os(iOS) || os(tvOS)
+        view.vtree.addGesture(for: event) { gesture in
+            let context = GestureContext(location: gesture.location(in: gesture.view), state: gesture.state)
+            let msg = msgFunc.impl(context)
+            Messenger.shared.send(AnyMsg(msg))
+        }
+    #endif
+}
+
+private func _updateGesture<Msg: Message>(msgFunc: FuncBox<GestureContext, Msg>, for event: GestureEvent, in view: View)
+{
+    _removeGesture(for: event, in: view)
+    _insertGesture(msgFunc: msgFunc, for: event, in: view)
+}
+
+// MARK: Reorder
 
 private func _applyReorder(to view: View, reorder: Reorder)
 {
@@ -131,6 +173,8 @@ private func _applyReorder(to view: View, reorder: Reorder)
         }
     }
 }
+
+// MARK: _indexViews
 
 /// Create index-view-table.
 private func _indexViews<Msg: Message>(_ rootView: View, _ rootTree: AnyVTree<Msg>, _ patchIndexes: [Int]) -> [Int : View]

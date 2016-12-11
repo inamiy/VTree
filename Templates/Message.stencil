@@ -1,0 +1,42 @@
+import VTree
+{% for enum in types.enums %}{% if enum.annotations.VTreeMessage %}
+extension {{ enum.name }}: Message
+{
+    public init?(rawValue: String)
+    {
+        switch rawValue {
+{% for case in enum.cases %}{% if case.associatedValues.count == 0 %}
+            case "{{ case.name }}":
+                self = .{{ case.name }}
+{% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext %}
+            // .{{ case.name }}({{ case.associatedValues.0.typeName }})
+            case _ where rawValue.hasPrefix("{{ case.name }}\({{ case.associatedValues.0.typeName }}.separator)"):
+                let count = "{{ case.name }}\({{ case.associatedValues.0.typeName }}.separator)".characters.count
+                let fromIndex = rawValue.index(rawValue.startIndex, offsetBy: count)
+                let contextValue = rawValue.substring(from: fromIndex)
+                if let context = {{ case.associatedValues.0.typeName }}(rawValue: contextValue) {
+                    self = .{{ case.name }}(context)
+                }
+                else {
+                    return nil
+                }
+{% endif %}{% endif %}{% endfor %}
+            default:
+                return nil
+        }
+    }
+
+    public var rawValue: String
+    {
+        switch self {
+{% for case in enum.cases %}{% if case.associatedValues.count == 0 %}
+            case .{{ case.name }}:
+                return "{{ case.name }}"
+{% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext %}
+            case let .{{ case.name }}(context):
+                return context.rawMessage("{{ case.name }}")
+{% endif %}{% endif %}{% endfor %}
+        }
+    }
+}
+{% endif %}{% endfor %}

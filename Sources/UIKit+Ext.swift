@@ -11,45 +11,35 @@ extension UIView
     }
 }
 
-extension VTreePrefix where Base: NSObject
-{
-    internal typealias CocoaTargets = [CocoaEvent : CocoaTarget<UIControl>]
-
-    /// `CocoaTarget<UIControl>` storage that has a reference type.
-    internal var cocoaTargets: MutableBox<CocoaTargets>
-    {
-        return self.associatedValue { _ in MutableBox<CocoaTargets>([:]) }
-    }
-
-    internal func cocoaTarget(for cocoaEvent: CocoaEvent) -> CocoaTarget<UIControl>?
-    {
-        return self.cocoaTargets.value[cocoaEvent]
-    }
-}
+// MARK: UIControl + SimpleEvent.control
 
 extension VTreePrefix where Base: UIControl
 {
+    internal typealias ControlTargets = [UIControlEvents : CocoaTarget<UIControl>]
+
+    /// `CocoaTarget` storage that has a reference type.
+    internal var controlTargets: MutableBox<ControlTargets>
+    {
+        return self.associatedValue { _ in MutableBox<ControlTargets>([:]) }
+    }
+
     internal func addHandler(for controlEvents: UIControlEvents, handler: @escaping (UIControl) -> ())
     {
-        let cocoaEvent = CocoaEvent.control(controlEvents)
-
-        if self.cocoaTarget(for: cocoaEvent) == nil {
-            self.cocoaTargets.value[cocoaEvent] = CocoaTarget<UIControl>(handler) { $0 as! UIControl }
+        if self.controlTargets.value[controlEvents] == nil {
+            self.controlTargets.value[controlEvents] = CocoaTarget<UIControl>(handler) { $0 as! UIControl }
         }
 
-        let target = self.cocoaTarget(for: cocoaEvent)!
+        let target = self.controlTargets.value[controlEvents]!
 
         self.base.addTarget(target, action: #selector(target.sendNext), for: controlEvents)
     }
 
     internal func removeHandler(for controlEvents: UIControlEvents)
     {
-        let cocoaEvent = CocoaEvent.control(controlEvents)
-
-        if let target = self.cocoaTarget(for: cocoaEvent) {
+        if let target = self.controlTargets.value[controlEvents] {
             self.base.removeTarget(target, action: #selector(target.sendNext), for: controlEvents)
 
-            self.cocoaTargets.value[cocoaEvent] = nil
+            self.controlTargets.value[controlEvents] = nil
         }
     }
 }

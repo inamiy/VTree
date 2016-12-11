@@ -1,3 +1,5 @@
+import CoreGraphics
+
 /// Base protocol for virtual tree node.
 ///
 /// - Note:
@@ -8,8 +10,6 @@ public protocol VTree
     associatedtype ViewType: View
     associatedtype MsgType: Message
 
-    typealias Handlers = [CocoaEvent : MsgType]
-
     /// Identity used for efficient reordering.
     var key: Key? { get }
 
@@ -18,8 +18,11 @@ public protocol VTree
     /// - Warning: Some property names e.g. `"isHidden"` is not allowed in ObjC, so use e.g. `"hidden"` instead.
     var props: [String : Any] { get }
 
-    /// `CocoaEvent`-to-`Message` event mapping.
-    var handlers: Handlers { get }
+    /// `SimpleEvent` to `Message` mapping.
+    var handlers: HandlerMapping<MsgType> { get }
+
+    /// `GestureEvent` to `Message`-function (`FuncBox`) mapping.
+    var gestures: GestureMapping<MsgType> { get }
 
     /// VTree children.
     var children: [AnyVTree<MsgType>] { get }
@@ -39,7 +42,13 @@ public protocol VTree
 extension VTree
 {
     // Default implementation.
-    public var handlers: Handlers
+    public var handlers: HandlerMapping<MsgType>
+    {
+        return [:]
+    }
+
+    // Default implementation.
+    public var gestures: GestureMapping<MsgType>
     {
         return [:]
     }

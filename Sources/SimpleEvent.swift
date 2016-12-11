@@ -5,7 +5,7 @@
 #endif
 
 /// Simple Cocoa event source type that `VTree` interpets to make event-handler diffs.
-public enum CocoaEvent: Hashable
+public enum SimpleEvent: Hashable
 {
     #if os(iOS) || os(tvOS)
     case control(UIControlEvents)
@@ -13,7 +13,7 @@ public enum CocoaEvent: Hashable
 //    case targetAction  // TODO: for NSButton
     #endif
 
-    public static func == (lhs: CocoaEvent, rhs: CocoaEvent) -> Bool
+    public static func == (lhs: SimpleEvent, rhs: SimpleEvent) -> Bool
     {
         #if os(iOS) || os(tvOS)
             if case let (.control(l), .control(r)) = (lhs, rhs), l == r {
@@ -35,3 +35,6 @@ public enum CocoaEvent: Hashable
         return 1 << 31
     }
 }
+
+/// Simple Cocoa event handler mapping.
+public typealias HandlerMapping<Msg: Message> = [SimpleEvent : Msg]

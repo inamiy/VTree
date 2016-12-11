@@ -5,19 +5,22 @@ public final class VGeneric<V: View, Msg: Message>: VTree
 {
     public let key: Key?
     public let props: [String : Any]
-    public let handlers: [CocoaEvent : Msg]
+    public let handlers: HandlerMapping<Msg>
+    public let gestures: GestureMapping<Msg>
     public let children: [AnyVTree<Msg>]
 
     public init(
         key: Key? = nil,
         props: [String : Any] = [:],
-        handlers: [CocoaEvent : Msg] = [:],
+        handlers: HandlerMapping<Msg> = [:],
+        gestures: GestureMapping<Msg> = [:],
         children: [AnyVTree<Msg>] = []
         )
     {
         self.key = key
         self.props = props
         self.handlers = handlers
+        self.gestures = gestures
         self.children = children
     }
 

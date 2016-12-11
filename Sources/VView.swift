@@ -10,6 +10,7 @@ public final class VView<Msg: Message>: VTree, PropsReflectable
     public typealias PropsData = VViewPropsData
 
     public let key: Key?
+    public let gestures: GestureMapping<Msg>
     public let children: [AnyVTree<Msg>]
 
     public let propsData: PropsData
@@ -20,10 +21,12 @@ public final class VView<Msg: Message>: VTree, PropsReflectable
         backgroundColor: Color? = nil,
         alpha: CGFloat = 1,
         isHidden: Bool = false,
+        gestures: GestureMapping<Msg> = [:],
         children: [AnyVTree<Msg>] = []
         )
     {
         self.key = key
+        self.gestures = gestures
         self.children = children
         self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden)
     }

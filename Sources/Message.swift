@@ -1,4 +1,4 @@
-/// Message protocol that `VTree` generates from `CocoaEvent`,
+/// Message protocol that `VTree` generates from Cocoa's events,
 /// then it dipatches corresponding **`AnyMsg`** via `Messenger`.
 ///
 /// - Note:
@@ -7,11 +7,36 @@
 /// and only string-based messaging is possible.
 ///
 /// - Note:
-/// To conform your `Message` enum to this protocol, make sure to add `String` as `RawValue`, i.e.
+/// To conform your `enum Msg` to this protocol, make sure to add `String` as `RawValue`, i.e.:
+///
 /// ```
-/// enum MyMsg: String, Message { case ... }
+/// enum MyMsg: String, Message { case increment, decrement, ... }
 /// ```
-public protocol Message: Hashable, RawRepresentable
+///
+/// However, if `enum Msg` needs to interact with `VTree`'s complex messages
+/// e.g. `GestureEvent` that requires **associated values**,
+/// Swift's automatic `RawRepresentable` is NOT possible.
+///
+/// ```
+/// // ERROR: String as RawRepresentable.RawValue is NOT possible!
+/// enum Msg: String, Message { case tap(GestureContext), longPress(GestureContext), ... }
+/// ```
+///
+/// In such case, we can either implement `RawRepresentable` by hand (hard work!),
+/// or use template-metaprogramming e.g. https://github.com/krzysztofzablocki/Sourcery
+/// to assist code-generation.
+///
+/// 1. Add `/// sourcery: VTreeMessage` annotation
+/// 2. Run below script to automatically generate `extension Msg: Message`.
+///
+/// ```
+/// /// sourcery: VTreeMessage
+/// enum Msg: { case tap(GestureContext), longPress(GestureContext), ... }
+///
+/// // Run script:
+/// // $ <VTree-root>/Scripts/generate-message.sh <source-dir> <code-generated-dir>
+/// ```
+public protocol Message: RawStringRepresentable, Equatable
 {
     init?(rawValue: String)
     var rawValue: String { get }
@@ -22,6 +47,12 @@ extension Message
     public init?(_ anyMsg: AnyMsg)
     {
         self.init(rawValue: anyMsg.rawValue)
+    }
+
+    // Default implementation.
+    public static func == (l: Self, r: Self) -> Bool
+    {
+        return l.rawValue == r.rawValue
     }
 }
 
@@ -39,16 +70,6 @@ public enum NoMsg: Message
     {
         return ""
     }
-
-    public static func == (lhs: NoMsg, rhs: NoMsg) -> Bool
-    {
-        return false
-    }
-
-    public var hashValue: Int
-    {
-        return 0
-    }
 }
 
 // MARK: AnyMsg
@@ -57,12 +78,10 @@ public enum NoMsg: Message
 public struct AnyMsg: Message
 {
     private let _rawString: String
-    private let _hashValue: Int
 
     public init<Msg: Message>(_ base: Msg)
     {
         self._rawString = base.rawValue
-        self._hashValue = base.hashValue
     }
 
     public init?(rawValue: String)
@@ -73,15 +92,5 @@ public struct AnyMsg: Message
     public var rawValue: String
     {
         return self._rawString
-    }
-
-    public static func == (lhs: AnyMsg, rhs: AnyMsg) -> Bool
-    {
-        return lhs._hashValue == rhs._hashValue
-    }
-
-    public var hashValue: Int
-    {
-        return self._hashValue
     }
 }
