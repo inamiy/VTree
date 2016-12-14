@@ -25,7 +25,25 @@ class DiffInternalSpec: QuickSpec
 
                 expect(steps.count) == 1
                 expect(steps[0]) == [.reorderChildren(Reorder(removes: [(key: key2, from: 1)], inserts: [(key: key2, to: 0)]))]
+            }
 
+            it("key1 & key2 are swapped (2)") {
+                let oldChildren: [AnyVTree<NoMsg>] = [
+                    *VView(key: key1),
+                    *VLabel(text: "div"),
+                    *VView(key: key2),
+                ]
+                let newChildren: [AnyVTree<NoMsg>] = [
+                    *VView(key: key2),
+                    *VLabel(text: "div"),
+                    *VView(key: key1),
+                ]
+
+                var steps = Patch<NoMsg>.Steps()
+                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+
+                expect(steps.count) == 1
+                expect(steps[0]) == [.reorderChildren(Reorder(removes: [(key: key1, from: 0), (key: key2, from: 1)], inserts: [(key: key2, to: 0), (key: key1, to: 2)]))]
             }
 
             it("complex") {
