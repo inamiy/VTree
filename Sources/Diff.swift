@@ -238,10 +238,10 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
                         midCursor += 1
                         midRemovedCount += 1
 
-                        let nextMidChild = midChildren[midCursor]
-
                         // If `nextMidChild` is same as `newChild`...
-                        if let nextMidKey = nextMidChild?.key, nextMidKey === newKey {
+                        if let nextMidChild = midChildren[safe: midCursor],
+                            let nextMidKey = nextMidChild?.key, nextMidKey === newKey
+                        {
                             midCursor += 1
                             newCursor += 1
                         }
