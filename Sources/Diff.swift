@@ -217,13 +217,19 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
             let newChild = newChildren[newCursor]
 
             // Append `Remove` while `midChild` is nil.
-            while midChildren[midCursor] == nil && midCursor < midCount {
+            while midCursor < midCount && midChildren[midCursor] == nil {
                 removes.append(Reorder.Remove(key: nil, from: midCursor - midRemovedCount))
                 midCursor += 1
                 midRemovedCount += 1
             }
 
-            let midChild = midChildren[midCursor]
+            let midChild: AnyVTree<Msg>?
+            if midCursor < midCount {
+                midChild = midChildren[midCursor]
+            }
+            else {
+                midChild = nil
+            }
 
             switch (midChild?.key, newChild.key) {
 
