@@ -15,18 +15,18 @@ class VGenericSpec: QuickSpec
             let defaultChildren: [AnyVTree<NoMsg>] = [
                 *VView(key: key1),
                 *VView(key: key2),
-                *VLabel(text: "1"),
+                *VLabel(text: "1")
             ]
 
             it("no diff") {
                 let tree1 = V<UILabel>(props: [
-                    #keyPath(UILabel.text) : "hello",
-                    #keyPath(UILabel.enabled) : false
+                    #keyPath(UILabel.text): "hello",
+                    #keyPath(UILabel.enabled): false
                 ], children: defaultChildren)
 
                 let tree2 = V<UILabel>(props: [
-                    #keyPath(UILabel.text) : "hello",
-                    #keyPath(UILabel.enabled) : false
+                    #keyPath(UILabel.text): "hello",
+                    #keyPath(UILabel.enabled): false
                 ], children: defaultChildren)
 
                 let view1 = tree1.createView()
@@ -45,13 +45,13 @@ class VGenericSpec: QuickSpec
 
             it("root property changed") {
                 let tree1 = V<UILabel>(props: [
-                    #keyPath(UILabel.text) : "hello",
-                    #keyPath(UILabel.enabled) : false
+                    #keyPath(UILabel.text): "hello",
+                    #keyPath(UILabel.enabled): false
                 ], children: defaultChildren)
 
                 let tree2 = V<UILabel>(props: [
-                    #keyPath(UILabel.text) : "world",
-                    #keyPath(UILabel.enabled) : true
+                    #keyPath(UILabel.text): "world",
+                    #keyPath(UILabel.enabled): true
                 ], children: defaultChildren)
 
                 let view1 = tree1.createView()

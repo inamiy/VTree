@@ -82,4 +82,4 @@ public enum GestureEvent: String
 }
 
 /// Gesture handler mapping with handler type as `(GestureContext) -> Msg`.
-public typealias GestureMapping<Msg: Message> = [GestureEvent : FuncBox<GestureContext, Msg>]
+public typealias GestureMapping<Msg: Message> = [GestureEvent: FuncBox<GestureContext, Msg>]

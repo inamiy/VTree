@@ -11,7 +11,7 @@ public protocol PropsReflectable
 extension VTree where Self: PropsReflectable
 {
     // Default implementation.
-    public var props: [String : Any]
+    public var props: [String: Any]
     {
         return Mirror(reflecting: self.propsData)._allChildren
     }
@@ -20,9 +20,9 @@ extension VTree where Self: PropsReflectable
 extension Mirror
 {
     /// Collect all properties in class hierarchy.
-    fileprivate var _allChildren: [String : Any]
+    fileprivate var _allChildren: [String: Any]
     {
-        var properties: [String : Any] = [:]
+        var properties: [String: Any] = [:]
 
         for case let (key?, value) in self.children {
             properties[key] = value

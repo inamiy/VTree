@@ -2,7 +2,7 @@
 public struct Patch<Msg: Message>
 {
     /// Dictionary with "key = treeIndex" and "value = array of PatchStep".
-    internal typealias Steps = [Int : [PatchStep<Msg>]]
+    internal typealias Steps = [Int: [PatchStep<Msg>]]
 
     internal let oldTree: AnyVTree<Msg>
     internal let steps: Steps
@@ -21,7 +21,7 @@ extension Patch: CustomStringConvertible
 internal enum PatchStep<Msg: Message>: Equatable
 {
     case replace(AnyVTree<Msg>)
-    case props(removes: [String], updates: [String : Any], inserts: [String : Any])
+    case props(removes: [String], updates: [String: Any], inserts: [String: Any])
     case handlers(removes: [SimpleEvent], updates: HandlerMapping<Msg>, inserts: HandlerMapping<Msg>)
     case gestures(removes: [GestureEvent], updates: GestureMapping<Msg>, inserts: GestureMapping<Msg>)
     case removeChild(AnyVTree<Msg>)

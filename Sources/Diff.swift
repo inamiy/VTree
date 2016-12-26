@@ -26,7 +26,7 @@ private func _diffProps<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: A
     let newProps = newTree.props
 
     var removes = [String]()
-    var updates = [String : Any]()
+    var updates = [String: Any]()
     var inserts = newProps
 
     for (oldKey, oldValue) in oldProps {
@@ -161,7 +161,7 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
     // e.g.
     // oldChildren = ["key1", "key2", section]
     // newChildren = [div, span, "key2", "key3", h1]
-    // newKeyIndexes = ["key2" : 2, "key3" : 3]
+    // newKeyIndexes = ["key2": 2, "key3": 3]
     // newFreeIndexes = [0, 1, 4]
 
     var midChildren = [AnyVTree<Msg>?]()
@@ -202,7 +202,7 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
         // newFreeIndexes = [0, 1, 4]
         // newFreeCursor = 1
 
-        let remainingNewCursor = newFreeCursor >= newFreeCount ? newCount : newFreeIndexes[newFreeCursor]
+        let remainingNewCursor = newFreeCursor >= newFreeCount ? newCount: newFreeIndexes[newFreeCursor]
 
         do {
             var newCursor = 0
@@ -329,10 +329,10 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
 }
 
 /// Create a tuple of "key-index-table" and "remainder (array)",
-/// e.g. `trees = ["key2", div, "key1", span]` will return `(keys: ["key1" : 2, "key2" : 0], frees: [1, 3])`.
-internal func _keyIndexes<Msg: Message>(_ trees: [AnyVTree<Msg>]) -> (keys: [ObjectIdentifier : Int], frees: [Int])
+/// e.g. `trees = ["key2", div, "key1", span]` will return `(keys: ["key1": 2, "key2": 0], frees: [1, 3])`.
+internal func _keyIndexes<Msg: Message>(_ trees: [AnyVTree<Msg>]) -> (keys: [ObjectIdentifier: Int], frees: [Int])
 {
-    var keys = [ObjectIdentifier : Int]()
+    var keys = [ObjectIdentifier: Int]()
     var frees = [Int]() // remaining no-key indexes
 
     for i in 0..<trees.count {

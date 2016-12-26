@@ -22,7 +22,7 @@ class LazyMapSpec: QuickSpec
                     updatedMsgs.append(msg)
                 }
 
-                let tree = VButton<MyMsg>(handlers: [.touchUpInside : .msg1])
+                let tree = VButton<MyMsg>(handlers: [.touchUpInside: .msg1])
 
                 let button = tree.createView { msg -> MyMsg in
                     createdMsgs.append(msg)
@@ -49,7 +49,7 @@ class LazyMapSpec: QuickSpec
                     updatedMsgs.append(msg)
                 }
 
-                let tree = *VButton<MyMsg>(handlers: [.touchUpInside : .msg1])
+                let tree = *VButton<MyMsg>(handlers: [.touchUpInside: .msg1])
                 let tree2 = tree.map { _ in _MyMsg2.test2 }
 
                 let button = tree2.createView { msg -> _MyMsg2 in

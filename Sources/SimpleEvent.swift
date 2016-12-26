@@ -37,4 +37,4 @@ public enum SimpleEvent: Hashable
 }
 
 /// Simple Cocoa event handler mapping.
-public typealias HandlerMapping<Msg: Message> = [SimpleEvent : Msg]
+public typealias HandlerMapping<Msg: Message> = [SimpleEvent: Msg]

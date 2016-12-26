@@ -12,12 +12,12 @@ class DiffInternalSpec: QuickSpec
                 let oldChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VLabel(text: "div"),
+                    *VLabel(text: "div")
                 ]
                 let newChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key2),
                     *VView(key: key1),
-                    *VLabel(text: "div"),
+                    *VLabel(text: "div")
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
@@ -31,12 +31,12 @@ class DiffInternalSpec: QuickSpec
                 let oldChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key1),
                     *VLabel(text: "div"),
-                    *VView(key: key2),
+                    *VView(key: key2)
                 ]
                 let newChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key2),
                     *VLabel(text: "div"),
-                    *VView(key: key1),
+                    *VView(key: key1)
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
@@ -50,12 +50,12 @@ class DiffInternalSpec: QuickSpec
                 let oldChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VLabel(text: "div"),
+                    *VLabel(text: "div")
                 ]
                 let newChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key2),
                     *VLabel(text: "div"),
-                    *VView(key: key1),
+                    *VView(key: key1)
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
@@ -70,14 +70,14 @@ class DiffInternalSpec: QuickSpec
                 let oldChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VPhantom<Int>(),
+                    *VPhantom<Int>()
                 ]
                 let newChildren: [AnyVTree<NoMsg>] = [
                     *VPhantom<String>(),
                     *VPhantom<Float>(),
                     *VView(key: key2),
                     *VView(key: key3),
-                    *VPhantom<Double>(),
+                    *VPhantom<Double>()
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
@@ -91,7 +91,7 @@ class DiffInternalSpec: QuickSpec
                     .reorderChildren(Reorder(
                         removes: [(nil, 0), (key2, 0)],
                         inserts: [(key2, 2)]
-                    )),
+                    ))
                 ]
                 expect(steps[1]) == [.removeChild(oldChildren[0])]
                 expect(steps[2]).to(beNil())
@@ -103,17 +103,17 @@ class DiffInternalSpec: QuickSpec
 
                 let oldChildren: [AnyVTree<MyMsg>] = [
                     *VButton(key: key1),
-                    *VButton(key: key2, handlers: [.touchDown : .msg2]),
-                    *VButton(key: key3, handlers: [.valueChanged : .msg3]),
-                    *VButton(title: "h1", handlers: [.touchDragExit : .msg3]),
-                    *VButton(title: "h2", handlers: [.touchDragEnter : .msg4]),
+                    *VButton(key: key2, handlers: [.touchDown: .msg2]),
+                    *VButton(key: key3, handlers: [.valueChanged: .msg3]),
+                    *VButton(title: "h1", handlers: [.touchDragExit: .msg3]),
+                    *VButton(title: "h2", handlers: [.touchDragEnter: .msg4])
                 ]
                 let newChildren: [AnyVTree<MyMsg>] = [
-                    *VButton(key: key1, handlers: [.touchUpInside : .msg1]),    // added
+                    *VButton(key: key1, handlers: [.touchUpInside: .msg1]),     // added
                     *VButton(key: key2),                                        // removed
-                    *VButton(key: key3, handlers: [.valueChanged : .msg3]),     // not changed
-                    *VButton(title: "h1", handlers: [.touchDragExit : .msg4]),  // value changed
-                    *VButton(title: "h2", handlers: [.touchCancel : .msg4]),    // key changed
+                    *VButton(key: key3, handlers: [.valueChanged: .msg3]),      // not changed
+                    *VButton(title: "h1", handlers: [.touchDragExit: .msg4]),   // value changed
+                    *VButton(title: "h2", handlers: [.touchCancel: .msg4])      // key changed
                 ]
 
                 var steps = Patch<MyMsg>.Steps()
@@ -130,7 +130,7 @@ class DiffInternalSpec: QuickSpec
                     let handlers = steps[1]?[0].handlers
                     expect(handlers?.removes) == []
                     expect(handlers?.updates) == [:]
-                    expect(handlers?.inserts) == [.control(.touchUpInside) : .msg1]
+                    expect(handlers?.inserts) == [.control(.touchUpInside): .msg1]
                 }
                 do {
                     expect(steps[2]?.count) == 1
@@ -148,7 +148,7 @@ class DiffInternalSpec: QuickSpec
 
                     let handlers = steps[4]?[0].handlers
                     expect(handlers?.removes) == []
-                    expect(handlers?.updates) == [.control(.touchDragExit) : .msg4]
+                    expect(handlers?.updates) == [.control(.touchDragExit): .msg4]
                     expect(handlers?.inserts) == [:]
                 }
                 do {
@@ -157,7 +157,7 @@ class DiffInternalSpec: QuickSpec
                     let handlers = steps[5]?[0].handlers
                     expect(handlers?.removes) == [.control(.touchDragEnter)]
                     expect(handlers?.updates) == [:]
-                    expect(handlers?.inserts) == [.control(.touchCancel) : .msg4]
+                    expect(handlers?.inserts) == [.control(.touchCancel): .msg4]
                 }
             }
 
@@ -171,17 +171,17 @@ class DiffInternalSpec: QuickSpec
 
                 let oldChildren: [AnyVTree<MyGestureMsg>] = [
                     *VLabel(key: key1),
-                    *VLabel(key: key2, gestures: [.tap : msg2Func]),
-                    *VLabel(key: key3, gestures: [.tap : msg3Func]),
-                    *VLabel(text: "h1", gestures: [.tap : msg3Func]),
-                    *VLabel(text: "h2", gestures: [.tap : msg4Func]),
+                    *VLabel(key: key2, gestures: [.tap: msg2Func]),
+                    *VLabel(key: key3, gestures: [.tap: msg3Func]),
+                    *VLabel(text: "h1", gestures: [.tap: msg3Func]),
+                    *VLabel(text: "h2", gestures: [.tap: msg4Func])
                     ]
                 let newChildren: [AnyVTree<MyGestureMsg>] = [
-                    *VLabel(key: key1, gestures: [.tap : msg1Func]),    // added
+                    *VLabel(key: key1, gestures: [.tap: msg1Func]),     // added
                     *VLabel(key: key2),                                 // removed
-                    *VLabel(key: key3, gestures: [.tap : msg3Func]),    // not changed
-                    *VLabel(text: "h1", gestures: [.tap : msg4Func]),   // value changed
-                    *VLabel(text: "h2", gestures: [.pan : msg4Func]),   // key changed
+                    *VLabel(key: key3, gestures: [.tap: msg3Func]),     // not changed
+                    *VLabel(text: "h1", gestures: [.tap: msg4Func]),    // value changed
+                    *VLabel(text: "h2", gestures: [.pan: msg4Func])     // key changed
                 ]
 
                 var steps = Patch<MyGestureMsg>.Steps()
@@ -198,7 +198,7 @@ class DiffInternalSpec: QuickSpec
                     let gestures = steps[1]?[0].gestures
                     expect(gestures?.removes) == []
                     expect(gestures?.updates) == [:]
-                    expect(gestures?.inserts) == [.tap : msg1Func]
+                    expect(gestures?.inserts) == [.tap: msg1Func]
                 }
                 do {
                     expect(steps[2]?.count) == 1
@@ -216,7 +216,7 @@ class DiffInternalSpec: QuickSpec
 
                     let gestures = steps[4]?[0].gestures
                     expect(gestures?.removes) == []
-                    expect(gestures?.updates) == [.tap : msg4Func]
+                    expect(gestures?.updates) == [.tap: msg4Func]
                     expect(gestures?.inserts) == [:]
                 }
                 do {
@@ -225,7 +225,7 @@ class DiffInternalSpec: QuickSpec
                     let gestures = steps[5]?[0].gestures
                     expect(gestures?.removes) == [.tap]
                     expect(gestures?.updates) == [:]
-                    expect(gestures?.inserts) == [.pan : msg4Func]
+                    expect(gestures?.inserts) == [.pan: msg4Func]
                 }
             }
 
@@ -253,11 +253,11 @@ class DiffInternalSpec: QuickSpec
                 func children(isNew: Bool) -> [AnyVTree<MyGestureMsg>]
                 {
                     return [
-                        *VLabel(key: key1, gestures: isNew ? [.tap : msg1Func] : [:]),          // added
-                        *VLabel(key: key2, gestures: isNew ? [:] : [.tap : msg2Func]),          // removed
-                        *VLabel(key: key3, gestures: [.tap : msg3Func]),                        // not changed
-                        *VLabel(text: "h1", gestures: [.tap : (isNew ? msg4Func : msg3Func)]),  // value changed
-                        *VLabel(text: "h2", gestures: [(isNew ? .pan : .tap) : msg4Func]),      // key changed
+                        *VLabel(key: key1, gestures: isNew ? [.tap: msg1Func]: [:]),          // added
+                        *VLabel(key: key2, gestures: isNew ? [:]: [.tap: msg2Func]),          // removed
+                        *VLabel(key: key3, gestures: [.tap: msg3Func]),                       // not changed
+                        *VLabel(text: "h1", gestures: [.tap: (isNew ? msg4Func: msg3Func)]),  // value changed
+                        *VLabel(text: "h2", gestures: [(isNew ? .pan: .tap): msg4Func])       // key changed
                     ]
                 }
 
@@ -279,7 +279,7 @@ class DiffInternalSpec: QuickSpec
                     expect(gestures?.removes) == []
                     expect(gestures?.updates) == [:]
                     // Comment-Out: funcs are mapped (composed) and no longer able to test equality
-//                    expect(gestures?.inserts) == [.tap : msg1Func]
+//                    expect(gestures?.inserts) == [.tap: msg1Func]
                     expect(gestures?.inserts[.tap]).notTo(beNil())
                 }
                 do {
@@ -298,7 +298,7 @@ class DiffInternalSpec: QuickSpec
 
                     let gestures = steps[4]?[0].gestures
                     expect(gestures?.removes) == []
-//                    expect(gestures?.updates) == [.tap : msg4Func]
+//                    expect(gestures?.updates) == [.tap: msg4Func]
                     expect(gestures?.updates[.tap]).notTo(beNil())
                     expect(gestures?.inserts) == [:]
                 }
@@ -308,7 +308,7 @@ class DiffInternalSpec: QuickSpec
                     let gestures = steps[5]?[0].gestures
                     expect(gestures?.removes) == [.tap]
                     expect(gestures?.updates) == [:]
-//                    expect(gestures?.inserts) == [.pan : msg4Func]
+//                    expect(gestures?.inserts) == [.pan: msg4Func]
                     expect(gestures?.inserts[.tap]).to(beNil())
                     expect(gestures?.inserts[.pan]).notTo(beNil())
                 }
@@ -344,14 +344,14 @@ class DiffInternalSpec: QuickSpec
                 let oldChildren: [AnyVTree<NoMsg>] = [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VPhantom<Int>(),
+                    *VPhantom<Int>()
                 ]
                 let newChildren: [AnyVTree<NoMsg>] = [
                     *VPhantom<String>(),
                     *VPhantom<Float>(),
                     *VView(key: key2),
                     *VView(key: key3),
-                    *VPhantom<Double>(),
+                    *VPhantom<Double>()
                 ]
 
                 let (midChildren, reordered) = _reorder(old: oldChildren, new: newChildren)
@@ -381,7 +381,7 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 let (keys, noKeys) = _keyIndexes(children)
-                expect(keys) == [ObjectIdentifier(key2) : 1, ObjectIdentifier(key1) : 0]
+                expect(keys) == [ObjectIdentifier(key2): 1, ObjectIdentifier(key1): 0]
                 expect(noKeys) == [2]
             }
 

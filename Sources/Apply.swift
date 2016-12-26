@@ -157,7 +157,7 @@ private func _updateGesture<Msg: Message>(msgFunc: FuncBox<GestureContext, Msg>,
 
 private func _applyReorder(to view: View, reorder: Reorder)
 {
-    var keyViews = [ObjectIdentifier : View]()
+    var keyViews = [ObjectIdentifier: View]()
 
     for remove in reorder.removes {
         let removingView = view.subviews[remove.fromIndex]
@@ -177,9 +177,9 @@ private func _applyReorder(to view: View, reorder: Reorder)
 // MARK: _indexViews
 
 /// Create index-view-table.
-private func _indexViews<Msg: Message>(_ rootView: View, _ rootTree: AnyVTree<Msg>, _ patchIndexes: [Int]) -> [Int : View]
+private func _indexViews<Msg: Message>(_ rootView: View, _ rootTree: AnyVTree<Msg>, _ patchIndexes: [Int]) -> [Int: View]
 {
-    var indexedViews = [Int : View]()
+    var indexedViews = [Int: View]()
     _accumulateRecursively(
         rootView: rootView,
         rootTree: rootTree,
@@ -190,7 +190,7 @@ private func _indexViews<Msg: Message>(_ rootView: View, _ rootTree: AnyVTree<Ms
     return indexedViews
 }
 
-private func _accumulateRecursively<Msg: Message>(rootView: View, rootTree: AnyVTree<Msg>, rootIndex: Int, patchIndexes: [Int], indexedViews: inout [Int : View])
+private func _accumulateRecursively<Msg: Message>(rootView: View, rootTree: AnyVTree<Msg>, rootIndex: Int, patchIndexes: [Int], indexedViews: inout [Int: View])
 {
     if patchIndexes.contains(rootIndex) {
         indexedViews[rootIndex] = rootView

@@ -15,7 +15,7 @@ extension UIView
 
 extension VTreePrefix where Base: UIControl
 {
-    internal typealias ControlTargets = [UIControlEvents : CocoaTarget<UIControl>]
+    internal typealias ControlTargets = [UIControlEvents: CocoaTarget<UIControl>]
 
     /// `CocoaTarget` storage that has a reference type.
     internal var controlTargets: MutableBox<ControlTargets>

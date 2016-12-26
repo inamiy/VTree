@@ -16,7 +16,7 @@ public protocol VTree
     /// Type-unsafe property dictionary to reflect to real view via Key-Value-Coding.
     /// - Warning: `Dictionary.Value` respects to `Mirror.Child`'s value as `Any`, which may be `nil`.
     /// - Warning: Some property names e.g. `"isHidden"` is not allowed in ObjC, so use e.g. `"hidden"` instead.
-    var props: [String : Any] { get }
+    var props: [String: Any] { get }
 
     /// `SimpleEvent` to `Message` mapping.
     var handlers: HandlerMapping<MsgType> { get }

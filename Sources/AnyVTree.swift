@@ -3,15 +3,15 @@
 public final class AnyVTree<Msg: Message>: VTree
 {
     public let key: Key?
-    public let props: [String : Any]
+    public let props: [String: Any]
 
     private let _children: [Any]
     private let _childrenTransform: (Any) -> AnyVTree<Msg>
 
-    private let _handlers: [SimpleEvent : Any]
+    private let _handlers: [SimpleEvent: Any]
     private let _handlersTransform: (Any) -> Msg
 
-    private let _gestures: [GestureEvent : Any]
+    private let _gestures: [GestureEvent: Any]
     private let _gesturesTransform: (Any) -> FuncBox<GestureContext, Msg>
 
     private let _createView: (@escaping (Msg) -> AnyMsg) -> View

@@ -12,12 +12,12 @@ class KeyCacheSpec: QuickSpec
                 let tree1 = VView<NoMsg>(children: [
                     *VView(key: key("1")),
                     *VView(key: key("2")),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
                 let tree2 = VView<NoMsg>(children: [
                     *VView(key: key("1")),
                     *VView(key: key("2")),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
 
                 let patch = diff(old: tree1, new: tree2)
@@ -29,12 +29,12 @@ class KeyCacheSpec: QuickSpec
                 let tree1 = VView<NoMsg>(children: [
                     *VView(key: key(1)),
                     *VView(key: key(2)),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
                 let tree2 = VView<NoMsg>(children: [
                     *VView(key: key(2)),
                     *VView(key: key(1)),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
 
                 let patch = diff(old: tree1, new: tree2)

@@ -12,7 +12,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
 
     public let propsData: PropsData
 
-    private let _handlers: [UIControlEvents : Msg]
+    private let _handlers: [UIControlEvents: Msg]
 
     public init(
         key: Key? = nil,
@@ -23,7 +23,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
         title: String? = nil,
         titleColor: Color? = nil,
         titleFont: Font? = nil,
-        handlers: [UIControlEvents : Msg] = [:],
+        handlers: [UIControlEvents: Msg] = [:],
         children: [AnyVTree<Msg>] = []
         )
     {

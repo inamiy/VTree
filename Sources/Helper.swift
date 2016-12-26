@@ -55,7 +55,7 @@ internal func _indexInRange(_ indexes: [Int], _ left: Int, _ right: Int) -> Bool
 extension Collection
 {
     internal subscript (safe index: Index) -> Iterator.Element? {
-        return index < self.endIndex ? self[index] : nil
+        return index < self.endIndex ? self[index]: nil
     }
 }
 
@@ -63,9 +63,9 @@ extension Collection
 
 extension Dictionary
 {
-    internal func map<K: Hashable, V>(_ transform: (Key, Value) -> (K, V)) -> Dictionary<K, V>
+    internal func map<K: Hashable, V>(_ transform: (Key, Value) -> (K, V)) -> [K: V]
     {
-        var results: Dictionary<K, V> = [:]
+        var results: [K: V] = [:]
         for (key, value) in self {
             let (key2, value2) = transform(key, value)
             results.updateValue(value2, forKey: key2)

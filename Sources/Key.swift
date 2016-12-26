@@ -6,7 +6,7 @@ public final class Key
 
 // MARK: Key Cache
 
-private var _keyCache = [AnyHashable : Key]()
+private var _keyCache = [AnyHashable: Key]()
 
 /// Easy `Key` generator using key-cache, e.g. `key("button")`, `key(1)`.
 public func key(_ keyName: AnyHashable) -> Key

@@ -4,7 +4,7 @@ import VTree
 public final class VPhantom<👻>: VTree
 {
     public let key: Key?
-    public let props: [String : Any] = [:]  // NOTE: `Segmentation fault: 11` if removing this line
+    public let props: [String: Any] = [:]  // NOTE: `Segmentation fault: 11` if removing this line
     public let children: [AnyVTree<NoMsg>]
 
     public init(

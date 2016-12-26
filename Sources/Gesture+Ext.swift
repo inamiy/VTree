@@ -8,7 +8,7 @@
 
 extension VTreePrefix where Base: View
 {
-    internal typealias GestureTargets = [GestureEvent : CocoaTarget<GestureRecognizer>]
+    internal typealias GestureTargets = [GestureEvent: CocoaTarget<GestureRecognizer>]
 
     /// `CocoaTarget` storage that has a reference type.
     internal var gestureTargets: MutableBox<GestureTargets>

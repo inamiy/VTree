@@ -70,7 +70,7 @@ public final class Program
             return VView(
                 frame: CGRect(x: 0, y: 0, width: rootWidth, height: rootHeight),
                 backgroundColor: .white,
-                gestures: [.tap : ^Msg.tap, .pan : ^Msg.pan],
+                gestures: [.tap: ^Msg.tap, .pan: ^Msg.pan],
                 children: children
             )
         }
@@ -93,7 +93,7 @@ public final class Program
                 backgroundColor: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1),
                 title: "+",
                 titleFont: .systemFont(ofSize: 24),
-                handlers: [.touchUpInside : .increment]
+                handlers: [.touchUpInside: .increment]
             )
         }
 
@@ -104,7 +104,7 @@ public final class Program
                 backgroundColor: #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1),
                 title: "-",
                 titleFont: .systemFont(ofSize: 24),
-                handlers: [.touchUpInside : .decrement]
+                handlers: [.touchUpInside: .decrement]
             )
         }
 
@@ -123,7 +123,7 @@ public final class Program
             *label(state),
             *incrementButton(),
             *decrementButton(),
-            *noteLabel(),
+            *noteLabel()
         ])
     }
 
@@ -156,14 +156,14 @@ public final class Program
 
         let oldTree = self.rootTree!
 
-        // createTree : State -> VTree
+        // createTree: State -> VTree
         let newTree = self.createTree(state: count)
 
-        // diff : VTree -> VTree -> Patch
+        // diff: VTree -> VTree -> Patch
         let patch = diff(old: oldTree, new: newTree)
         print("patch =", patch)
 
-        // apply : Patch -> View -> IO View
+        // apply: Patch -> View -> IO View
         let newView = apply(patch: patch, to: self.rootView!)
 
         self.rootView = newView

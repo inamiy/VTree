@@ -13,7 +13,7 @@ class ApplySpec: QuickSpec
             let defaultChildren: [AnyVTree<NoMsg>] = [
                 *VView(key: key1),
                 *VView(key: key2),
-                *VLabel(text: "1"),
+                *VLabel(text: "1")
             ]
 
             it("no diff") {
@@ -108,12 +108,12 @@ class ApplySpec: QuickSpec
                 let tree1 = VView<NoMsg>(children: [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
                 let tree2 = VView<NoMsg>(children: [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VImageView(),
+                    *VImageView()
                 ])
 
                 let view1 = tree1.createView()
@@ -131,12 +131,12 @@ class ApplySpec: QuickSpec
                 let tree1 = VView<NoMsg>(children: [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
                 let tree2 = VView<NoMsg>(children: [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VLabel(text: "2"),
+                    *VLabel(text: "2")
                 ])
 
                 let view1 = tree1.createView()
@@ -158,12 +158,12 @@ class ApplySpec: QuickSpec
                 let tree1 = VView<NoMsg>(children: [
                     *VView(key: key1),
                     *VView(key: key2),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
                 let tree2 = VView<NoMsg>(children: [
                     *VView(key: key2),
                     *VView(key: key1),
-                    *VLabel(text: "1"),
+                    *VLabel(text: "1")
                 ])
 
                 let view1 = tree1.createView()
