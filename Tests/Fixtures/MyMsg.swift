@@ -5,8 +5,7 @@ enum MyMsg: String, Message
     case msg1, msg2, msg3, msg4
 }
 
-// sourcery: VTreeMessage
-enum MyGestureMsg
+enum MyGestureMsg: AutoMessage
 {
     case msg1(GestureContext)
     case msg2(GestureContext)
@@ -14,8 +13,7 @@ enum MyGestureMsg
     case msg4(GestureContext)
 }
 
-// sourcery: VTreeMessage
-enum MyGestureMsg2
+enum MyGestureMsg2: AutoMessage
 {
     case msg1(GestureContext)
     case msg2(GestureContext)
