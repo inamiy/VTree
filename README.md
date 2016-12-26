@@ -2,6 +2,8 @@
 
 VirtualDOM for Swift (iOS, macOS), inspired by [Matt-Esch/virtual-dom](https://github.com/Matt-Esch/virtual-dom) and [elm-lang/virtual-dom](https://github.com/elm-lang/virtual-dom).
 
+See [inamiy/SwiftElm](https://github.com/inamiy/SwiftElm) for practical use.
+
 ## Pseudocode
 
 ```swift
