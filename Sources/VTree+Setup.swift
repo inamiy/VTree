@@ -1,3 +1,5 @@
+import Foundation
+
 extension VTree
 {
     /// Common view setup logic using KVC.
@@ -9,6 +11,15 @@ extension VTree
 
         for child in self.children {
             view.addSubview(child.createView(msgMapper))
+        }
+
+        for (event, msgFunc) in self.gestures {
+            (view as View).vtree.addGesture(for: event) { gesture in
+                let context = GestureContext(location: gesture.location(in: gesture.view), state: gesture.state)
+                let msg = msgFunc.impl(context)
+                let msg2 = msgMapper(msg)
+                Messenger.shared.send(AnyMsg(msg2))
+            }
         }
     }
 }

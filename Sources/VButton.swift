@@ -7,6 +7,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
     public typealias PropsData = VButtonPropsData
 
     public let key: Key?
+    //public let gestures: GestureMapping<Msg>  // Comment-Out: Use `handlers` instead.
     public let children: [AnyVTree<Msg>]
 
     public let propsData: PropsData
@@ -32,7 +33,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
         self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, title: title, titleColor: titleColor, titleFont: titleFont)
     }
 
-    public var handlers: [CocoaEvent : Msg]
+    public var handlers: HandlerMapping<Msg>
     {
         return self._handlers.map { (.control($0), $1) }
     }

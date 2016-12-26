@@ -1,10 +1,24 @@
 import UIKit
 import VTree
 
-public enum Msg: String, Message
+/// Complex `Message` type that has associated values.
+/// - Important: See `VTree.Message` comment documentation for more detail.
+///
+/// sourcery: VTreeMessage
+public enum Msg
 {
     case increment
     case decrement
+    case tap(GestureContext)
+    case pan(GestureContext)
+
+    case dummy(DummyContext)
+}
+
+/// Custom `MessageContext` that is recognizable in Sourcery (template-metaprogramming).
+public enum DummyContext: String, MessageContext
+{
+    case dummy
 }
 
 /// Naive VTree renderer & event handler.
@@ -28,9 +42,15 @@ public final class Program
             guard let msg = Msg(anyMsg) else { return }
             switch msg {
                 case .increment:
-                    self?.increment()
+                    self?.onIncrement()
                 case .decrement:
-                    self?.decrement()
+                    self?.onDecrement()
+                case let .tap(context):
+                    self?.onGesture(prefix: "tap", context: context)
+                case let .pan(context):
+                    self?.onGesture(prefix: "pan", context: context)
+                default:
+                    print("other = \(msg)")
             }
         }
     }
@@ -50,6 +70,7 @@ public final class Program
             return VView(
                 frame: CGRect(x: 0, y: 0, width: rootWidth, height: rootHeight),
                 backgroundColor: .white,
+                gestures: [.tap : ^Msg.tap, .pan : ^Msg.pan],
                 children: children
             )
         }
@@ -87,19 +108,14 @@ public final class Program
             )
         }
 
-        func testView(_ state: Int) -> VButton<Msg>
+        func noteLabel() -> VLabel<Msg>
         {
-            let alpha = 0.6 + 0.4 * sin(CGFloat(state) * 2 * .pi / 10)
-            let fontSize = max(0, state)
-            let height = CGFloat(50 + max(0, state))
-
-            return VButton(
-                frame: CGRect(x: space, y: 250, width: rootWidth-2*space, height: height),
-                backgroundColor: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1),
-                alpha: alpha,
-                title: "Font \(fontSize)pt",
-                titleColor: #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1).withAlphaComponent(1.2 - alpha),
-                titleFont: .systemFont(ofSize: CGFloat(fontSize))
+            return VLabel(
+                frame: CGRect(x: 0, y: 200, width: rootWidth, height: 80),
+                backgroundColor: .clear,
+                font: .systemFont(ofSize: 24),
+                text: "Tap anywhere to test gesture.",
+                textAlignment: .center
             )
         }
 
@@ -107,24 +123,29 @@ public final class Program
             *label(state),
             *incrementButton(),
             *decrementButton(),
-            *testView(state)
+            *noteLabel(),
         ])
     }
 
     // MARK: Event handling
 
-    private func decrement()
+    private func onDecrement()
     {
         print("-1")
         self.count -= 1
         self.rerender()
     }
 
-    private func increment()
+    private func onIncrement()
     {
         print("+1")
         self.count += 1
         self.rerender()
+    }
+
+    private func onGesture(prefix: String, context: GestureContext)
+    {
+        print("onGesture", prefix, context.location, context.state.rawValue)
     }
 
     // MARK: Re-render
@@ -140,6 +161,7 @@ public final class Program
 
         // diff : VTree -> VTree -> Patch
         let patch = diff(old: oldTree, new: newTree)
+        print("patch =", patch)
 
         // apply : Patch -> View -> IO View
         let newView = apply(patch: patch, to: self.rootView!)

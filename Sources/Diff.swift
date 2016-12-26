@@ -16,6 +16,7 @@ private func _diffTree<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: An
 
     _diffProps(old: oldTree, new: newTree, steps: &steps, index: index)
     _diffHandlers(old: oldTree, new: newTree, steps: &steps, index: index)
+    _diffGestures(old: oldTree, new: newTree, steps: &steps, index: index)
     _diffChildren(old: oldTree.children, new: newTree.children, steps: &steps, parentIndex: index)
 }
 
@@ -49,8 +50,8 @@ private func _diffHandlers<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
     let oldHandlers = oldTree.handlers
     let newHandlers = newTree.handlers
 
-    var removes = [CocoaEvent]()
-    var updates: [CocoaEvent : Msg] = [:]
+    var removes = [SimpleEvent]()
+    var updates: HandlerMapping<Msg> = [:]
     var inserts = newHandlers
 
     for (oldKey, oldValue) in oldHandlers {
@@ -66,6 +67,31 @@ private func _diffHandlers<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
 
     if !(removes.isEmpty && updates.isEmpty && inserts.isEmpty) {
         _appendSteps(&steps, step: .handlers(removes: removes, updates: updates, inserts: inserts), at: index)
+    }
+}
+
+private func _diffGestures<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, index: Int)
+{
+    let oldGestures = oldTree.gestures
+    let newGestures = newTree.gestures
+
+    var removes = [GestureEvent]()
+    var updates: GestureMapping<Msg> = [:]
+    var inserts = newGestures
+
+    for (oldKey, oldValue) in oldGestures {
+        if let newValue = inserts.removeValue(forKey: oldKey) {
+            if oldValue != newValue {
+                updates[oldKey] = newValue
+            }
+        }
+        else {
+            removes.append(oldKey)
+        }
+    }
+
+    if !(removes.isEmpty && updates.isEmpty && inserts.isEmpty) {
+        _appendSteps(&steps, step: .gestures(removes: removes, updates: updates, inserts: inserts), at: index)
     }
 }
 

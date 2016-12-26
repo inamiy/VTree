@@ -22,7 +22,8 @@ internal enum PatchStep<Msg: Message>: Equatable
 {
     case replace(AnyVTree<Msg>)
     case props(removes: [String], updates: [String : Any], inserts: [String : Any])
-    case handlers(removes: [CocoaEvent], updates: [CocoaEvent : Msg], inserts: [CocoaEvent : Msg])
+    case handlers(removes: [SimpleEvent], updates: HandlerMapping<Msg>, inserts: HandlerMapping<Msg>)
+    case gestures(removes: [GestureEvent], updates: GestureMapping<Msg>, inserts: GestureMapping<Msg>)
     case removeChild(AnyVTree<Msg>)
     case insertChild(AnyVTree<Msg>)
     case reorderChildren(Reorder)
@@ -36,6 +37,8 @@ internal enum PatchStep<Msg: Message>: Equatable
                 return true
             case let (.handlers(l), .handlers(r)) where l.0 == r.0 && l.1 == r.1 && l.2 == r.2:
                 return true
+            case let (.gestures(l), .gestures(r)) where l.0 == r.0 && l.1 == r.1 && l.2 == r.2:
+                return true
             case let (.removeChild(l), .removeChild(r)) where l.key === r.key:
                 return true
             case let (.insertChild(l), .insertChild(r)) where l.key === r.key:
@@ -47,9 +50,17 @@ internal enum PatchStep<Msg: Message>: Equatable
         }
     }
 
-    internal var handlers: (removes: [CocoaEvent], updates: [CocoaEvent : Msg], inserts: [CocoaEvent : Msg])?
+    internal var handlers: (removes: [SimpleEvent], updates: HandlerMapping<Msg>, inserts: HandlerMapping<Msg>)?
     {
         guard case let .handlers(removes, updates, inserts) = self else {
+            return nil
+        }
+        return (removes: removes, updates: updates, inserts: inserts)
+    }
+
+    internal var gestures: (removes: [GestureEvent], updates: GestureMapping<Msg>, inserts: GestureMapping<Msg>)?
+    {
+        guard case let .gestures(removes, updates, inserts) = self else {
             return nil
         }
         return (removes: removes, updates: updates, inserts: inserts)
