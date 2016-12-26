@@ -14,6 +14,7 @@
 		1F34451A1DF3A10500D792E3 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3445191DF3A10500D792E3 /* Box.swift */; };
 		1F3C63991DF4C687009F5399 /* RButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C63981DF4C687009F5399 /* RButton.swift */; };
 		1F3C63A11DF555B6009F5399 /* VTree+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C63A01DF555B6009F5399 /* VTree+Setup.swift */; };
+		1F3EBCD31E11626B002C0B29 /* AutoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3EBCD21E11626B002C0B29 /* AutoMessage.swift */; };
 		1F43AFE11E0B9C5C00312DE7 /* MessageContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43AFE01E0B9C5C00312DE7 /* MessageContext.swift */; };
 		1F43AFE31E0BA3B900312DE7 /* RawStringRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43AFE21E0BA3B900312DE7 /* RawStringRepresentable.swift */; };
 		1F43BE301E0BE17A00312DE7 /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43BE2F1E0BE17A00312DE7 /* Message.generated.swift */; };
@@ -126,6 +127,7 @@
 		1F3445191DF3A10500D792E3 /* Box.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		1F3C63981DF4C687009F5399 /* RButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RButton.swift; sourceTree = "<group>"; };
 		1F3C63A01DF555B6009F5399 /* VTree+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "VTree+Setup.swift"; sourceTree = "<group>"; };
+		1F3EBCD21E11626B002C0B29 /* AutoMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoMessage.swift; sourceTree = "<group>"; };
 		1F433A981DF9B7D100DE4262 /* UniversalFramework_Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Base.xcconfig; sourceTree = "<group>"; };
 		1F433A991DF9B7D100DE4262 /* UniversalFramework_Framework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Framework.xcconfig; sourceTree = "<group>"; };
 		1F433A9A1DF9B7D100DE4262 /* UniversalFramework_Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Test.xcconfig; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 				487FB0CC1DE2A51700F3465F /* SimpleEvent.swift */,
 				1F8602E31DFCD1280007911E /* GestureEvent.swift */,
 				1FBFDA9C1DE5604900094059 /* Message.swift */,
+				1F3EBCD21E11626B002C0B29 /* AutoMessage.swift */,
 				1F43AFE01E0B9C5C00312DE7 /* MessageContext.swift */,
 				1FBFDAA21DE580DA00094059 /* Messenger.swift */,
 			);
@@ -733,6 +736,7 @@
 				487FB0CD1DE2A51700F3465F /* SimpleEvent.swift in Sources */,
 				1F43AFE31E0BA3B900312DE7 /* RawStringRepresentable.swift in Sources */,
 				1FB7F4DF1DD814DB007B8E53 /* VGeneric.swift in Sources */,
+				1F3EBCD31E11626B002C0B29 /* AutoMessage.swift in Sources */,
 				484497181DDD806B00F5BB99 /* VTree+Reflection.swift in Sources */,
 				48034A601DD5ABEA00B8013D /* Diff.swift in Sources */,
 				48034A661DD5ADEE00B8013D /* AppKit+Ext.swift in Sources */,

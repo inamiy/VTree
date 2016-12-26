@@ -26,12 +26,11 @@
 /// or use template-metaprogramming e.g. https://github.com/krzysztofzablocki/Sourcery
 /// to assist code-generation.
 ///
-/// 1. Add `/// sourcery: VTreeMessage` annotation
+/// 1. Conform to `AutoMessage` protocol (instead of `Message`).
 /// 2. Run below script to automatically generate `extension Msg: Message`.
 ///
 /// ```
-/// /// sourcery: VTreeMessage
-/// enum Msg: { case tap(GestureContext), longPress(GestureContext), ... }
+/// enum Msg: AutoMessage { case tap(GestureContext), longPress(GestureContext), ... }
 ///
 /// // Run script:
 /// // $ <VTree-root>/Scripts/generate-message.sh <source-dir> <code-generated-dir>

@@ -1,5 +1,5 @@
 import VTree
-{% for enum in types.enums %}{% if enum.annotations.VTreeMessage %}
+{% for enum in types.implementing.AutoMessage %}{% if enum.kind == "enum" %}
 extension {{ enum.name }}: Message
 {
     public init?(rawValue: String)

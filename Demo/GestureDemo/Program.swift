@@ -3,9 +3,7 @@ import VTree
 
 /// Complex `Message` type that has associated values.
 /// - Important: See `VTree.Message` comment documentation for more detail.
-///
-/// sourcery: VTreeMessage
-public enum Msg
+public enum Msg: AutoMessage
 {
     case increment
     case decrement
