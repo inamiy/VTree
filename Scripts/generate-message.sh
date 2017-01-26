@@ -23,14 +23,14 @@ fi
 
 # Copy VTree code (temporarily) to source directory
 # so that SourceKitten can find types.
-mkdir -p $SOURCE_DIR/_VTreeGenerated
-cp $DIR/../Sources/*.swift $SOURCE_DIR/_VTreeGenerated/
+mkdir -p "$SOURCE_DIR"/_VTreeGenerated
+cp "$DIR"/../Sources/*.swift "$SOURCE_DIR"/_VTreeGenerated/
 
 # Run Sourcery.
-$DIR/sourcery/bin/sourcery $SOURCE_DIR $DIR/../Templates $OUTPUT_DIR
+$DIR/sourcery/bin/sourcery "$SOURCE_DIR" "$DIR"/../Templates "$OUTPUT_DIR"
 
 STATUS=$?
 
-rm -rf $SOURCE_DIR/_VTreeGenerated
+rm -rf "$SOURCE_DIR"/_VTreeGenerated
 
 exit $STATUS
