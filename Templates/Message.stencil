@@ -2,19 +2,17 @@ import VTree
 {% for enum in types.implementing.AutoMessage %}{% if enum.kind == "enum" %}
 extension {{ enum.name }}: Message
 {
-    public init?(rawValue: String)
+    public init?(rawValue: RawMessage)
     {
-        switch rawValue {
+        switch rawValue.funcName {
 {% for case in enum.cases %}{% if case.associatedValues.count == 0 %}
             case "{{ case.name }}":
                 self = .{{ case.name }}
 {% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext %}
             // .{{ case.name }}({{ case.associatedValues.0.typeName }})
-            case _ where rawValue.hasPrefix("{{ case.name }}\({{ case.associatedValues.0.typeName }}.separator)"):
-                let count = "{{ case.name }}\({{ case.associatedValues.0.typeName }}.separator)".characters.count
-                let fromIndex = rawValue.index(rawValue.startIndex, offsetBy: count)
-                let contextValue = rawValue.substring(from: fromIndex)
-                if let context = {{ case.associatedValues.0.typeName }}(rawValue: contextValue) {
+            case "{{ case.name }}":
+                let arguments = rawValue.arguments
+                if let context = {{ case.associatedValues.0.typeName }}(rawValue: arguments) {
                     self = .{{ case.name }}(context)
                 }
                 else {
@@ -26,15 +24,15 @@ extension {{ enum.name }}: Message
         }
     }
 
-    public var rawValue: String
+    public var rawValue: RawMessage
     {
         switch self {
 {% for case in enum.cases %}{% if case.associatedValues.count == 0 %}
             case .{{ case.name }}:
-                return "{{ case.name }}"
+                return RawMessage(funcName: "{{ case.name }}", arguments: [])
 {% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext %}
             case let .{{ case.name }}(context):
-                return context.rawMessage("{{ case.name }}")
+                return RawMessage(funcName: "{{ case.name }}", arguments: context.rawValue)
 {% endif %}{% endif %}{% endfor %}
         }
     }

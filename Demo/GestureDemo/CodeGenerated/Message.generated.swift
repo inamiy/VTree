@@ -5,9 +5,9 @@ import VTree
 
 extension Msg: Message
 {
-    public init?(rawValue: String)
+    public init?(rawValue: RawMessage)
     {
-        switch rawValue {
+        switch rawValue.funcName {
 
             case "increment":
                 self = .increment
@@ -16,11 +16,9 @@ extension Msg: Message
                 self = .decrement
 
             // .tap(GestureContext)
-            case _ where rawValue.hasPrefix("tap\(GestureContext.separator)"):
-                let count = "tap\(GestureContext.separator)".characters.count
-                let fromIndex = rawValue.index(rawValue.startIndex, offsetBy: count)
-                let contextValue = rawValue.substring(from: fromIndex)
-                if let context = GestureContext(rawValue: contextValue) {
+            case "tap":
+                let arguments = rawValue.arguments
+                if let context = GestureContext(rawValue: arguments) {
                     self = .tap(context)
                 }
                 else {
@@ -28,11 +26,9 @@ extension Msg: Message
                 }
 
             // .pan(GestureContext)
-            case _ where rawValue.hasPrefix("pan\(GestureContext.separator)"):
-                let count = "pan\(GestureContext.separator)".characters.count
-                let fromIndex = rawValue.index(rawValue.startIndex, offsetBy: count)
-                let contextValue = rawValue.substring(from: fromIndex)
-                if let context = GestureContext(rawValue: contextValue) {
+            case "pan":
+                let arguments = rawValue.arguments
+                if let context = GestureContext(rawValue: arguments) {
                     self = .pan(context)
                 }
                 else {
@@ -40,11 +36,9 @@ extension Msg: Message
                 }
 
             // .dummy(DummyContext)
-            case _ where rawValue.hasPrefix("dummy\(DummyContext.separator)"):
-                let count = "dummy\(DummyContext.separator)".characters.count
-                let fromIndex = rawValue.index(rawValue.startIndex, offsetBy: count)
-                let contextValue = rawValue.substring(from: fromIndex)
-                if let context = DummyContext(rawValue: contextValue) {
+            case "dummy":
+                let arguments = rawValue.arguments
+                if let context = DummyContext(rawValue: arguments) {
                     self = .dummy(context)
                 }
                 else {
@@ -56,24 +50,24 @@ extension Msg: Message
         }
     }
 
-    public var rawValue: String
+    public var rawValue: RawMessage
     {
         switch self {
 
             case .increment:
-                return "increment"
+                return RawMessage(funcName: "increment", arguments: [])
 
             case .decrement:
-                return "decrement"
+                return RawMessage(funcName: "decrement", arguments: [])
 
             case let .tap(context):
-                return context.rawMessage("tap")
+                return RawMessage(funcName: "tap", arguments: context.rawValue)
 
             case let .pan(context):
-                return context.rawMessage("pan")
+                return RawMessage(funcName: "pan", arguments: context.rawValue)
 
             case let .dummy(context):
-                return context.rawMessage("dummy")
+                return RawMessage(funcName: "dummy", arguments: context.rawValue)
 
         }
     }

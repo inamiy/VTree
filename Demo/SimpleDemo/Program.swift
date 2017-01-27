@@ -2,7 +2,7 @@ import UIKit
 import VTree
 
 /// Simple `Message` type (String RawRepresentable).
-public enum Msg: String, Message
+public enum Msg: AutoMessage
 {
     case increment
     case decrement

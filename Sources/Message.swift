@@ -2,29 +2,9 @@
 /// then it dipatches corresponding **`AnyMsg`** via `Messenger`.
 ///
 /// - Note:
-/// This protocol needs to work like "RawStringRepresentable"
-/// because concrete `Message` type is not determined at framework compile time,
-/// and only string-based messaging is possible.
-///
-/// - Note:
-/// To conform your `enum Msg` to this protocol, make sure to add `String` as `RawValue`, i.e.:
-///
-/// ```
-/// enum MyMsg: String, Message { case increment, decrement, ... }
-/// ```
-///
-/// However, if `enum Msg` needs to interact with `VTree`'s complex messages
-/// e.g. `GestureEvent` that requires **associated values**,
-/// Swift's automatic `RawRepresentable` is NOT possible.
-///
-/// ```
-/// // ERROR: String as RawRepresentable.RawValue is NOT possible!
-/// enum Msg: String, Message { case tap(GestureContext), longPress(GestureContext), ... }
-/// ```
-///
-/// In such case, we can either implement `RawRepresentable` by hand (hard work!),
-/// or use template-metaprogramming e.g. https://github.com/krzysztofzablocki/Sourcery
-/// to assist code-generation.
+/// Implementing `Message` will be a tedious work,
+/// so use https://github.com/krzysztofzablocki/Sourcery
+/// to assist code-generation for **`enum Msg` with associated values**.
 ///
 /// 1. Conform to `AutoMessage` protocol (instead of `Message`).
 /// 2. Run below script to automatically generate `extension Msg: Message`.
@@ -35,23 +15,23 @@
 /// // Run script:
 /// // $ <VTree-root>/Scripts/generate-message.sh <source-dir> <code-generated-dir>
 /// ```
-public protocol Message: RawStringRepresentable, Equatable
+public protocol Message: RawRepresentable
 {
-    init?(rawValue: String)
-    var rawValue: String { get }
+    init?(rawValue: RawMessage)
+    var rawValue: RawMessage { get }
 }
 
-extension Message
-{
-    public init?(_ anyMsg: AnyMsg)
-    {
-        self.init(rawValue: anyMsg.rawValue)
-    }
+// MARK: RawMessage
 
-    // Default implementation.
-    public static func == (l: Self, r: Self) -> Bool
+public struct RawMessage
+{
+    public let funcName: String
+    public let arguments: [Any]
+
+    public init(funcName: String, arguments: [Any])
     {
-        return l.rawValue == r.rawValue
+        self.funcName = funcName
+        self.arguments = arguments
     }
 }
 
@@ -60,14 +40,14 @@ extension Message
 /// "No message" type that conforms to `Message` protocol.
 public enum NoMsg: Message
 {
-    public init?(rawValue: String)
+    public init?(rawValue: RawMessage)
     {
         return nil
     }
 
-    public var rawValue: String
+    public var rawValue: RawMessage
     {
-        return ""
+        return RawMessage(funcName: "", arguments: [])
     }
 }
 
@@ -76,20 +56,29 @@ public enum NoMsg: Message
 /// Type-erased `Message`.
 public struct AnyMsg: Message
 {
-    private let _rawString: String
+    private let _rawMessage: RawMessage
 
     public init<Msg: Message>(_ base: Msg)
     {
-        self._rawString = base.rawValue
+        self._rawMessage = base.rawValue
     }
 
-    public init?(rawValue: String)
+    public init?(rawValue: RawMessage)
     {
         return nil
     }
 
-    public var rawValue: String
+    public var rawValue: RawMessage
     {
-        return self._rawString
+        return self._rawMessage
+    }
+}
+
+extension Message
+{
+    /// Converts from `AnyMsg`.
+    public init?(_ anyMsg: AnyMsg)
+    {
+        self.init(rawValue: anyMsg.rawValue)
     }
 }

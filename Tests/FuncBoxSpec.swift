@@ -2,11 +2,6 @@
 import Quick
 import Nimble
 
-fileprivate enum _MyMsg2: String, Message
-{
-    case test1, test2
-}
-
 class FuncBoxSpec: QuickSpec
 {
     override func spec()

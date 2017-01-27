@@ -1,8 +1,13 @@
 import VTree
 
-enum MyMsg: String, Message
+enum MyMsg: AutoMessage
 {
     case msg1, msg2, msg3, msg4
+}
+
+enum MyMsg2: AutoMessage
+{
+    case test1, test2
 }
 
 enum MyGestureMsg: AutoMessage

@@ -35,7 +35,7 @@ internal enum PatchStep<Msg: Message>: Equatable
                 return true
             case let (.props(l), .props(r)) where l.0 == r.0 && _objcEqual(l.1, r.1) && _objcEqual(l.2, r.2):
                 return true
-            case let (.handlers(l), .handlers(r)) where l.0 == r.0 && l.1 == r.1 && l.2 == r.2:
+            case let (.handlers(l), .handlers(r)) where l.0 == r.0 && _objcEqual(l.1, r.1) && _objcEqual(l.2, r.2):
                 return true
             case let (.gestures(l), .gestures(r)) where l.0 == r.0 && l.1 == r.1 && l.2 == r.2:
                 return true

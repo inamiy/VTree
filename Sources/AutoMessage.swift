@@ -11,6 +11,7 @@
 /// // $ <VTree-root>/Scripts/generate-message.sh <source-dir> <code-generated-dir>
 /// ```
 ///
-/// - Note:
-/// `enum Msg` associated values must have single argument only that conforms to `MessageContext` protocol.
+/// - Note: `enum Msg` associated values must have single argument only that conforms to `MessageContext` protocol.
+///
+/// - SeeAlso: Templates/Message.stencil
 public protocol AutoMessage {}

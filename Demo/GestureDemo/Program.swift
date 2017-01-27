@@ -13,10 +13,20 @@ public enum Msg: AutoMessage
     case dummy(DummyContext)
 }
 
-/// Custom `MessageContext` that is recognizable in Sourcery (template-metaprogramming).
-public enum DummyContext: String, MessageContext
+/// Custom `MessageContext` that is recognizable in Sourcery.
+public enum DummyContext: MessageContext
 {
     case dummy
+
+    public init?(rawValue: [Any])
+    {
+        self = .dummy
+    }
+
+    public var rawValue: [Any]
+    {
+        return []
+    }
 }
 
 /// Naive VTree renderer & event handler.

@@ -56,7 +56,7 @@ private func _diffHandlers<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
 
     for (oldKey, oldValue) in oldHandlers {
         if let newValue = inserts.removeValue(forKey: oldKey) {
-            if oldValue != newValue {
+            if !_objcEqual(oldValue, newValue) {
                 updates[oldKey] = newValue
             }
         }
