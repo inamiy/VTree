@@ -70,15 +70,12 @@ private func _applyStep<Msg: Message>(_ step: PatchStep<Msg>, to view: View) -> 
             }
             return nil
 
-        case let .gestures(removes, updates, inserts):
+        case let .gestures(removes, inserts):
             for removeEvent in removes {
                 _removeGesture(for: removeEvent, in: view)
             }
-            for update in updates {
-                _updateGesture(msgFunc: update.value, for: update.key, in: view)
-            }
             for insert in inserts {
-                _insertGesture(msgFunc: insert.value, for: insert.key, in: view)
+                _insertGesture(for: insert, in: view)
             }
             return nil
 
@@ -129,28 +126,20 @@ private func _updateHandler<Msg: Message>(msg: Msg, for event: SimpleEvent, in v
 
 // MARK: remove/insert gestures
 
-private func _removeGesture(for event: GestureEvent, in view: View)
+private func _removeGesture<Msg: Message>(for event: GestureEvent<Msg>, in view: View)
 {
     #if os(iOS) || os(tvOS)
         view.vtree.removeGesture(for: event)
     #endif
 }
 
-private func _insertGesture<Msg: Message>(msgFunc: FuncBox<GestureContext, Msg>, for event: GestureEvent, in view: View)
+private func _insertGesture<Msg: Message>(for event: GestureEvent<Msg>, in view: View)
 {
     #if os(iOS) || os(tvOS)
-        view.vtree.addGesture(for: event) { gesture in
-            let context = GestureContext(location: gesture.location(in: gesture.view), state: gesture.state)
-            let msg = msgFunc.impl(context)
+        view.vtree.addGesture(for: event) { msg in
             Messenger.shared.send(AnyMsg(msg))
         }
     #endif
-}
-
-private func _updateGesture<Msg: Message>(msgFunc: FuncBox<GestureContext, Msg>, for event: GestureEvent, in view: View)
-{
-    _removeGesture(for: event, in: view)
-    _insertGesture(msgFunc: msgFunc, for: event, in: view)
 }
 
 // MARK: Reorder

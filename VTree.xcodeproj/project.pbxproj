@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F0A889C1E3C5DD4009254B9 /* MessageContext.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0A889A1E3C5D66009254B9 /* MessageContext.generated.swift */; };
+		1F0A88A01E3C75C8009254B9 /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0A889E1E3C75C8009254B9 /* Message.generated.swift */; };
+		1F0A88A11E3C75C8009254B9 /* MessageContext.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0A889F1E3C75C8009254B9 /* MessageContext.generated.swift */; };
+		1F0A88A41E3C7853009254B9 /* Gesture+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0A88A21E3C77E5009254B9 /* Gesture+Debug.swift */; };
 		1F21F6181DD6209B00A70C25 /* ApplySpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21F6171DD6209B00A70C25 /* ApplySpec.swift */; };
 		1F21F61B1DD6227B00A70C25 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21F6191DD621B000A70C25 /* Helper.swift */; };
 		1F21F6201DD6269800A70C25 /* Patch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F21F61E1DD6265400A70C25 /* Patch.swift */; };
@@ -16,7 +20,6 @@
 		1F3C63A11DF555B6009F5399 /* VTree+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C63A01DF555B6009F5399 /* VTree+Setup.swift */; };
 		1F3EBCD31E11626B002C0B29 /* AutoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3EBCD21E11626B002C0B29 /* AutoMessage.swift */; };
 		1F43AFE11E0B9C5C00312DE7 /* MessageContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43AFE01E0B9C5C00312DE7 /* MessageContext.swift */; };
-		1F43BE301E0BE17A00312DE7 /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F43BE2F1E0BE17A00312DE7 /* Message.generated.swift */; };
 		1F4622C11E0F797D008B3E84 /* Gesture+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4622C01E0F797D008B3E84 /* Gesture+Ext.swift */; };
 		1F49DC361DDFECBB0036D22C /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F49DC351DDFECBB0036D22C /* Key.swift */; };
 		1F517BD31E3B926A00A77053 /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F517BD21E3B926A00A77053 /* Message.generated.swift */; };
@@ -48,6 +51,9 @@
 		1FC903511E06E69D001A70BF /* VTree.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48FB18A71DD584520027B8B1 /* VTree.framework */; };
 		1FC903521E06E69D001A70BF /* VTree.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48FB18A71DD584520027B8B1 /* VTree.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1FC903621E06F12A001A70BF /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC903611E06F12A001A70BF /* Message.generated.swift */; };
+		1FEC8A981E3C7A470077BE11 /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEC8A961E3C7A470077BE11 /* Message.generated.swift */; };
+		1FEC8A991E3C7A470077BE11 /* MessageContext.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEC8A971E3C7A470077BE11 /* MessageContext.generated.swift */; };
+		1FEC8A9B1E3C7A930077BE11 /* MessageContext.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEC8A9A1E3C7A930077BE11 /* MessageContext.generated.swift */; };
 		1FF41B211DD8A48E00443C4A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF41B201DD8A48E00443C4A /* AppDelegate.swift */; };
 		1FF41B261DD8A48E00443C4A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FF41B241DD8A48E00443C4A /* Main.storyboard */; };
 		1FF41B281DD8A48E00443C4A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FF41B271DD8A48E00443C4A /* Assets.xcassets */; };
@@ -120,6 +126,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F0A888E1E3C4DBC009254B9 /* MessageContext.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MessageContext.stencil; sourceTree = "<group>"; };
+		1F0A889A1E3C5D66009254B9 /* MessageContext.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContext.generated.swift; sourceTree = "<group>"; };
+		1F0A889E1E3C75C8009254B9 /* Message.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.generated.swift; sourceTree = "<group>"; };
+		1F0A889F1E3C75C8009254B9 /* MessageContext.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContext.generated.swift; sourceTree = "<group>"; };
+		1F0A88A21E3C77E5009254B9 /* Gesture+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Gesture+Debug.swift"; sourceTree = "<group>"; };
 		1F21F6171DD6209B00A70C25 /* ApplySpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplySpec.swift; sourceTree = "<group>"; };
 		1F21F6191DD621B000A70C25 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		1F21F61C1DD6263600A70C25 /* Apply.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Apply.swift; sourceTree = "<group>"; };
@@ -133,7 +144,6 @@
 		1F433A9A1DF9B7D100DE4262 /* UniversalFramework_Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UniversalFramework_Test.xcconfig; sourceTree = "<group>"; };
 		1F43AFE01E0B9C5C00312DE7 /* MessageContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContext.swift; sourceTree = "<group>"; };
 		1F43AFE61E0BA9E400312DE7 /* generate-message.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "generate-message.sh"; sourceTree = "<group>"; };
-		1F43BE2F1E0BE17A00312DE7 /* Message.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.generated.swift; sourceTree = "<group>"; };
 		1F4622C01E0F797D008B3E84 /* Gesture+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Gesture+Ext.swift"; sourceTree = "<group>"; };
 		1F49DC351DDFECBB0036D22C /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 		1F49DC371DDFF26E0036D22C /* Keys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
@@ -164,6 +174,9 @@
 		1FC9034A1E06E661001A70BF /* Program.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		1FC903581E06E9C5001A70BF /* Message.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Message.stencil; sourceTree = "<group>"; };
 		1FC903611E06F12A001A70BF /* Message.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.generated.swift; sourceTree = "<group>"; };
+		1FEC8A961E3C7A470077BE11 /* Message.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.generated.swift; sourceTree = "<group>"; };
+		1FEC8A971E3C7A470077BE11 /* MessageContext.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContext.generated.swift; sourceTree = "<group>"; };
+		1FEC8A9A1E3C7A930077BE11 /* MessageContext.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContext.generated.swift; sourceTree = "<group>"; };
 		1FF41B1E1DD8A48E00443C4A /* SimpleDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FF41B201DD8A48E00443C4A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FF41B251DD8A48E00443C4A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -231,6 +244,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F0A889D1E3C75C8009254B9 /* CodeGenerated */ = {
+			isa = PBXGroup;
+			children = (
+				1F0A889E1E3C75C8009254B9 /* Message.generated.swift */,
+				1F0A889F1E3C75C8009254B9 /* MessageContext.generated.swift */,
+			);
+			path = CodeGenerated;
+			sourceTree = "<group>";
+		};
 		1F34452C1DF3ADC000D792E3 /* Views (mutable) */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,6 +316,7 @@
 			isa = PBXGroup;
 			children = (
 				1F517BD21E3B926A00A77053 /* Message.generated.swift */,
+				1FEC8A9A1E3C7A930077BE11 /* MessageContext.generated.swift */,
 			);
 			path = CodeGenerated;
 			sourceTree = "<group>";
@@ -315,10 +338,10 @@
 		1FB7F4DB1DD7FEE7007B8E53 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				1FEC8A951E3C7A470077BE11 /* CodeGenerated */,
 				1FB7F4DC1DD7FEE7007B8E53 /* VPhantom.swift */,
 				1F49DC371DDFF26E0036D22C /* Keys.swift */,
 				1FBFDA9E1DE5738E00094059 /* MyMsg.swift */,
-				1F43BE2F1E0BE17A00312DE7 /* Message.generated.swift */,
 				1F5DED0F1DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift */,
 			);
 			path = Fixtures;
@@ -361,6 +384,7 @@
 				1FC903601E06F12A001A70BF /* CodeGenerated */,
 				1FC9033A1E06E5D6001A70BF /* AppDelegate.swift */,
 				1FC9034A1E06E661001A70BF /* Program.swift */,
+				1F0A88A21E3C77E5009254B9 /* Gesture+Debug.swift */,
 				1FC9033E1E06E5D6001A70BF /* Main.storyboard */,
 				1FC903411E06E5D6001A70BF /* Assets.xcassets */,
 				1FC903431E06E5D6001A70BF /* LaunchScreen.storyboard */,
@@ -373,6 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				1FC903581E06E9C5001A70BF /* Message.stencil */,
+				1F0A888E1E3C4DBC009254B9 /* MessageContext.stencil */,
 			);
 			path = Templates;
 			sourceTree = "<group>";
@@ -381,6 +406,16 @@
 			isa = PBXGroup;
 			children = (
 				1FC903611E06F12A001A70BF /* Message.generated.swift */,
+				1F0A889A1E3C5D66009254B9 /* MessageContext.generated.swift */,
+			);
+			path = CodeGenerated;
+			sourceTree = "<group>";
+		};
+		1FEC8A951E3C7A470077BE11 /* CodeGenerated */ = {
+			isa = PBXGroup;
+			children = (
+				1FEC8A961E3C7A470077BE11 /* Message.generated.swift */,
+				1FEC8A971E3C7A470077BE11 /* MessageContext.generated.swift */,
 			);
 			path = CodeGenerated;
 			sourceTree = "<group>";
@@ -436,6 +471,7 @@
 				1F34452C1DF3ADC000D792E3 /* Views (mutable) */,
 				1F49DC3A1DDFFCD90036D22C /* Patch */,
 				1FBFDAA11DE57BB500094059 /* Event */,
+				1F0A889D1E3C75C8009254B9 /* CodeGenerated */,
 				48FB18AB1DD584520027B8B1 /* Info.plist */,
 			);
 			path = Sources;
@@ -543,6 +579,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 48FB18BB1DD584520027B8B1 /* Build configuration list for PBXNativeTarget "VTree" */;
 			buildPhases = (
+				1F0A888D1E3C4D5A009254B9 /* Run Script: VTree generate-message.sh */,
 				487FB0CE1DE2CCF800F3465F /* Run Script (SwiftLint) */,
 				48FB18A21DD584520027B8B1 /* Sources */,
 				48FB18A31DD584520027B8B1 /* Frameworks */,
@@ -666,6 +703,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1F0A888D1E3C4D5A009254B9 /* Run Script: VTree generate-message.sh */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script: VTree generate-message.sh";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Scripts/generate-message.sh -a internal ./Sources ./Sources/CodeGenerated";
+		};
 		1F43BE2E1E0BE15500312DE7 /* Run Script: VTree generate-message.sh */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -678,7 +729,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Scripts/generate-message.sh ./Tests/Fixtures/ ./Tests/Fixtures/";
+			shellScript = "./Scripts/generate-message.sh ./Tests/Fixtures/ ./Tests/Fixtures/CodeGenerated";
 		};
 		1F517BD41E3B927900A77053 /* Run Script: VTree generate-message.sh */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -729,9 +780,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F0A889C1E3C5DD4009254B9 /* MessageContext.generated.swift in Sources */,
 				1FC9034B1E06E661001A70BF /* Program.swift in Sources */,
 				1FC903621E06F12A001A70BF /* Message.generated.swift in Sources */,
 				1FC9033B1E06E5D6001A70BF /* AppDelegate.swift in Sources */,
+				1F0A88A41E3C7853009254B9 /* Gesture+Debug.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -739,6 +792,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FEC8A9B1E3C7A930077BE11 /* MessageContext.generated.swift in Sources */,
 				1FF41B331DD8A56900443C4A /* Program.swift in Sources */,
 				1F517BD31E3B926A00A77053 /* Message.generated.swift in Sources */,
 				1FF41B211DD8A48E00443C4A /* AppDelegate.swift in Sources */,
@@ -749,6 +803,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F0A88A11E3C75C8009254B9 /* MessageContext.generated.swift in Sources */,
 				1FB7F4E21DD817C4007B8E53 /* VTree.swift in Sources */,
 				1F49DC361DDFECBB0036D22C /* Key.swift in Sources */,
 				48034A6F1DD5B07D00B8013D /* VView.swift in Sources */,
@@ -767,6 +822,7 @@
 				1F8602E21DFCCF3F0007911E /* FuncBox.swift in Sources */,
 				1FBFDAA31DE580DA00094059 /* Messenger.swift in Sources */,
 				1F5DED121DEAB98500BC6B1B /* AnyVTree.swift in Sources */,
+				1F0A88A01E3C75C8009254B9 /* Message.generated.swift in Sources */,
 				1F8602E41DFCD1280007911E /* GestureEvent.swift in Sources */,
 				1FF41B371DD8B1F800443C4A /* CocoaTarget.swift in Sources */,
 				1F8F783F1DD74004008D8B67 /* VButton.swift in Sources */,
@@ -785,6 +841,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FEC8A981E3C7A470077BE11 /* Message.generated.swift in Sources */,
 				1F9893551DD8747000C06825 /* VGenericSpec.swift in Sources */,
 				1FA623E81DE00DED00DEBF73 /* Keys.swift in Sources */,
 				48956F961DD5F07B00ED31B8 /* DiffSpec.swift in Sources */,
@@ -794,9 +851,9 @@
 				1F5DECAF1DEAA58A00BC6B1B /* LazyMapSpec.swift in Sources */,
 				1F5DECAD1DEAA19500BC6B1B /* KeyCacheSpec.swift in Sources */,
 				1F7AF2921E0D359E0038DED0 /* FuncBoxSpec.swift in Sources */,
+				1FEC8A991E3C7A470077BE11 /* MessageContext.generated.swift in Sources */,
 				1F8F783D1DD73743008D8B67 /* DiffInternalSpec.swift in Sources */,
 				1F21F6181DD6209B00A70C25 /* ApplySpec.swift in Sources */,
-				1F43BE301E0BE17A00312DE7 /* Message.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

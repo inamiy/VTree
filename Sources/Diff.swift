@@ -75,23 +75,20 @@ private func _diffGestures<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
     let oldGestures = oldTree.gestures
     let newGestures = newTree.gestures
 
-    var removes = [GestureEvent]()
-    var updates: GestureMapping<Msg> = [:]
+    var removes = [GestureEvent<Msg>]()
     var inserts = newGestures
 
-    for (oldKey, oldValue) in oldGestures {
-        if let newValue = inserts.removeValue(forKey: oldKey) {
-            if oldValue != newValue {
-                updates[oldKey] = newValue
-            }
+    for oldGesture in oldGestures {
+        if inserts.contains(oldGesture) {
+            inserts.remove(at: inserts.index(of: oldGesture)!)
         }
         else {
-            removes.append(oldKey)
+            removes.append(oldGesture)
         }
     }
 
-    if !(removes.isEmpty && updates.isEmpty && inserts.isEmpty) {
-        _appendSteps(&steps, step: .gestures(removes: removes, updates: updates, inserts: inserts), at: index)
+    if !(removes.isEmpty && inserts.isEmpty) {
+        _appendSteps(&steps, step: .gestures(removes: removes, inserts: inserts), at: index)
     }
 }
 

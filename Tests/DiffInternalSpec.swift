@@ -170,24 +170,23 @@ class DiffInternalSpec: QuickSpec
                 let msg4Func = ^MyGestureMsg.msg4
 
                 let oldChildren: [AnyVTree<MyGestureMsg>] = [
-                    *VLabel(key: key1),
-                    *VLabel(key: key2, gestures: [.tap: msg2Func]),
-                    *VLabel(key: key3, gestures: [.tap: msg3Func]),
-                    *VLabel(text: "h1", gestures: [.tap: msg3Func]),
-                    *VLabel(text: "h2", gestures: [.tap: msg4Func])
-                    ]
+                    *VLabel(),
+                    *VLabel(gestures: [.tap(msg2Func)]),
+                    *VLabel(gestures: [.tap(msg3Func)]),
+                    *VLabel(gestures: [.tap(msg3Func)])
+                ]
+
                 let newChildren: [AnyVTree<MyGestureMsg>] = [
-                    *VLabel(key: key1, gestures: [.tap: msg1Func]),     // added
-                    *VLabel(key: key2),                                 // removed
-                    *VLabel(key: key3, gestures: [.tap: msg3Func]),     // not changed
-                    *VLabel(text: "h1", gestures: [.tap: msg4Func]),    // value changed
-                    *VLabel(text: "h2", gestures: [.pan: msg4Func])     // key changed
+                    *VLabel(gestures: [.tap(msg1Func)]),    // added
+                    *VLabel(),                              // removed
+                    *VLabel(gestures: [.tap(msg3Func)]),    // not changed
+                    *VLabel(gestures: [.tap(msg4Func)])     // func changed
                 ]
 
                 var steps = Patch<MyGestureMsg>.Steps()
                 _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
-                expect(steps.count) == 4
+                expect(steps.count) == 3
 
                 do {
                     expect(steps[0]).to(beNil())
@@ -197,16 +196,14 @@ class DiffInternalSpec: QuickSpec
 
                     let gestures = steps[1]?[0].gestures
                     expect(gestures?.removes) == []
-                    expect(gestures?.updates) == [:]
-                    expect(gestures?.inserts) == [.tap: msg1Func]
+                    expect(gestures?.inserts) == [.tap(msg1Func)]
                 }
                 do {
                     expect(steps[2]?.count) == 1
 
                     let gestures = steps[2]?[0].gestures
-                    expect(gestures?.removes) == [.tap]
-                    expect(gestures?.updates) == [:]
-                    expect(gestures?.inserts) == [:]
+                    expect(gestures?.removes) == [.tap(msg2Func)]
+                    expect(gestures?.inserts) == []
                 }
                 do {
                     expect(steps[3]).to(beNil())
@@ -215,17 +212,8 @@ class DiffInternalSpec: QuickSpec
                     expect(steps[4]?.count) == 1
 
                     let gestures = steps[4]?[0].gestures
-                    expect(gestures?.removes) == []
-                    expect(gestures?.updates) == [.tap: msg4Func]
-                    expect(gestures?.inserts) == [:]
-                }
-                do {
-                    expect(steps[5]?.count) == 1
-
-                    let gestures = steps[5]?[0].gestures
-                    expect(gestures?.removes) == [.tap]
-                    expect(gestures?.updates) == [:]
-                    expect(gestures?.inserts) == [.pan: msg4Func]
+                    expect(gestures?.removes) == [.tap(msg3Func)]
+                    expect(gestures?.inserts) == [.tap(msg4Func)]
                 }
             }
 
@@ -250,24 +238,26 @@ class DiffInternalSpec: QuickSpec
                 let msg3Func = ^MyGestureMsg.msg3
                 let msg4Func = ^MyGestureMsg.msg4
 
-                func children(isNew: Bool) -> [AnyVTree<MyGestureMsg>]
-                {
-                    return [
-                        *VLabel(key: key1, gestures: isNew ? [.tap: msg1Func]: [:]),          // added
-                        *VLabel(key: key2, gestures: isNew ? [:]: [.tap: msg2Func]),          // removed
-                        *VLabel(key: key3, gestures: [.tap: msg3Func]),                       // not changed
-                        *VLabel(text: "h1", gestures: [.tap: (isNew ? msg4Func: msg3Func)]),  // value changed
-                        *VLabel(text: "h2", gestures: [(isNew ? .pan: .tap): msg4Func])       // key changed
-                    ]
-                }
+                let oldChildren: [AnyVTree<MyGestureMsg2>] = [
+                    *VLabel(),
+                    *VLabel(gestures: [.tap(msg2Func)]),
+                    *VLabel(gestures: [.tap(msg3Func)]),
+                    *VLabel(gestures: [.tap(msg3Func)])
+                ]
+                    .map { $0.map(msgTransform) }
 
-                let oldChildren: [AnyVTree<MyGestureMsg2>] = children(isNew: false).map { $0.map(msgTransform) }
-                let newChildren: [AnyVTree<MyGestureMsg2>] = children(isNew: true).map { $0.map(msgTransform) }
+                let newChildren: [AnyVTree<MyGestureMsg2>] = [
+                    *VLabel(gestures: [.tap(msg1Func)]),    // added
+                    *VLabel(),                              // removed
+                    *VLabel(gestures: [.tap(msg3Func)]),    // not changed
+                    *VLabel(gestures: [.tap(msg4Func)])     // func changed
+                ]
+                    .map { $0.map(msgTransform) }
 
                 var steps = Patch<MyGestureMsg2>.Steps()
                 _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
-                expect(steps.count) == 4
+                expect(steps.count) == 3
 
                 do {
                     expect(steps[0]).to(beNil())
@@ -277,18 +267,14 @@ class DiffInternalSpec: QuickSpec
 
                     let gestures = steps[1]?[0].gestures
                     expect(gestures?.removes) == []
-                    expect(gestures?.updates) == [:]
-                    // Comment-Out: funcs are mapped (composed) and no longer able to test equality
-//                    expect(gestures?.inserts) == [.tap: msg1Func]
-                    expect(gestures?.inserts[.tap]).notTo(beNil())
+                    expect(gestures?.inserts) == [GestureEvent<MyGestureMsg>.tap(msg1Func).map(msgTransform)]
                 }
                 do {
                     expect(steps[2]?.count) == 1
 
                     let gestures = steps[2]?[0].gestures
-                    expect(gestures?.removes) == [.tap]
-                    expect(gestures?.updates) == [:]
-                    expect(gestures?.inserts) == [:]
+                    expect(gestures?.removes) == [GestureEvent<MyGestureMsg>.tap(msg2Func).map(msgTransform)]
+                    expect(gestures?.inserts) == []
                 }
                 do {
                     expect(steps[3]).to(beNil())
@@ -297,20 +283,8 @@ class DiffInternalSpec: QuickSpec
                     expect(steps[4]?.count) == 1
 
                     let gestures = steps[4]?[0].gestures
-                    expect(gestures?.removes) == []
-//                    expect(gestures?.updates) == [.tap: msg4Func]
-                    expect(gestures?.updates[.tap]).notTo(beNil())
-                    expect(gestures?.inserts) == [:]
-                }
-                do {
-                    expect(steps[5]?.count) == 1
-
-                    let gestures = steps[5]?[0].gestures
-                    expect(gestures?.removes) == [.tap]
-                    expect(gestures?.updates) == [:]
-//                    expect(gestures?.inserts) == [.pan: msg4Func]
-                    expect(gestures?.inserts[.tap]).to(beNil())
-                    expect(gestures?.inserts[.pan]).notTo(beNil())
+                    expect(gestures?.removes) == [GestureEvent<MyGestureMsg>.tap(msg3Func).map(msgTransform)]
+                    expect(gestures?.inserts) == [GestureEvent<MyGestureMsg>.tap(msg4Func).map(msgTransform)]
                 }
             }
             #endif

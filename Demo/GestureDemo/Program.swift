@@ -8,25 +8,18 @@ public enum Msg: AutoMessage
     case increment
     case decrement
     case tap(GestureContext)
-    case pan(GestureContext)
+    case pan(PanGestureContext)
+    case longPress(GestureContext)
+    case swipe(GestureContext)
+    case pinch(PinchGestureContext)
+    case rotation(RotationGestureContext)
 
     case dummy(DummyContext)
 }
 
 /// Custom `MessageContext` that is recognizable in Sourcery.
-public enum DummyContext: MessageContext
+public struct DummyContext: AutoMessageContext
 {
-    case dummy
-
-    public init?(rawValue: [Any])
-    {
-        self = .dummy
-    }
-
-    public var rawValue: [Any]
-    {
-        return []
-    }
 }
 
 /// Naive VTree renderer & event handler.
@@ -47,18 +40,17 @@ public final class Program
 
         // Handle messages sent from `VTree`.
         Messenger.shared.handler = { [weak self] anyMsg in
-            guard let msg = Msg(anyMsg) else { return }
+            guard let msg = Msg(anyMsg) else {
+                print("Failed to convert anyMsg = \(anyMsg)")
+                return
+            }
             switch msg {
                 case .increment:
                     self?.onIncrement()
                 case .decrement:
                     self?.onDecrement()
-                case let .tap(context):
-                    self?.onGesture(prefix: "tap", context: context)
-                case let .pan(context):
-                    self?.onGesture(prefix: "pan", context: context)
                 default:
-                    print("other = \(msg)")
+                    print("gesture = \(msg)")
             }
         }
     }
@@ -78,7 +70,7 @@ public final class Program
             return VView(
                 frame: CGRect(x: 0, y: 0, width: rootWidth, height: rootHeight),
                 backgroundColor: .white,
-                gestures: [.tap: ^Msg.tap, .pan: ^Msg.pan],
+                gestures: [.tap(^Msg.tap), .pan(^Msg.pan), .longPress(^Msg.longPress), .swipe(^Msg.swipe), .pinch(^Msg.pinch), .rotation(^Msg.rotation)],
                 children: children
             )
         }
@@ -149,11 +141,6 @@ public final class Program
         print("+1")
         self.count += 1
         self.rerender()
-    }
-
-    private func onGesture(prefix: String, context: GestureContext)
-    {
-        print("onGesture", prefix, context.location, context.state.rawValue)
     }
 
     // MARK: Re-render

@@ -10,7 +10,7 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
     public typealias PropsData = VLabelPropsData
 
     public let key: Key?
-    public let gestures: GestureMapping<Msg>
+    public let gestures: [GestureEvent<Msg>]
     public let children: [AnyVTree<Msg>]
 
     public let propsData: PropsData
@@ -24,7 +24,7 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
         font: Font? = nil,
         text: String? = nil,
         textAlignment: NSTextAlignment = .left,
-        gestures: GestureMapping<Msg> = [:],
+        gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )
     {
