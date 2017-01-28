@@ -22,7 +22,7 @@ public protocol VTree
     var handlers: HandlerMapping<MsgType> { get }
 
     /// `GestureEvent` to `Message`-function (`FuncBox`) mapping.
-    var gestures: GestureMapping<MsgType> { get }
+    var gestures: [GestureEvent<MsgType>] { get }
 
     /// VTree children.
     var children: [AnyVTree<MsgType>] { get }
@@ -48,9 +48,9 @@ extension VTree
     }
 
     // Default implementation.
-    public var gestures: GestureMapping<MsgType>
+    public var gestures: [GestureEvent<MsgType>]
     {
-        return [:]
+        return []
     }
 
     // Default implementation.

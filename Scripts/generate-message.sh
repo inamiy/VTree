@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
 # https://github.com/krzysztofzablocki/Sourcery
-SOURCERY_VER=0.4.9
+SOURCERY_VER=0.5.3
 
 CMD=`basename $0`
-if [ $# -ne 2 ]; then
+
+getopts "a:" OPTS
+ARG=$OPTARG
+shift $((OPTIND-1))
+
+if [[ $# -ne 2 ]]; then
   echo "Usage: $CMD <source-dir> <code-generated-dir>" 1>&2
   exit 1
 fi
@@ -27,7 +32,7 @@ mkdir -p "$SOURCE_DIR"/_VTreeGenerated
 cp "$DIR"/../Sources/*.swift "$SOURCE_DIR"/_VTreeGenerated/
 
 # Run Sourcery.
-$DIR/sourcery/bin/sourcery "$SOURCE_DIR" "$DIR"/../Templates "$OUTPUT_DIR"
+$DIR/sourcery/bin/sourcery "$SOURCE_DIR" "$DIR"/../Templates "$OUTPUT_DIR" --args "$ARG"
 
 STATUS=$?
 

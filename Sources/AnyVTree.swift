@@ -11,8 +11,8 @@ public final class AnyVTree<Msg: Message>: VTree
     private let _handlers: [SimpleEvent: Any]
     private let _handlersTransform: (Any) -> Msg
 
-    private let _gestures: [GestureEvent: Any]
-    private let _gesturesTransform: (Any) -> FuncBox<GestureContext, Msg>
+    private let _gestures: [Any]
+    private let _gesturesTransform: (Any) -> GestureEvent<Msg>
 
     private let _createView: (@escaping (Msg) -> AnyMsg) -> View
 
@@ -30,7 +30,7 @@ public final class AnyVTree<Msg: Message>: VTree
         self._handlersTransform = { $0 as! Base.MsgType }
 
         self._gestures = base.gestures
-        self._gesturesTransform = { $0 as! FuncBox<GestureContext, Base.MsgType> }
+        self._gesturesTransform = { $0 as! GestureEvent<Msg> }
 
         self._children = base.children
         self._childrenTransform = { $0 as! AnyVTree<Base.MsgType> }
@@ -58,7 +58,7 @@ public final class AnyVTree<Msg: Message>: VTree
             self._handlers = base.handlers
             self._handlersTransform = { transform($0 as! Base.MsgType) }
             self._gestures = base.gestures
-            self._gesturesTransform = { ($0 as! FuncBox<GestureContext, Base.MsgType>).map(transform) }
+            self._gesturesTransform = { ($0 as! GestureEvent<Base.MsgType>).map(transform) }
             self._children = base.children
             self._childrenTransform = { ($0 as! AnyVTree<Base.MsgType>).map(transform) }
         }
@@ -74,10 +74,10 @@ public final class AnyVTree<Msg: Message>: VTree
         return self._handlers.map { ($0, transform($1)) }
     }
 
-    public var gestures: GestureMapping<Msg>
+    public var gestures: [GestureEvent<Msg>]
     {
         let transform = self._gesturesTransform
-        return self._gestures.map { ($0, transform($1)) }
+        return self._gestures.map { transform($0) }
     }
 
     public var children: [AnyVTree<Msg>]

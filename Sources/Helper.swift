@@ -1,3 +1,9 @@
+/// Combine hashValues.
+internal func _hashValue<X: Hashable, Y: Hashable>(x: X, y: Y) -> Int
+{
+    return (31 &* x.hashValue) &+ y.hashValue
+}
+
 /// Compare 2 `Any`s using the power of `AnyObject`.
 internal func _objcEqual(_ any1: Any, _ any2: Any) -> Bool
 {

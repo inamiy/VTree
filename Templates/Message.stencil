@@ -1,4 +1,4 @@
-import VTree
+{% if not argument.internal %}import VTree{% endif %}
 {% for enum in types.implementing.AutoMessage %}{% if enum.kind == "enum" %}
 extension {{ enum.name }}: Message
 {

@@ -7,7 +7,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
     public typealias PropsData = VButtonPropsData
 
     public let key: Key?
-    //public let gestures: GestureMapping<Msg>  // Comment-Out: Use `handlers` instead.
+    //public let gestures: [GestureEvent<Msg>]  // Comment-Out: Use `handlers` instead.
     public let children: [AnyVTree<Msg>]
 
     public let propsData: PropsData

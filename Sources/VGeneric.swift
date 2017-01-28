@@ -6,14 +6,14 @@ public final class VGeneric<V: View, Msg: Message>: VTree
     public let key: Key?
     public let props: [String: Any]
     public let handlers: HandlerMapping<Msg>
-    public let gestures: GestureMapping<Msg>
+    public let gestures: [GestureEvent<Msg>]
     public let children: [AnyVTree<Msg>]
 
     public init(
         key: Key? = nil,
         props: [String: Any] = [:],
         handlers: HandlerMapping<Msg> = [:],
-        gestures: GestureMapping<Msg> = [:],
+        gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )
     {

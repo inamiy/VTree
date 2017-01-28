@@ -17,29 +17,35 @@ public protocol MessageContext: RawRepresentable
 
 // MARK: GestureContext
 
-/// Gesture arguments to interact with Sourcery, e.g. `case tap(GestureContext)`.
-public struct GestureContext
+/// Common (tap, longPress, swipe) gesture arguments to interact with Sourcery, e.g. `case tap(GestureContext)`.
+public struct GestureContext: _AutoMessageContext
 {
-    public let location: CGPoint
     public let state: GestureState
+    public let location: CGPoint
 }
 
-extension GestureContext: MessageContext
+/// Pan gesture arguments to interact with Sourcery.
+public struct PanGestureContext: _AutoMessageContext
 {
-    public init?(rawValue: [Any])
-    {
-        guard rawValue.count == 2,
-            let point = rawValue[0] as? CGPoint,
-            let state = rawValue[1] as? GestureState else
-        {
-            return nil
-        }
+    public let state: GestureState
+    public let location: CGPoint
+    public let velocity: CGPoint
+}
 
-        self = GestureContext(location: point, state: state)
-    }
+/// Pinch gesture arguments to interact with Sourcery.
+public struct PinchGestureContext: _AutoMessageContext
+{
+    public let state: GestureState
+    public let location: CGPoint
+    public let scale: CGFloat
+    public let velocity: CGFloat
+}
 
-    public var rawValue: [Any]
-    {
-        return [location, state]
-    }
+/// Rotation gesture arguments to interact with Sourcery.
+public struct RotationGestureContext: _AutoMessageContext
+{
+    public let state: GestureState
+    public let location: CGPoint
+    public let rotation: CGFloat
+    public let velocity: CGFloat
 }

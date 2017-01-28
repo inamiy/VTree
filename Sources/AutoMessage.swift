@@ -14,4 +14,11 @@
 /// - Note: `enum Msg` associated values must have single argument only that conforms to `MessageContext` protocol.
 ///
 /// - SeeAlso: Templates/Message.stencil
-public protocol AutoMessage {}
+public protocol AutoMessage: Message {}
+
+/// Phantom protocol for `MessageContext` code-generation.
+/// - SeeAlso: Templates/MessageContext.stencil
+public protocol AutoMessageContext: MessageContext {}
+
+/// Same as `AutoMessageContext` but only for internal purpose.
+internal protocol _AutoMessageContext: MessageContext {}

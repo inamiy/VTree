@@ -76,6 +76,14 @@ extension FuncBox: Equatable
     }
 }
 
+extension FuncBox: Hashable
+{
+    public var hashValue: Int
+    {
+        return self.addresses.map(_hashValue).reduce(0, _hashValue)
+    }
+}
+
 // MARK: Custom Operators
 
 prefix operator ^

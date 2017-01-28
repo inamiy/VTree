@@ -13,10 +13,8 @@ extension VTree
             view.addSubview(child.createView(msgMapper))
         }
 
-        for (event, msgFunc) in self.gestures {
-            (view as View).vtree.addGesture(for: event) { gesture in
-                let context = GestureContext(location: gesture.location(in: gesture.view), state: gesture.state)
-                let msg = msgFunc.impl(context)
+        for gesture in self.gestures {
+            (view as View).vtree.addGesture(for: gesture) { msg in
                 let msg2 = msgMapper(msg)
                 Messenger.shared.send(AnyMsg(msg2))
             }
