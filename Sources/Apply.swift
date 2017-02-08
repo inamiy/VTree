@@ -1,7 +1,9 @@
 #if os(iOS) || os(tvOS)
     import UIKit
+    private let _scale = UIScreen.main.scale
 #elseif os(macOS)
     import AppKit
+    private let _scale = NSScreen.main()!.backingScaleFactor
 #endif
 
 /// Apply `Patch` (generated from `diff()`) to the existing real `View`.
@@ -25,6 +27,20 @@ public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
                 if index == 0, let appliedView = appliedView {
                     newView = appliedView
                 }
+            }
+        }
+    }
+
+    if newView != nil {
+        let flexboxFrames = patch.flexboxFrames.map { ($0, $1.map(_roundFrame)) }
+//        Debug.print("patch.flexboxFrames = \(flexboxFrames)")
+
+        let patchIndexes = flexboxFrames.map { $0.key }
+        let indexedViews = _indexViews(view, patch.oldTree, patchIndexes)
+
+        for (index, frames) in patch.flexboxFrames {
+            if let indexedView = indexedViews[index] {
+                applyFlexbox(frames: frames, to: indexedView)
             }
         }
     }
@@ -91,6 +107,21 @@ private func _applyStep<Msg: Message>(_ step: PatchStep<Msg>, to view: View) -> 
         case let .reorderChildren(reorder):
             _applyReorder(to: view, reorder: reorder)
             return nil
+    }
+}
+
+internal func applyFlexbox(frames: [CGRect], to view: View)
+{
+    func flatten(_ view: View) -> [View]
+    {
+        var views = [view]
+        let subviews = view.subviews.filter { $0.isVTreeView }.flatMap { flatten($0) }
+        views.append(contentsOf: subviews)
+        return views
+    }
+
+    for (frame, view) in zip(frames, flatten(view)) {
+        view.frame = frame
     }
 }
 
@@ -185,6 +216,13 @@ private func _accumulateRecursively<Msg: Message>(rootView: View, rootTree: AnyV
         indexedViews[rootIndex] = rootView
     }
 
+    // Early exit if subviews are not created via VTree.
+    // For example, UIButton has internal UIImageView and UIButtonLabel,
+    // but VTree only handles `VButton`.
+    guard let firstSubview = rootView.subviews.first, firstSubview.isVTreeView == true else {
+        return
+    }
+
     var childIndex = rootIndex
 
     for i in 0..<rootTree.children.count {
@@ -205,4 +243,21 @@ private func _accumulateRecursively<Msg: Message>(rootView: View, rootTree: AnyV
 
         childIndex = nextChildIndex
     }
+}
+
+// MARK: Helper
+
+private func _roundFrame(_ frame: CGRect) -> CGRect
+{
+    func roundPixel(_ value: CGFloat) -> CGFloat
+    {
+        return round(value * _scale) / _scale
+    }
+
+    return CGRect(
+        x: roundPixel(frame.origin.x),
+        y: roundPixel(frame.origin.y),
+        width: roundPixel(frame.size.width),
+        height: roundPixel(frame.size.height)
+    )
 }

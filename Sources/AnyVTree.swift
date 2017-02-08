@@ -1,9 +1,13 @@
+import Flexbox
+
 /// Type-erased `VTree` with lazy `map` support.
 /// - Note: Lazy `map` could be splitted into another enum type.
 public final class AnyVTree<Msg: Message>: VTree
 {
     public let key: Key?
     public let props: [String: Any]
+    public let propsKeysForMeasure: [String]
+    public let flexbox: Flexbox.Node?
 
     private let _children: [Any]
     private let _childrenTransform: (Any) -> AnyVTree<Msg>
@@ -14,7 +18,7 @@ public final class AnyVTree<Msg: Message>: VTree
     private let _gestures: [Any]
     private let _gesturesTransform: (Any) -> GestureEvent<Msg>
 
-    private let _createView: (@escaping (Msg) -> AnyMsg) -> View
+    private let _createView: (ViewConfig<Msg, AnyMsg>) -> View
 
     /// Type-unsafe raw `VTree` type for comparison.
     internal let _rawType: Any.Type
@@ -25,6 +29,8 @@ public final class AnyVTree<Msg: Message>: VTree
 
         self.key = base.key
         self.props = base.props
+        self.propsKeysForMeasure = base.propsKeysForMeasure
+        self.flexbox = base.flexbox
 
         self._handlers = base.handlers
         self._handlersTransform = { $0 as! Base.MsgType }
@@ -42,9 +48,10 @@ public final class AnyVTree<Msg: Message>: VTree
     private init<Base: VTree>(_ base: Base, transform: @escaping (Base.MsgType) -> Msg)
     {
         self._rawType = _rawVTreeType(of: base)
-
         self.key = base.key
         self.props = base.props
+        self.propsKeysForMeasure = base.propsKeysForMeasure
+        self.flexbox = base.flexbox
 
         if let base = base as? AnyVTree<Base.MsgType> {
             self._handlers = base._handlers
@@ -63,8 +70,12 @@ public final class AnyVTree<Msg: Message>: VTree
             self._childrenTransform = { ($0 as! AnyVTree<Base.MsgType>).map(transform) }
         }
 
-        self._createView = { msgMapper in
-            return base.createView { msgMapper(transform($0)) }
+        self._createView = { config in
+            let config2 = ViewConfig<Base.MsgType, AnyMsg>(
+                msgMapper: { config._msgMapper(transform($0)) },
+                skipsFlexbox: config._skipsFlexbox
+            )
+            return base.createView(config2)
         }
     }
 
@@ -86,9 +97,13 @@ public final class AnyVTree<Msg: Message>: VTree
         return self._children.map { transform($0) }
     }
 
-    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> View
+    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> View
     {
-        return self._createView { AnyMsg(msgMapper($0)) }
+        let config2 = ViewConfig<Msg, AnyMsg>(
+            msgMapper: { AnyMsg(config._msgMapper($0)) },
+            skipsFlexbox: config._skipsFlexbox
+        )
+        return self._createView(config2)
     }
 
     /// Lazy `map`.

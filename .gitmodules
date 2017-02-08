@@ -4,3 +4,6 @@
 [submodule "Carthage/Checkouts/Quick"]
 	path = Carthage/Checkouts/Quick
 	url = https://github.com/Quick/Quick.git
+[submodule "Carthage/Checkouts/Flexbox"]
+	path = Carthage/Checkouts/Flexbox
+	url = https://github.com/inamiy/Flexbox.git

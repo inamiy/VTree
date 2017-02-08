@@ -1,3 +1,5 @@
 #include "Base.xcconfig"
 
 SWIFT_OPTIMIZATION_LEVEL = -Onone;
+
+OTHER_SWIFT_FLAGS = -D VTREE_DEBUG

@@ -1,3 +1,7 @@
+import Flexbox
+
+internal typealias FlexboxFrames = [Int: [CGRect]]
+
 /// Container of `PatchStep`s.
 public struct Patch<Msg: Message>
 {
@@ -6,6 +10,7 @@ public struct Patch<Msg: Message>
 
     internal let oldTree: AnyVTree<Msg>
     internal let steps: Steps
+    internal let flexboxFrames: FlexboxFrames
 }
 
 extension Patch: CustomStringConvertible

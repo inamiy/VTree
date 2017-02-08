@@ -1,13 +1,19 @@
+import Flexbox
+
 /// Create `Patch` by diff-ing `oldTree` and `newTree`.
 public func diff<OldTree: VTree, NewTree: VTree, Msg: Message>(old oldTree: OldTree, new newTree: NewTree) -> Patch<Msg>
     where OldTree.MsgType == Msg, NewTree.MsgType == Msg
 {
+    let oldTree_ = *oldTree
+
     var steps = Patch<Msg>.Steps()
-    _diffTree(old: *oldTree, new: *newTree, steps: &steps, index: 0)
-    return Patch(oldTree: *oldTree, steps: steps)
+    var flexboxFrames = FlexboxFrames()
+    _diffTree(old: oldTree_, new: *newTree, steps: &steps, flexboxFrames: &flexboxFrames, index: 0, skipsFlexbox: false)
+
+    return Patch(oldTree: oldTree_, steps: steps, flexboxFrames: flexboxFrames)
 }
 
-private func _diffTree<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, index: Int)
+private func _diffTree<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, flexboxFrames: inout FlexboxFrames, index: Int, skipsFlexbox: Bool)
 {
     guard oldTree._rawType == newTree._rawType else {
         _appendSteps(&steps, step: .replace(newTree), at: index)
@@ -17,7 +23,11 @@ private func _diffTree<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: An
     _diffProps(old: oldTree, new: newTree, steps: &steps, index: index)
     _diffHandlers(old: oldTree, new: newTree, steps: &steps, index: index)
     _diffGestures(old: oldTree, new: newTree, steps: &steps, index: index)
-    _diffChildren(old: oldTree.children, new: newTree.children, steps: &steps, parentIndex: index)
+
+    var skipsFlexbox = skipsFlexbox
+    _diffFlexbox(old: oldTree, new: newTree, steps: &steps, flexboxFrames: &flexboxFrames, skipsFlexbox: &skipsFlexbox, index: index)
+
+    _diffChildren(old: oldTree.children, new: newTree.children, steps: &steps, flexboxFrames: &flexboxFrames, skipsFlexbox: skipsFlexbox, parentIndex: index)
 }
 
 private func _diffProps<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, index: Int)
@@ -92,20 +102,71 @@ private func _diffGestures<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
     }
 }
 
-internal func _diffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>], steps: inout Patch<Msg>.Steps, parentIndex: Int)
+internal func _diffFlexbox<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, flexboxFrames: inout FlexboxFrames, skipsFlexbox: inout Bool, index: Int)
 {
-    let reordered = _reorder(old: oldChildren, new: newChildren)
-    let maxCount = max(oldChildren.count, reordered.midChildren.count)
+    let oldChildren = oldTree.children
+    let newChildren = newTree.children
+
+    // Examine `flexboxTree` (flexbox hiearchy) and calculate `flexboxFrames` if needed.
+    if !skipsFlexbox, let newFlexboxTree = newTree._flexboxTree {
+
+        var isFlexboxDirty = oldTree._flexboxTree != newFlexboxTree
+//        Debug.print("flexboxTree compared, isFlexboxDirty = \(isFlexboxDirty)")
+
+//        Debug.print("oldTree.flexboxTree = \(oldTree.flexboxTree)\n")
+//        Debug.print("newFlexboxTree = \(newFlexboxTree)\n")
+
+        if !isFlexboxDirty {
+
+            func arePropsKeysForMeasureChanged(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>) -> Bool
+            {
+                for key in newTree.propsKeysForMeasure {
+                    if !_objcEqual(oldTree.props[key] as Any, newTree.props[key] as Any) {
+                        return true
+                    }
+                }
+
+                for (oldChild, newChild) in zip(oldTree.children, newTree.children) {
+                    if arePropsKeysForMeasureChanged(old: oldChild, new: newChild) {
+                        return true
+                    }
+                }
+
+                return false
+            }
+
+            isFlexboxDirty = arePropsKeysForMeasureChanged(old: oldTree, new: newTree)
+
+//            Debug.print("propsKeysForMeasure compared, isFlexboxDirty = \(isFlexboxDirty)")
+        }
+
+        if isFlexboxDirty {
+            flexboxFrames[index] = calculateFlexbox(newFlexboxTree)
+        }
+
+        // NOTE:
+        // The topmost "vtree with flexbox" has calculated all descendent flexboxes
+        // at this point (`isFlexboxDirty` doesn't matter), so turn on the
+        // skipping flag to avoid re-calculation for the descendent traversal.
+        skipsFlexbox = true
+    }
+
+}
+
+internal func _diffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>], steps: inout Patch<Msg>.Steps, flexboxFrames: inout FlexboxFrames, skipsFlexbox: Bool, parentIndex: Int)
+{
+    let (midChildren, reorder) = _reorder(old: oldChildren, new: newChildren)
+    let maxCount = max(oldChildren.count, midChildren.count)
     var childCursor = parentIndex
 
     for i in 0..<maxCount {
         let oldChild = oldChildren[safe: i]
-        let midChild = reordered.midChildren[safe: i]
+        let midChild = midChildren[safe: i]
         childCursor += 1
 
         if case let .some(.some(midChild)) = midChild {
             if let oldChild = oldChild {
-                _diffTree(old: oldChild, new: midChild, steps: &steps, index: childCursor)
+                _diffTree(old: oldChild, new: midChild, steps: &steps, flexboxFrames: &flexboxFrames, index: childCursor, skipsFlexbox: skipsFlexbox)
             }
             else {
                 _appendSteps(&steps, step: .insertChild(midChild), at: parentIndex)
@@ -120,9 +181,30 @@ internal func _diffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new 
         childCursor += oldChild?.children.count ?? 0
     }
 
-    if !reordered.reorder.isEmpty {
-        _appendSteps(&steps, step: .reorderChildren(reordered.reorder), at: parentIndex)
+    if !reorder.isEmpty {
+        _appendSteps(&steps, step: .reorderChildren(reorder), at: parentIndex)
     }
+}
+
+/// - Returns:
+/// Flattened `Flexbox.Node` frames started from `flexboxTree` itself's frame
+/// followed by descendent flexbox-node frames in depth-first order.
+///
+/// - Note:
+/// This method can be called from non-main thread.
+internal func calculateFlexbox(_ flexboxTree: Flexbox.Node) -> [CGRect]
+{
+//    Debug.print("*** calculateFlexbox ***")
+
+    func flatten(_ layout: Flexbox.Layout) -> [CGRect]
+    {
+        var frames = [layout.frame]
+        frames.append(contentsOf: layout.children.flatMap { flatten($0) })
+        return frames
+    }
+
+    let layout = flexboxTree.layout()  // calculate Flexbox
+    return flatten(layout)
 }
 
 private func _appendSteps<Msg: Message>(_ steps: inout Patch<Msg>.Steps, step: PatchStep<Msg>, at index: Int)

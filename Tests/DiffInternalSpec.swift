@@ -21,7 +21,7 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 1
                 expect(steps[0]) == [.reorderChildren(Reorder(removes: [(key: key2, from: 1)], inserts: [(key: key2, to: 0)]))]
@@ -40,7 +40,7 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 1
                 expect(steps[0]) == [.reorderChildren(Reorder(removes: [(key: key1, from: 0), (key: key2, from: 1)], inserts: [(key: key2, to: 0), (key: key1, to: 2)]))]
@@ -59,10 +59,9 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 1
-                print(steps)
                 expect(steps[0]) == [.reorderChildren(Reorder(removes: [(key: key1, from: 0)], inserts: [(key: key1, to: 2)]))]
             }
 
@@ -81,7 +80,7 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 var steps = Patch<NoMsg>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 3
                 expect(steps[0]) == [
@@ -117,7 +116,7 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 var steps = Patch<MyMsg>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 4
 
@@ -184,7 +183,7 @@ class DiffInternalSpec: QuickSpec
                 ]
 
                 var steps = Patch<MyGestureMsg>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 3
 
@@ -255,7 +254,7 @@ class DiffInternalSpec: QuickSpec
                     .map { $0.map(msgTransform) }
 
                 var steps = Patch<MyGestureMsg2>.Steps()
-                _diffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
                 expect(steps.count) == 3
 
