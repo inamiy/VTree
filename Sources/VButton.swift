@@ -1,5 +1,10 @@
+import Flexbox
+
 #if os(iOS) || os(tvOS)
 import UIKit
+
+/// View for `measure` calculation.
+private let _calcView = UIButton()
 
 /// Virtual tree node for `UIButton`.
 public final class VButton<Msg: Message>: VTree, PropsReflectable
@@ -7,6 +12,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
     public typealias PropsData = VButtonPropsData
 
     public let key: Key?
+    public let flexbox: Flexbox.Node?
     //public let gestures: [GestureEvent<Msg>]  // Comment-Out: Use `handlers` instead.
     public let children: [AnyVTree<Msg>]
 
@@ -16,21 +22,45 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
 
     public init(
         key: Key? = nil,
-        frame: CGRect = .zero,
+        frame: CGRect = .null,
         backgroundColor: Color? = nil,
         alpha: CGFloat = 1,
         isHidden: Bool = false,
         title: String? = nil,
         titleColor: Color? = nil,
-        titleFont: Font? = nil,
+        font: Font? = nil,
+        numberOfLines: Int = 0,
+        flexbox: Flexbox.Node? = nil,
         handlers: [UIControlEvents: Msg] = [:],
         children: [AnyVTree<Msg>] = []
         )
     {
         self.key = key
+
+        let measure: ((CGSize) -> CGSize) = { maxSize in
+            objc_sync_enter(_calcView)
+            defer { objc_sync_exit(_calcView) }
+
+            _calcView.setTitle(title, for: .normal)
+            _calcView.titleLabel?.font = font
+            _calcView.titleLabel?.numberOfLines = numberOfLines
+
+            let calcSize = _calcView.sizeThatFits(maxSize)
+            return calcSize
+        }
+
+        self.flexbox = flexbox.map {
+            return Flexbox.Node(size: $0.size, minSize: $0.minSize, maxSize: $0.maxSize, children: $0.children, flexDirection: $0.flexDirection, flexWrap: $0.flexWrap, justifyContent: $0.justifyContent, alignContent: $0.alignContent, alignItems: $0.alignItems, alignSelf: $0.alignSelf, flex: $0.flex, flexGrow: $0.flexGrow, flexShrink: $0.flexShrink, flexBasis: $0.flexBasis, direction: $0.direction, overflow: $0.overflow, positionType: $0.positionType, position: $0.position, margin: $0.margin, padding: $0.padding, border: $0.border, measure: measure)
+        }
+
         self._handlers = handlers
         self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, title: title, titleColor: titleColor, titleFont: titleFont)
+        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_title: title, vtree_titleColor: titleColor, vtree_font: font, vtree_numberOfLines: numberOfLines)
+    }
+
+    public var propsKeysForMeasure: [String]
+    {
+        return ["vtree_title", "vtree_font", "vtree_numberOfLines"]
     }
 
     public var handlers: HandlerMapping<Msg>
@@ -38,14 +68,14 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
         return self._handlers.map { (.control($0), $1) }
     }
 
-    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> Button
+    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> Button
     {
         let view = Button()
 
-        self._setupView(view, msgMapper: msgMapper)
+        self._setupView(view, config: config)
 
         for (event, msg) in self._handlers {
-            let msg2 = msgMapper(msg)
+            let msg2 = config._msgMapper(msg)
             view.vtree.addHandler(for: event) { _ in
                 Messenger.shared.send(AnyMsg(msg2))
             }
@@ -66,9 +96,10 @@ public struct VButtonPropsData
     fileprivate let alpha: CGFloat
     fileprivate let hidden: Bool
 
-    fileprivate let title: String?
-    fileprivate let titleColor: Color?
-    fileprivate let titleFont: Font?
+    fileprivate let vtree_title: String?
+    fileprivate let vtree_titleColor: Color?
+    fileprivate let vtree_font: Font?
+    fileprivate let vtree_numberOfLines: Int
 }
 
 #endif

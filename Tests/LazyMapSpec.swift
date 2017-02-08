@@ -19,7 +19,7 @@ class LazyMapSpec: QuickSpec
 
                 let tree = VButton<MyMsg>(handlers: [.touchUpInside: .msg1])
 
-                let button = tree.createView { msg -> MyMsg in
+                let button = tree.createTestView { msg -> MyMsg in
                     createdMsgs.append(msg)
                     return msg
                 }
@@ -31,7 +31,7 @@ class LazyMapSpec: QuickSpec
 
                 // NOTE: `msgMapper` in `createView()` is only invoked once.
                 expect(createdMsgs) == [MyMsg.msg1]
-                expect(createdMsgs) == [MyMsg.msg1]
+                expect(updatedMsgs) == [MyMsg.msg1]
             }
 
             it("using AnyVTree.map") {
@@ -47,7 +47,7 @@ class LazyMapSpec: QuickSpec
                 let tree = *VButton<MyMsg>(handlers: [.touchUpInside: .msg1])
                 let tree2 = tree.map { _ in MyMsg2.test2 }
 
-                let button = tree2.createView { msg -> MyMsg2 in
+                let button = tree2.createTestView { msg -> MyMsg2 in
                     createdMsgs.append(msg)
                     return msg
                 } as! UIButton
@@ -58,7 +58,7 @@ class LazyMapSpec: QuickSpec
                 button.sendActions(for: .touchUpInside)
 
                 expect(createdMsgs) == [MyMsg2.test2]
-                expect(createdMsgs) == [MyMsg2.test2]
+                expect(updatedMsgs) == [MyMsg2.test2]
             }
         #endif
     }

@@ -80,9 +80,9 @@ public final class Program
             return VLabel(
                 frame: CGRect(x: 0, y: 40, width: rootWidth, height: 80),
                 backgroundColor: .clear,
-                font: .systemFont(ofSize: 48),
                 text: "\(state)",
-                textAlignment: .center
+                textAlignment: .center,
+                font: .systemFont(ofSize: 48)
             )
         }
 
@@ -92,7 +92,7 @@ public final class Program
                 frame: CGRect(x: rootWidth/2 + space/2, y: 150, width: buttonWidth, height: 50),
                 backgroundColor: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1),
                 title: "+",
-                titleFont: .systemFont(ofSize: 24),
+                font: .systemFont(ofSize: 24),
                 handlers: [.touchUpInside: .increment]
             )
         }
@@ -103,7 +103,7 @@ public final class Program
                 frame: CGRect(x: space, y: 150, width: buttonWidth, height: 50),
                 backgroundColor: #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1),
                 title: "-",
-                titleFont: .systemFont(ofSize: 24),
+                font: .systemFont(ofSize: 24),
                 handlers: [.touchUpInside: .decrement]
             )
         }
@@ -113,9 +113,9 @@ public final class Program
             return VLabel(
                 frame: CGRect(x: 0, y: 200, width: rootWidth, height: 80),
                 backgroundColor: .clear,
-                font: .systemFont(ofSize: 24),
                 text: "Tap anywhere to test gesture.",
-                textAlignment: .center
+                textAlignment: .center,
+                font: .systemFont(ofSize: 24)
             )
         }
 

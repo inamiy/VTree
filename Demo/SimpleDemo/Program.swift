@@ -60,9 +60,9 @@ public final class Program
             return VLabel(
                 frame: CGRect(x: 0, y: 40, width: rootWidth, height: 80),
                 backgroundColor: .clear,
-                font: .systemFont(ofSize: 48),
                 text: "\(state)",
-                textAlignment: .center
+                textAlignment: .center,
+                font: .systemFont(ofSize: 48)
             )
         }
 
@@ -72,7 +72,7 @@ public final class Program
                 frame: CGRect(x: rootWidth/2 + space/2, y: 150, width: buttonWidth, height: 50),
                 backgroundColor: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1),
                 title: "+",
-                titleFont: .systemFont(ofSize: 24),
+                font: .systemFont(ofSize: 24),
                 handlers: [.touchUpInside: .increment]
             )
         }
@@ -83,32 +83,15 @@ public final class Program
                 frame: CGRect(x: space, y: 150, width: buttonWidth, height: 50),
                 backgroundColor: #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1),
                 title: "-",
-                titleFont: .systemFont(ofSize: 24),
+                font: .systemFont(ofSize: 24),
                 handlers: [.touchUpInside: .decrement]
-            )
-        }
-
-        func testView(_ state: Int) -> VButton<Msg>
-        {
-            let alpha = 0.6 + 0.4 * sin(CGFloat(state) * 2 * .pi / 10)
-            let fontSize = max(0, state)
-            let height = CGFloat(50 + max(0, state))
-
-            return VButton(
-                frame: CGRect(x: space, y: 250, width: rootWidth-2*space, height: height),
-                backgroundColor: #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1),
-                alpha: alpha,
-                title: "Font \(fontSize)pt",
-                titleColor: #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1).withAlphaComponent(1.2 - alpha),
-                titleFont: .systemFont(ofSize: CGFloat(fontSize))
             )
         }
 
         return rootView([
             *label(state),
             *incrementButton(),
-            *decrementButton(),
-            *testView(state)
+            *decrementButton()
         ])
     }
 

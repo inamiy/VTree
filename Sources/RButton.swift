@@ -16,7 +16,7 @@ public final class RButton: UIButton
 
     // MARK: KVC-compliant properties
 
-    public var title: String?
+    public var vtree_title: String?
     {
         get {
             return self.title(for: .normal)
@@ -26,7 +26,7 @@ public final class RButton: UIButton
         }
     }
 
-    public var titleColor: UIColor?
+    public var vtree_titleColor: UIColor?
     {
         get {
             return self.titleColor(for: .normal)
@@ -36,13 +36,23 @@ public final class RButton: UIButton
         }
     }
 
-    public var titleFont: UIFont?
+    public var vtree_font: UIFont?
     {
         get {
             return self.titleLabel?.font
         }
         set {
             self.titleLabel?.font = newValue
+        }
+    }
+
+    public var vtree_numberOfLines: Int
+    {
+        get {
+            return self.titleLabel?.numberOfLines ?? 0
+        }
+        set {
+            self.titleLabel?.numberOfLines = newValue
         }
     }
 }

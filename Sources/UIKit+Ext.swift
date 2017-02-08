@@ -46,6 +46,15 @@ extension VTreePrefix where Base: UIControl
 
 // MARK: UIControlEvents + Hashable
 
+// NOTE: Required for -Owhole-module-optimization... (bug?)
+extension UIControlEvents: Equatable
+{
+    public static func == (lhs: UIControlEvents, rhs: UIControlEvents) -> Bool
+    {
+        return lhs.rawValue == rhs.rawValue
+    }
+}
+
 extension UIControlEvents: Hashable
 {
     public var hashValue: Int

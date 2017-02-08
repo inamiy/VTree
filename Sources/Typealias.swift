@@ -8,7 +8,7 @@
 
     public typealias View = UIView
     public typealias ImageView = UIImageView
-    public typealias Label = UILabel
+    public typealias Label = RLabel
     public typealias Button = RButton
 
     public typealias GestureRecognizer = UIGestureRecognizer
@@ -24,7 +24,7 @@
 
     public typealias View = NSView
     public typealias ImageView = NSImageView
-    public typealias Label = NSTextField
+    public typealias Label = RLabel
     public typealias Button = NSButton
 
     public typealias GestureRecognizer = NSGestureRecognizer

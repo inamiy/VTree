@@ -1,3 +1,5 @@
+import Flexbox
+
 #if os(iOS) || os(tvOS)
     import UIKit
 #elseif os(macOS)
@@ -10,6 +12,7 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
     public typealias PropsData = VImageViewPropsData
 
     public let key: Key?
+    public let flexbox: Flexbox.Node?
     public let gestures: [GestureEvent<Msg>]
     public let children: [AnyVTree<Msg>]
 
@@ -17,26 +20,28 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
 
     public init(
         key: Key? = nil,
-        frame: CGRect = .zero,
+        frame: CGRect = .null,
         backgroundColor: Color? = nil,
         alpha: CGFloat = 1,
         isHidden: Bool = false,
         image: Image? = nil,
+        flexbox: Flexbox.Node? = nil,
         gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )
     {
         self.key = key
+        self.flexbox = flexbox
         self.gestures = gestures
         self.children = children
         self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, image: image)
     }
 
-    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> ImageView
+    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> ImageView
     {
         let view = ImageView()
 
-        self._setupView(view, msgMapper: msgMapper)
+        self._setupView(view, config: config)
 
         return view
     }
