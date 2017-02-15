@@ -44,7 +44,7 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
 
             _calcView.text = text
             _calcView.font = font
-            
+
             #if os(iOS) || os(tvOS)
             _calcView.numberOfLines = numberOfLines
             #elseif os(macOS)
