@@ -110,8 +110,13 @@ public prefix func ^ <T, U>(f: @escaping (T) -> U) -> FuncBox<T, U>
 /// - http://qiita.com/dankogai/items/ab407918dba590016058 (Japanese)
 private func _peekFunc<A, R>(_ f: (A) -> R) -> (fp: Int, ctx: Int)
 {
-    let (_, low) = unsafeBitCast(f, to: (Int, Int).self)
-    let offset = MemoryLayout<Int>.size == 8 ? 16 : 12
-    let ptr = UnsafePointer<Int>(bitPattern: low + offset)
-    return (ptr!.pointee, ptr!.successor().pointee)
+    let (hi, low) = unsafeBitCast(f, to: (Int, Int).self)
+    if low == 0 {   // optimized
+        return (hi, 0)
+    }
+    else {
+        let offset = MemoryLayout<Int>.size == 8 ? 16 : 12
+        let ptr = UnsafePointer<Int>(bitPattern: low + offset)
+        return (ptr!.pointee, ptr!.successor().pointee)
+    }
 }
