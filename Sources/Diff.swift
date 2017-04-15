@@ -319,8 +319,6 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
         var midRemovedCount = 0 // offset adjustment for reorder-index calculation
 
         while newCursor < newCount {
-            let newChild = newChildren[newCursor]
-
             // Append `Remove` while `midChild` is nil.
             while midCursor < midCount && midChildren[midCursor] == nil {
                 removes.append(Reorder.Remove(key: nil, from: midCursor - midRemovedCount))
@@ -328,13 +326,8 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
                 midRemovedCount += 1
             }
 
-            let midChild: AnyVTree<Msg>?
-            if midCursor < midCount {
-                midChild = midChildren[midCursor]
-            }
-            else {
-                midChild = nil
-            }
+            let midChild = midChildren[safe: midCursor] ?? nil
+            let newChild = newChildren[newCursor]
 
             switch (midChild?.key, newChild.key) {
 
@@ -348,18 +341,6 @@ internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newCh
                         removes.append(Reorder.Remove(key: midKey, from: midCursor - midRemovedCount))
                         midCursor += 1
                         midRemovedCount += 1
-
-                        // If `nextMidChild` is same as `newChild`...
-                        if let nextMidChild = midChildren[safe: midCursor],
-                            let nextMidKey = nextMidChild?.key, nextMidKey === newKey
-                        {
-                            midCursor += 1
-                            newCursor += 1
-                        }
-                        else {
-                            inserts.append(Reorder.Insert(key: newKey, to: newCursor))
-                            newCursor += 1
-                        }
                     }
 
                 // If "same key" or "neither has key"...
