@@ -20,7 +20,8 @@ public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
 
     var newView: View? = view
 
-    for (index, steps) in patch.steps {
+    for index in patchIndexes {
+        let steps = patch.steps[index]!
         for step in steps {
             if let indexedView = indexedViews[index] {
                 let appliedView = _applyStep(step, to: indexedView)
@@ -33,8 +34,6 @@ public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
 
     if newView != nil {
         let flexboxFrames = patch.flexboxFrames.map { ($0, $1.map(_roundFrame)) }
-//        Debug.print("patch.flexboxFrames = \(flexboxFrames)")
-
         let patchIndexes = flexboxFrames.map { $0.key }
         let indexedViews = _indexViews(view, patch.oldTree, patchIndexes)
 

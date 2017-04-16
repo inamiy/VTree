@@ -55,7 +55,6 @@
 		1F7AF2921E0D359E0038DED0 /* FuncBoxSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7AF2911E0D359E0038DED0 /* FuncBoxSpec.swift */; };
 		1F8602E21DFCCF3F0007911E /* FuncBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8602E11DFCCF3F0007911E /* FuncBox.swift */; };
 		1F8602E41DFCD1280007911E /* GestureEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8602E31DFCD1280007911E /* GestureEvent.swift */; };
-		1F8717E51E46F14300B6582C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8717E41E46F14300B6582C /* Debug.swift */; };
 		1F8F783A1DD6E9AA008D8B67 /* UIKit+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F78391DD6E9AA008D8B67 /* UIKit+Ext.swift */; };
 		1F8F783D1DD73743008D8B67 /* DiffInternalSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F783C1DD73743008D8B67 /* DiffInternalSpec.swift */; };
 		1F8F783F1DD74004008D8B67 /* VButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F783E1DD74004008D8B67 /* VButton.swift */; };
@@ -229,7 +228,6 @@
 		1F7AF2911E0D359E0038DED0 /* FuncBoxSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuncBoxSpec.swift; sourceTree = "<group>"; };
 		1F8602E11DFCCF3F0007911E /* FuncBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FuncBox.swift; sourceTree = "<group>"; };
 		1F8602E31DFCD1280007911E /* GestureEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GestureEvent.swift; sourceTree = "<group>"; };
-		1F8717E41E46F14300B6582C /* Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Debug.swift; sourceTree = "<group>"; };
 		1F8ADC831E3E1BD400F4531F /* make-playground.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "make-playground.sh"; sourceTree = "<group>"; };
 		1F8F78391DD6E9AA008D8B67 /* UIKit+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Ext.swift"; sourceTree = "<group>"; };
 		1F8F783C1DD73743008D8B67 /* DiffInternalSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffInternalSpec.swift; sourceTree = "<group>"; };
@@ -431,7 +429,6 @@
 		1F8F783B1DD6EB97008D8B67 /* Internals */ = {
 			isa = PBXGroup;
 			children = (
-				1F8717E41E46F14300B6582C /* Debug.swift */,
 				1F21F6191DD621B000A70C25 /* Helper.swift */,
 				1F3445191DF3A10500D792E3 /* Box.swift */,
 				1FF41B361DD8B1F800443C4A /* CocoaTarget.swift */,
@@ -997,7 +994,6 @@
 				1FB7F4DF1DD814DB007B8E53 /* VGeneric.swift in Sources */,
 				1F3EBCD31E11626B002C0B29 /* AutoMessage.swift in Sources */,
 				484497181DDD806B00F5BB99 /* VTree+Reflection.swift in Sources */,
-				1F8717E51E46F14300B6582C /* Debug.swift in Sources */,
 				48034A601DD5ABEA00B8013D /* Diff.swift in Sources */,
 				1F06F75A1E4B5DBC0020F52B /* RLabel.swift in Sources */,
 				48034A661DD5ADEE00B8013D /* AppKit+Ext.swift in Sources */,

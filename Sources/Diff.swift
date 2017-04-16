@@ -111,13 +111,8 @@ internal func _diffFlexbox<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
     if !skipsFlexbox, let newFlexboxTree = newTree._flexboxTree {
 
         var isFlexboxDirty = oldTree._flexboxTree != newFlexboxTree
-//        Debug.print("flexboxTree compared, isFlexboxDirty = \(isFlexboxDirty)")
-
-//        Debug.print("oldTree.flexboxTree = \(oldTree.flexboxTree)\n")
-//        Debug.print("newFlexboxTree = \(newFlexboxTree)\n")
 
         if !isFlexboxDirty {
-
             func arePropsKeysForMeasureChanged(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>) -> Bool
             {
                 for key in newTree.propsKeysForMeasure {
@@ -136,8 +131,6 @@ internal func _diffFlexbox<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
             }
 
             isFlexboxDirty = arePropsKeysForMeasureChanged(old: oldTree, new: newTree)
-
-//            Debug.print("propsKeysForMeasure compared, isFlexboxDirty = \(isFlexboxDirty)")
         }
 
         if isFlexboxDirty {
@@ -194,8 +187,6 @@ internal func _diffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new 
 /// This method can be called from non-main thread.
 internal func calculateFlexbox(_ flexboxTree: Flexbox.Node) -> [CGRect]
 {
-//    Debug.print("*** calculateFlexbox ***")
-
     func flatten(_ layout: Flexbox.Layout) -> [CGRect]
     {
         var frames = [layout.frame]
