@@ -14,7 +14,7 @@ public final class Program<Model, Msg: Message>
 
     private let _debug: Bool
 
-    public init(model: Model, update: @escaping (Model, Msg) -> (Model), view: @escaping (Model) -> VView<Msg>, debug: Bool = true)
+    public init(model: Model, update: @escaping (Model, Msg) -> (Model), view: @escaping (Model) -> VView<Msg>, debug: Bool = false)
     {
         self._model = model
         self._view = view

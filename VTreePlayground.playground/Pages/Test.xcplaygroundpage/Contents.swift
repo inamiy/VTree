@@ -2,9 +2,12 @@ import UIKit
 import PlaygroundSupport
 import VTree
 import Flexbox
+import DemoFramework
 
 struct Model
 {
+    static let initial = Model(count: 0)
+
     let rootSize = CGSize(width: 320, height: 800)
     let count: Int
 }
@@ -119,10 +122,11 @@ func view(model: Model) -> VView<Msg>
         )
     }
 
-    func flex1View(_ count: Int, _ children: [AnyVTree<Msg>] = []) -> VView<Msg>
+    func flex1View(key: Key? = nil, _ count: Int, _ color: UIColor, _ children: [AnyVTree<Msg>] = []) -> VView<Msg>
     {
         return VView(
-            backgroundColor: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1),
+            key: key,
+            backgroundColor: color,
             flexbox: Node(
                 size: CGSize(width: 40, height: 40),
                 margin: Edges(uniform: 10)
@@ -131,10 +135,11 @@ func view(model: Model) -> VView<Msg>
         )
     }
 
-    func flex2View(_ count: Int, _ children: [AnyVTree<Msg>] = []) -> VView<Msg>
+    func flex2View(key: Key? = nil, _ count: Int, _ color: UIColor, _ children: [AnyVTree<Msg>] = []) -> VView<Msg>
     {
         return VView(
-            backgroundColor: #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1),
+            key: key,
+            backgroundColor: color,
             flexbox: Node(
                 size: CGSize(width: 20, height: 20),
                 margin: Edges(uniform: 10),
@@ -144,10 +149,11 @@ func view(model: Model) -> VView<Msg>
         )
     }
 
-    func flex3View(_ count: Int, _ children: [AnyVTree<Msg>] = []) -> VView<Msg>
+    func flex3View(key: Key? = nil, _ count: Int, _ color: UIColor, _ children: [AnyVTree<Msg>] = []) -> VView<Msg>
     {
         return VView(
-            backgroundColor: #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1),
+            key: key,
+            backgroundColor: color,
             flexbox: Node(
                 size: CGSize(width: 40 + CGFloat(count) * 2, height: 40 + CGFloat(count) * 2),
                 margin: Edges(uniform: 10)
@@ -165,18 +171,19 @@ func view(model: Model) -> VView<Msg>
         *decrementButton(),
         *testView(count),
         *flexRootView(count, count % 2 == 0 ? [
-            *flex1View(count),
-            *flex2View(count),
-            *flex3View(count)
+            *flex3View(key: key(-1), count, #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)),
+            *flex1View(key: key(1), count, #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)),
+            *flex2View(count, #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)),
+            *flex3View(key: key(-2), count, #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)),
+            *flex1View(count, #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)),
+            *flex2View(key: key(2), count, #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1))
         ] : [
-            *flex1View(count),
-            *flex3View(count)
+            *flex2View(key: key(2), count, #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)),
+            *flex1View(key: key(1), count, #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1))
         ])
-])
+    ])
 }
 
-let model = Model(count: 0)
-
-let program = Program(model: model, update: update, view: view, debug: true)
+let program = Program(model: .initial, update: update, view: view, debug: true)
 
 PlaygroundPage.current.liveView = program.rootView

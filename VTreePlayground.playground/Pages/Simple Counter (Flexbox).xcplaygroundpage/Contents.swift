@@ -2,9 +2,12 @@ import UIKit
 import PlaygroundSupport
 import VTree
 import Flexbox
+import DemoFramework
 
 struct Model
 {
+    static let initial = Model(count: 0)
+
     let rootSize = CGSize(width: 320, height: 480)
     let count: Int
 }
@@ -46,7 +49,7 @@ func view(model: Model) -> VView<Msg>
     {
         return VLabel(
             backgroundColor: .clear,
-            text: spellOut(count),
+            text: "\(count)",
             textAlignment: .center,
             font: .systemFont(ofSize: 48),
             flexbox: Flexbox.Node(
@@ -108,8 +111,6 @@ func view(model: Model) -> VView<Msg>
     ])
 }
 
-let model = Model(count: 0)
-
-let program = Program(model: model, update: update, view: view)
+let program = Program(model: .initial, update: update, view: view)
 
 PlaygroundPage.current.liveView = program.rootView

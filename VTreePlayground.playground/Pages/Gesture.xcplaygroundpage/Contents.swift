@@ -2,9 +2,12 @@ import UIKit
 import PlaygroundSupport
 import VTree
 import Flexbox
+import DemoFramework
 
 struct Model
 {
+    static let initial = Model(message: "Initial", cursor: nil)
+
     let rootSize = CGSize(width: 320, height: 480)
     let message: String
     let cursor: Cursor?
@@ -103,6 +106,6 @@ func view(model: Model) -> VView<Msg>
 
 let model = Model(message: "Initial", cursor: nil)
 
-let program = Program(model: model, update: update, view: view, debug: false)
+let program = Program(model: .initial, update: update, view: view)
 
 PlaygroundPage.current.liveView = program.rootView

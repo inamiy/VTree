@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/inamiy/github/VTree/VTreePlayground.playground">
+      location = "group:VTreePlayground.playground">
    </FileRef>
    <Group
       location = "container:"
