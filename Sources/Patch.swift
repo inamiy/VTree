@@ -122,6 +122,7 @@ extension Reorder
 
         internal var description: String
         {
+            let key = self.key.map { "\"\($0)\"" } ?? "nil"
             return "(key: \(key), from: \(fromIndex))"
         }
 
@@ -144,6 +145,7 @@ extension Reorder
 
         internal var description: String
         {
+            let key = self.key.map { "\"\($0)\"" } ?? "nil"
             return "(key: \(key), to: \(toIndex))"
         }
 
