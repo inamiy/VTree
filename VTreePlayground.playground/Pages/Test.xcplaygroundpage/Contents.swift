@@ -18,7 +18,7 @@ struct Model: DebuggableModel
     }
 }
 
-func update(_ model: Model, _ msg: Msg) -> Model
+func update(_ model: Model, _ msg: Msg) -> Model?
 {
     switch msg {
         case .increment:

@@ -1,9 +1,8 @@
 import UIKit
 import VTree
 import Flexbox
-import DemoFramework
 
-public enum Msg: AutoMessage
+enum Msg: AutoMessage
 {
     case increment
     case decrement
@@ -17,7 +16,7 @@ struct Model
     let count: Int
 }
 
-func update(_ model: Model, _ msg: Msg) -> Model
+func update(_ model: Model, _ msg: Msg) -> Model?
 {
     switch msg {
         case .increment:

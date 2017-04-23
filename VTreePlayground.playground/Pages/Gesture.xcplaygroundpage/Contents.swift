@@ -38,7 +38,7 @@ extension Model.Cursor
     }
 }
 
-func update(_ model: Model, _ msg: Msg) -> Model
+func update(_ model: Model, _ msg: Msg) -> Model?
 {
     print(msg)  // Warning: impure logging
 
@@ -104,7 +104,7 @@ func view(model: Model) -> VView<Msg>
     ])
 }
 
-let model = Model(message: "Initial", cursor: nil)
+// MARK: Main
 
 let program = Program(model: .initial, update: update, view: view)
 

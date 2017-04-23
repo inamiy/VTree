@@ -11,7 +11,7 @@ struct Model
     let count: Int
 }
 
-func update(_ model: Model, _ msg: Msg) -> Model
+func update(_ model: Model, _ msg: Msg) -> Model?
 {
     switch msg {
         case .increment:
@@ -79,6 +79,8 @@ func view(model: Model) -> VView<Msg>
         *decrementButton()
     ])
 }
+
+// MARK: Main
 
 let program = Program(model: .initial, update: update, view: view)
 

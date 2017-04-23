@@ -1,11 +1,10 @@
 import UIKit
 import VTree
 import Flexbox
-import DemoFramework
 
 /// Complex `Message` type that has associated values.
 /// - Important: See `VTree.Message` comment documentation for more detail.
-public enum Msg: AutoMessage
+enum Msg: AutoMessage
 {
     case increment
     case decrement
@@ -20,7 +19,7 @@ public enum Msg: AutoMessage
 }
 
 /// Custom `MessageContext` that is recognizable in Sourcery.
-public struct DummyContext: AutoMessageContext {}
+struct DummyContext: AutoMessageContext {}
 
 struct Model
 {
@@ -56,7 +55,7 @@ extension Model.Cursor
     }
 }
 
-func update(_ model: Model, _ msg: Msg) -> Model
+func update(_ model: Model, _ msg: Msg) -> Model?
 {
     print(msg)  // Warning: impure logging
 
