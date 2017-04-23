@@ -3,13 +3,19 @@ import PlaygroundSupport
 import VTree
 import Flexbox
 import DemoFramework
+import VTreeDebugger
 
-struct Model
+struct Model: DebuggableModel
 {
     static let initial = Model(count: 0)
 
     let rootSize = CGSize(width: 320, height: 800)
     let count: Int
+
+    var description: String
+    {
+        return "\(count)"
+    }
 }
 
 func update(_ model: Model, _ msg: Msg) -> Model
@@ -58,7 +64,8 @@ func view(model: Model) -> VView<Msg>
             textAlignment: .center,
             font: .systemFont(ofSize: 48),
             flexbox: Flexbox.Node(
-                maxSize: CGSize(width: rootWidth - space*2, height: CGFloat.nan)
+                maxSize: CGSize(width: rootWidth - space*2, height: CGFloat.nan),
+                positionType: .absolute
             )
         )
     }
@@ -184,6 +191,6 @@ func view(model: Model) -> VView<Msg>
     ])
 }
 
-let program = Program(model: .initial, update: update, view: view, debug: true)
+let program = debugProgram(debug: true, model: .initial, update: update, view: view)
 
 PlaygroundPage.current.liveView = program.rootView

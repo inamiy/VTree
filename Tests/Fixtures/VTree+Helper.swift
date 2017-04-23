@@ -6,22 +6,20 @@ extension VTree
     /// `createView(config)` helper which ignores flexbox.
     func createTestView<Msg2: Message>(_ msgMapper: @escaping (MsgType) -> Msg2) -> ViewType
     {
-        let config = ViewConfig<MsgType, Msg2>(msgMapper: msgMapper, skipsFlexbox: false)
-        return self.createView(config)
+        return self.createView(msgMapper)
     }
 }
 
 /// `_diffChildren` helper which ignores flexbox.
 func testDiffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>], steps: inout Patch<Msg>.Steps, parentIndex: Int)
 {
-    var flexboxFrames = [Int: [CGRect]]()
+    var layoutDirty = LayoutDirtyReason.none
 
     _diffChildren(
         old: oldChildren,
         new: newChildren,
+        parentIndex: 0,
         steps: &steps,
-        flexboxFrames: &flexboxFrames,
-        skipsFlexbox: false,
-        parentIndex: 0
+        layoutDirty: &layoutDirty
     )
 }

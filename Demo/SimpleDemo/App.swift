@@ -54,7 +54,7 @@ func view(model: Model) -> VView<Msg>
     {
         return VLabel(
             backgroundColor: .clear,
-            text: spellOut(count),
+            text: "\(count)",
             textAlignment: .center,
             font: .systemFont(ofSize: 48),
             flexbox: Flexbox.Node(

@@ -27,7 +27,9 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
         backgroundColor: Color? = nil,
         alpha: CGFloat = 1,
         isHidden: Bool = false,
+        cornerRadius: CGFloat = 0,
         text: String? = nil,
+        textColor: Color? = nil,
         textAlignment: NSTextAlignment = .left,
         font: Font? = nil,
         numberOfLines: Int = 0,
@@ -61,7 +63,7 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
 
         self.gestures = gestures
         self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, text: text, textAlignment: textAlignment.rawValue, font: font, vtree_numberOfLines: numberOfLines)
+        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_cornerRadius: cornerRadius, text: text, textColor: textColor, textAlignment: textAlignment.rawValue, font: font, vtree_numberOfLines: numberOfLines)
     }
 
     public var propsKeysForMeasure: [String]
@@ -69,12 +71,10 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
         return ["font", "text", "vtree_numberOfLines"]
     }
 
-    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> Label
+    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> Label
     {
         let view = Label()
-
-        self._setupView(view, config: config)
-
+        self._setupView(view, msgMapper: msgMapper)
         return view
     }
 }
@@ -90,7 +90,10 @@ public struct VLabelPropsData
     fileprivate let alpha: CGFloat
     fileprivate let hidden: Bool
 
+    fileprivate let vtree_cornerRadius: CGFloat
+
     fileprivate let text: String?
+    fileprivate let textColor: Color?
     fileprivate let textAlignment: NSTextAlignment.RawValue
     fileprivate let font: Font?
 

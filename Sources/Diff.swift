@@ -5,32 +5,45 @@ public func diff<OldTree: VTree, NewTree: VTree, Msg: Message>(old oldTree: OldT
     where OldTree.MsgType == Msg, NewTree.MsgType == Msg
 {
     let oldTree_ = *oldTree
+    let newTree_ = *newTree
 
     var steps = Patch<Msg>.Steps()
-    var flexboxFrames = FlexboxFrames()
-    _diffTree(old: oldTree_, new: *newTree, steps: &steps, flexboxFrames: &flexboxFrames, index: 0, skipsFlexbox: false)
+    var layoutDirty = LayoutDirtyReason.none
+    _diffTree(old: oldTree_, new: newTree_, index: 0, steps: &steps, layoutDirty: &layoutDirty)
+
+    let flexboxFrames = (layoutDirty != .none) ? calculateFlexbox(newTree._flexboxTree) : []
 
     return Patch(oldTree: oldTree_, steps: steps, flexboxFrames: flexboxFrames)
 }
 
-private func _diffTree<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, flexboxFrames: inout FlexboxFrames, index: Int, skipsFlexbox: Bool)
+private func _diffTree<Msg: Message>(
+    old oldTree: AnyVTree<Msg>,
+    new newTree: AnyVTree<Msg>,
+    index: Int,
+    steps: inout Patch<Msg>.Steps,
+    layoutDirty: inout LayoutDirtyReason
+    )
 {
     guard oldTree._rawType == newTree._rawType else {
         _appendSteps(&steps, step: .replace(newTree), at: index)
+        layoutDirty = .replace
         return
     }
 
-    _diffProps(old: oldTree, new: newTree, steps: &steps, index: index)
-    _diffHandlers(old: oldTree, new: newTree, steps: &steps, index: index)
-    _diffGestures(old: oldTree, new: newTree, steps: &steps, index: index)
-
-    var skipsFlexbox = skipsFlexbox
-    _diffFlexbox(old: oldTree, new: newTree, steps: &steps, flexboxFrames: &flexboxFrames, skipsFlexbox: &skipsFlexbox, index: index)
-
-    _diffChildren(old: oldTree.children, new: newTree.children, steps: &steps, flexboxFrames: &flexboxFrames, skipsFlexbox: skipsFlexbox, parentIndex: index)
+    _diffProps(old: oldTree, new: newTree, index: index, steps: &steps, layoutDirty: &layoutDirty)
+    _diffHandlers(old: oldTree, new: newTree, index: index, steps: &steps)
+    _diffGestures(old: oldTree, new: newTree, index: index, steps: &steps)
+    _diffFlexbox(old: oldTree, new: newTree, layoutDirty: &layoutDirty)
+    _diffChildren(old: oldTree.children, new: newTree.children, parentIndex: index, steps: &steps, layoutDirty: &layoutDirty)
 }
 
-private func _diffProps<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, index: Int)
+private func _diffProps<Msg: Message>(
+    old oldTree: AnyVTree<Msg>,
+    new newTree: AnyVTree<Msg>,
+    index: Int,
+    steps: inout Patch<Msg>.Steps,
+    layoutDirty: inout LayoutDirtyReason
+    )
 {
     let oldProps = oldTree.props
     let newProps = newTree.props
@@ -52,10 +65,37 @@ private func _diffProps<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: A
 
     if !(removes.isEmpty && updates.isEmpty && inserts.isEmpty) {
         _appendSteps(&steps, step: .props(removes: removes, updates: updates, inserts: inserts), at: index)
+
+        if layoutDirty == .none {
+            layoutDirty = { _ -> LayoutDirtyReason in
+                for remove in removes {
+                    if newTree.propsKeysForMeasure.contains(remove) {
+                        return .diffProps
+                    }
+                }
+                for insert in inserts.keys {
+                    if newTree.propsKeysForMeasure.contains(insert) {
+                        return .diffProps
+                    }
+                }
+                for update in updates.keys {
+                    if newTree.propsKeysForMeasure.contains(update) {
+                        return .diffProps
+                    }
+                }
+                return .none
+            }()
+        }
+
     }
 }
 
-private func _diffHandlers<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, index: Int)
+private func _diffHandlers<Msg: Message>(
+    old oldTree: AnyVTree<Msg>,
+    new newTree: AnyVTree<Msg>,
+    index: Int,
+    steps: inout Patch<Msg>.Steps
+    )
 {
     let oldHandlers = oldTree.handlers
     let newHandlers = newTree.handlers
@@ -80,7 +120,12 @@ private func _diffHandlers<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
     }
 }
 
-private func _diffGestures<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, index: Int)
+private func _diffGestures<Msg: Message>(
+    old oldTree: AnyVTree<Msg>,
+    new newTree: AnyVTree<Msg>,
+    index: Int,
+    steps: inout Patch<Msg>.Steps
+    )
 {
     let oldGestures = oldTree.gestures
     let newGestures = newTree.gestures
@@ -102,51 +147,24 @@ private func _diffGestures<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree
     }
 }
 
-internal func _diffFlexbox<Msg: Message>(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>, steps: inout Patch<Msg>.Steps, flexboxFrames: inout FlexboxFrames, skipsFlexbox: inout Bool, index: Int)
+private func _diffFlexbox<Msg: Message>(
+    old oldTree: AnyVTree<Msg>,
+    new newTree: AnyVTree<Msg>,
+    layoutDirty: inout LayoutDirtyReason
+    )
 {
-    let oldChildren = oldTree.children
-    let newChildren = newTree.children
-
-    // Examine `flexboxTree` (flexbox hiearchy) and calculate `flexboxFrames` if needed.
-    if !skipsFlexbox, let newFlexboxTree = newTree._flexboxTree {
-
-        var isFlexboxDirty = oldTree._flexboxTree != newFlexboxTree
-
-        if !isFlexboxDirty {
-            func arePropsKeysForMeasureChanged(old oldTree: AnyVTree<Msg>, new newTree: AnyVTree<Msg>) -> Bool
-            {
-                for key in newTree.propsKeysForMeasure {
-                    if !_objcEqual(oldTree.props[key] as Any, newTree.props[key] as Any) {
-                        return true
-                    }
-                }
-
-                for (oldChild, newChild) in zip(oldTree.children, newTree.children) {
-                    if arePropsKeysForMeasureChanged(old: oldChild, new: newChild) {
-                        return true
-                    }
-                }
-
-                return false
-            }
-
-            isFlexboxDirty = arePropsKeysForMeasureChanged(old: oldTree, new: newTree)
-        }
-
-        if isFlexboxDirty {
-            flexboxFrames[index] = calculateFlexbox(newFlexboxTree)
-        }
-
-        // NOTE:
-        // The topmost "vtree with flexbox" has calculated all descendent flexboxes
-        // at this point (`isFlexboxDirty` doesn't matter), so turn on the
-        // skipping flag to avoid re-calculation for the descendent traversal.
-        skipsFlexbox = true
+    if layoutDirty == .none {
+        layoutDirty = (oldTree.flexbox != newTree.flexbox) ? .diffFlexbox : .none
     }
-
 }
 
-internal func _diffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>], steps: inout Patch<Msg>.Steps, flexboxFrames: inout FlexboxFrames, skipsFlexbox: Bool, parentIndex: Int)
+internal func _diffChildren<Msg: Message>(
+    old oldChildren: [AnyVTree<Msg>],
+    new newChildren: [AnyVTree<Msg>],
+    parentIndex: Int,
+    steps: inout Patch<Msg>.Steps,
+    layoutDirty: inout LayoutDirtyReason
+    )
 {
     let (midChildren, reorder) = _reorder(old: oldChildren, new: newChildren)
     let maxCount = max(oldChildren.count, midChildren.count)
@@ -159,23 +177,26 @@ internal func _diffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new 
 
         if case let .some(.some(midChild)) = midChild {
             if let oldChild = oldChild {
-                _diffTree(old: oldChild, new: midChild, steps: &steps, flexboxFrames: &flexboxFrames, index: childCursor, skipsFlexbox: skipsFlexbox)
+                _diffTree(old: oldChild, new: midChild, index: childCursor, steps: &steps, layoutDirty: &layoutDirty)
+                childCursor += oldChild._descendantCount
             }
             else {
                 _appendSteps(&steps, step: .insertChild(midChild), at: parentIndex)
+                layoutDirty = .insertChild
             }
         }
         else {
             if let oldChild = oldChild {
                 _appendSteps(&steps, step: .removeChild(oldChild), at: childCursor)
+                childCursor += oldChild._descendantCount
+                layoutDirty = .removeChild
             }
         }
-
-        childCursor += oldChild?.children.count ?? 0
     }
 
     if !reorder.isEmpty {
         _appendSteps(&steps, step: .reorderChildren(reorder), at: parentIndex)
+        layoutDirty = .reorderChildren
     }
 }
 
@@ -209,7 +230,10 @@ private func _appendSteps<Msg: Message>(_ steps: inout Patch<Msg>.Steps, step: P
 /// Compare `oldChildren` and `newChildren`, then return a tuple of:
 /// - `midChildren`: reordered, intermediate state of `newChildren`
 /// - `reorder`: removals & insertions from `midChildren` to `newChildren`
-internal func _reorder<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>]) -> (midChildren: [AnyVTree<Msg>?], reorder: Reorder)
+internal func _reorder<Msg: Message>(
+    old oldChildren: [AnyVTree<Msg>],
+    new newChildren: [AnyVTree<Msg>]
+    ) -> (midChildren: [AnyVTree<Msg>?], reorder: Reorder)
 {
     let (newKeyIndexes, newFreeIndexes) = _keyIndexes(newChildren)
 
@@ -396,4 +420,15 @@ internal func _keyIndexes<Msg: Message>(_ trees: [AnyVTree<Msg>]) -> (keys: [Obj
     }
 
     return (keys: keys, frees: frees)
+}
+
+internal enum LayoutDirtyReason
+{
+    case replace
+    case diffProps
+    case diffFlexbox
+    case insertChild
+    case removeChild
+    case reorderChildren
+    case none
 }

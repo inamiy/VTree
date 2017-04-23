@@ -24,6 +24,7 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
         backgroundColor: Color? = nil,
         alpha: CGFloat = 1,
         isHidden: Bool = false,
+        cornerRadius: CGFloat = 0,
         image: Image? = nil,
         flexbox: Flexbox.Node? = nil,
         gestures: [GestureEvent<Msg>] = [],
@@ -34,15 +35,13 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
         self.flexbox = flexbox
         self.gestures = gestures
         self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, image: image)
+        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_cornerRadius: cornerRadius, image: image)
     }
 
-    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> ImageView
+    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> ImageView
     {
         let view = ImageView()
-
-        self._setupView(view, config: config)
-
+        self._setupView(view, msgMapper: msgMapper)
         return view
     }
 }
@@ -57,6 +56,8 @@ public struct VImageViewPropsData
     fileprivate let backgroundColor: Color?
     fileprivate let alpha: CGFloat
     fileprivate let hidden: Bool
+
+    fileprivate let vtree_cornerRadius: CGFloat
 
     fileprivate let image: Image?
 }

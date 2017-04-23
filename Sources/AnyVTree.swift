@@ -18,7 +18,7 @@ public final class AnyVTree<Msg: Message>: VTree
     private let _gestures: [Any]
     private let _gesturesTransform: (Any) -> GestureEvent<Msg>
 
-    private let _createView: (ViewConfig<Msg, AnyMsg>) -> View
+    private let _createView: (@escaping (Msg) -> AnyMsg) -> View
 
     /// Type-unsafe raw `VTree` type for comparison.
     internal let _rawType: Any.Type
@@ -70,12 +70,8 @@ public final class AnyVTree<Msg: Message>: VTree
             self._childrenTransform = { ($0 as! AnyVTree<Base.MsgType>).map(transform) }
         }
 
-        self._createView = { config in
-            let config2 = ViewConfig<Base.MsgType, AnyMsg>(
-                msgMapper: { config._msgMapper(transform($0)) },
-                skipsFlexbox: config._skipsFlexbox
-            )
-            return base.createView(config2)
+        self._createView = { msgMapper in
+            return base.createView { msgMapper(transform($0)) }
         }
     }
 
@@ -97,19 +93,28 @@ public final class AnyVTree<Msg: Message>: VTree
         return self._children.map { transform($0) }
     }
 
-    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> View
+    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> View
     {
-        let config2 = ViewConfig<Msg, AnyMsg>(
-            msgMapper: { AnyMsg(config._msgMapper($0)) },
-            skipsFlexbox: config._skipsFlexbox
-        )
-        return self._createView(config2)
+        return self._createView { AnyMsg(msgMapper($0)) }
     }
 
     /// Lazy `map`.
     public func map<Msg2: Message>(_ transform: @escaping (Msg) -> Msg2) -> AnyVTree<Msg2>
     {
         return AnyVTree<Msg2>(self, transform: transform)
+    }
+
+    internal var _descendantCount: Int
+    {
+        return self.children.reduce(0) { $0 + 1 + $1._descendantCount }
+    }
+}
+
+extension AnyVTree: CustomDebugStringConvertible
+{
+    public var debugDescription: String
+    {
+        return "AnyVTree(\(_rawType))"
     }
 }
 

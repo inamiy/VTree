@@ -30,12 +30,10 @@ public final class VGeneric<V: View, Msg: Message>: VTree
         self.children = children
     }
 
-    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> V
+    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> V
     {
         let view = V()
-
-        self._setupView(view, config: config)
-
+        self._setupView(view, msgMapper: msgMapper)
         return view
     }
 }

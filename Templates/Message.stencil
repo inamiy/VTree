@@ -2,17 +2,17 @@
 {% for enum in types.implementing.AutoMessage %}{% if enum.kind == "enum" %}
 extension {{ enum.name }}: Message
 {
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
-        switch rawValue.funcName {
+        switch rawMessage.funcName {
 {% for case in enum.cases %}{% if case.associatedValues.count == 0 %}
             case "{{ case.name }}":
                 self = .{{ case.name }}
-{% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext %}
+{% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext or case.associatedValues.annotations.MessageContext %}
             // .{{ case.name }}({{ case.associatedValues.0.typeName }})
             case "{{ case.name }}":
-                let arguments = rawValue.arguments
-                if let context = {{ case.associatedValues.0.typeName }}(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = {{ case.associatedValues.0.typeName }}(rawArguments: arguments) {
                     self = .{{ case.name }}(context)
                 }
                 else {
@@ -24,15 +24,15 @@ extension {{ enum.name }}: Message
         }
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         switch self {
 {% for case in enum.cases %}{% if case.associatedValues.count == 0 %}
             case .{{ case.name }}:
                 return RawMessage(funcName: "{{ case.name }}", arguments: [])
-{% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext %}
+{% else %}{% if case.associatedValues.count == 1 and case.associatedValues.0.type.implements.MessageContext or case.associatedValues.annotations.MessageContext %}
             case let .{{ case.name }}(context):
-                return RawMessage(funcName: "{{ case.name }}", arguments: context.rawValue)
+                return RawMessage(funcName: "{{ case.name }}", arguments: context.rawArguments)
 {% endif %}{% endif %}{% endfor %}
         }
     }

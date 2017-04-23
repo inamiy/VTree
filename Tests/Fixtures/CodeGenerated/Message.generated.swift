@@ -5,14 +5,14 @@ import VTree
 
 extension MyGestureMsg: Message
 {
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
-        switch rawValue.funcName {
+        switch rawMessage.funcName {
 
             // .msg1(GestureContext)
             case "msg1":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg1(context)
                 }
                 else {
@@ -21,8 +21,8 @@ extension MyGestureMsg: Message
 
             // .msg2(GestureContext)
             case "msg2":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg2(context)
                 }
                 else {
@@ -31,8 +31,8 @@ extension MyGestureMsg: Message
 
             // .msg3(GestureContext)
             case "msg3":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg3(context)
                 }
                 else {
@@ -41,8 +41,8 @@ extension MyGestureMsg: Message
 
             // .msg4(GestureContext)
             case "msg4":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg4(context)
                 }
                 else {
@@ -54,21 +54,21 @@ extension MyGestureMsg: Message
         }
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         switch self {
 
             case let .msg1(context):
-                return RawMessage(funcName: "msg1", arguments: context.rawValue)
+                return RawMessage(funcName: "msg1", arguments: context.rawArguments)
 
             case let .msg2(context):
-                return RawMessage(funcName: "msg2", arguments: context.rawValue)
+                return RawMessage(funcName: "msg2", arguments: context.rawArguments)
 
             case let .msg3(context):
-                return RawMessage(funcName: "msg3", arguments: context.rawValue)
+                return RawMessage(funcName: "msg3", arguments: context.rawArguments)
 
             case let .msg4(context):
-                return RawMessage(funcName: "msg4", arguments: context.rawValue)
+                return RawMessage(funcName: "msg4", arguments: context.rawArguments)
 
         }
     }
@@ -76,14 +76,14 @@ extension MyGestureMsg: Message
 
 extension MyGestureMsg2: Message
 {
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
-        switch rawValue.funcName {
+        switch rawMessage.funcName {
 
             // .msg1(GestureContext)
             case "msg1":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg1(context)
                 }
                 else {
@@ -92,8 +92,8 @@ extension MyGestureMsg2: Message
 
             // .msg2(GestureContext)
             case "msg2":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg2(context)
                 }
                 else {
@@ -102,8 +102,8 @@ extension MyGestureMsg2: Message
 
             // .msg3(GestureContext)
             case "msg3":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg3(context)
                 }
                 else {
@@ -112,8 +112,8 @@ extension MyGestureMsg2: Message
 
             // .msg4(GestureContext)
             case "msg4":
-                let arguments = rawValue.arguments
-                if let context = GestureContext(rawValue: arguments) {
+                let arguments = rawMessage.arguments
+                if let context = GestureContext(rawArguments: arguments) {
                     self = .msg4(context)
                 }
                 else {
@@ -125,21 +125,21 @@ extension MyGestureMsg2: Message
         }
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         switch self {
 
             case let .msg1(context):
-                return RawMessage(funcName: "msg1", arguments: context.rawValue)
+                return RawMessage(funcName: "msg1", arguments: context.rawArguments)
 
             case let .msg2(context):
-                return RawMessage(funcName: "msg2", arguments: context.rawValue)
+                return RawMessage(funcName: "msg2", arguments: context.rawArguments)
 
             case let .msg3(context):
-                return RawMessage(funcName: "msg3", arguments: context.rawValue)
+                return RawMessage(funcName: "msg3", arguments: context.rawArguments)
 
             case let .msg4(context):
-                return RawMessage(funcName: "msg4", arguments: context.rawValue)
+                return RawMessage(funcName: "msg4", arguments: context.rawArguments)
 
         }
     }
@@ -147,9 +147,9 @@ extension MyGestureMsg2: Message
 
 extension MyMsg: Message
 {
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
-        switch rawValue.funcName {
+        switch rawMessage.funcName {
 
             case "msg1":
                 self = .msg1
@@ -168,7 +168,7 @@ extension MyMsg: Message
         }
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         switch self {
 
@@ -190,9 +190,9 @@ extension MyMsg: Message
 
 extension MyMsg2: Message
 {
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
-        switch rawValue.funcName {
+        switch rawMessage.funcName {
 
             case "test1":
                 self = .test1
@@ -205,7 +205,7 @@ extension MyMsg2: Message
         }
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         switch self {
 

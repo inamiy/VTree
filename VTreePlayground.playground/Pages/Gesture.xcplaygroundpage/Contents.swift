@@ -42,11 +42,11 @@ func update(_ model: Model, _ msg: Msg) -> Model
 {
     print(msg)  // Warning: impure logging
 
-    let argsString = msg.rawValue.arguments.map { "\($0)" }.joined(separator: "\n")
+    let argsString = msg.rawMessage.arguments.map { "\($0)" }.joined(separator: "\n")
     let cursor = Model.Cursor(msg: msg)
 
     return Model(
-        message: "\(msg.rawValue.funcName)\n\(argsString)",
+        message: "\(msg.rawMessage.funcName)\n\(argsString)",
         cursor: cursor
     )
 }

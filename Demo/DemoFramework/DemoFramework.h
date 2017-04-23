@@ -1,11 +1,3 @@
-//
-//  DemoFramework.h
-//  DemoFramework
-//
-//  Created by Yasuhiro Inami on 2017-04-16.
-//  Copyright © 2017 Yasuhiro Inami. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 
 //! Project version number for DemoFramework.

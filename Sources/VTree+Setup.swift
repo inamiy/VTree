@@ -3,7 +3,7 @@ import Foundation
 extension VTree
 {
     /// Common view setup logic using KVC.
-    internal func _setupView<Msg2: Message>(_ view: ViewType, config: ViewConfig<MsgType, Msg2>)
+    internal func _setupView<Msg2: Message>(_ view: ViewType, msgMapper: @escaping (MsgType) -> Msg2)
     {
         view.isVTreeView = true
 
@@ -11,25 +11,16 @@ extension VTree
             view.setValue(_toOptionalAny(prop.value), forKey: prop.key)
         }
 
-        if let flexboxTree = self._flexboxTree {
-            let config2 = ViewConfig(msgMapper: config._msgMapper, skipsFlexbox: true)
-
-            for child in self.children {
-                view.addSubview(child.createView(config2))
-            }
-
-            let frames = calculateFlexbox(flexboxTree)
-            applyFlexbox(frames: frames, to: view)
+        for child in self.children {
+            view.addSubview(child.createView(msgMapper))
         }
-        else {
-            for child in self.children {
-                view.addSubview(child.createView(config))
-            }
-        }
+
+        let frames = calculateFlexbox(self._flexboxTree)
+        applyFlexbox(frames: frames, to: view)
 
         for gesture in self.gestures {
             (view as View).vtree.addGesture(for: gesture) { msg in
-                let msg2 = config._msgMapper(msg)
+                let msg2 = msgMapper(msg)
                 Messenger.shared.send(AnyMsg(msg2))
             }
         }

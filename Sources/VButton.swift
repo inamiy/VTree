@@ -26,6 +26,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
         backgroundColor: Color? = nil,
         alpha: CGFloat = 1,
         isHidden: Bool = false,
+        cornerRadius: CGFloat = 0,
         title: String? = nil,
         titleColor: Color? = nil,
         font: Font? = nil,
@@ -55,7 +56,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
 
         self._handlers = handlers
         self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_title: title, vtree_titleColor: titleColor, vtree_font: font, vtree_numberOfLines: numberOfLines)
+        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_cornerRadius: cornerRadius, vtree_title: title, vtree_titleColor: titleColor, vtree_font: font, vtree_numberOfLines: numberOfLines)
     }
 
     public var propsKeysForMeasure: [String]
@@ -68,14 +69,13 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
         return self._handlers.map { (.control($0), $1) }
     }
 
-    public func createView<Msg2: Message>(_ config: ViewConfig<Msg, Msg2>) -> Button
+    public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> Button
     {
         let view = Button()
-
-        self._setupView(view, config: config)
+        self._setupView(view, msgMapper: msgMapper)
 
         for (event, msg) in self._handlers {
-            let msg2 = config._msgMapper(msg)
+            let msg2 = msgMapper(msg)
             view.vtree.addHandler(for: event) { _ in
                 Messenger.shared.send(AnyMsg(msg2))
             }
@@ -95,6 +95,8 @@ public struct VButtonPropsData
     fileprivate let backgroundColor: Color?
     fileprivate let alpha: CGFloat
     fileprivate let hidden: Bool
+
+    fileprivate let vtree_cornerRadius: CGFloat
 
     fileprivate let vtree_title: String?
     fileprivate let vtree_titleColor: Color?
