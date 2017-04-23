@@ -9,10 +9,10 @@
 /// Protocol that represents `enum Msg`'s "associated values (arguments)",
 /// interacting with https://github.com/krzysztofzablocki/Sourcery.
 /// - SeeAlso: Templates/Message.stencil
-public protocol MessageContext: RawRepresentable
+public protocol MessageContext
 {
-    init?(rawValue: [Any])
-    var rawValue: [Any] { get }
+    init?(rawArguments: [Any])
+    var rawArguments: [Any] { get }
 }
 
 // MARK: GestureContext

@@ -1,5 +1,5 @@
 /// Message protocol that `VTree` generates from Cocoa's events,
-/// then it dipatches corresponding **`AnyMsg`** via `Messenger`.
+/// then it dispatches corresponding **`AnyMsg`** via `Messenger`.
 ///
 /// - Note:
 /// Implementing `Message` will be a tedious work,
@@ -15,10 +15,28 @@
 /// // Run script:
 /// // $ <VTree-root>/Scripts/generate-message.sh <source-dir> <code-generated-dir>
 /// ```
-public protocol Message: RawRepresentable
+public protocol Message: MessageContext
 {
-    init?(rawValue: RawMessage)
-    var rawValue: RawMessage { get }
+    init?(rawMessage: RawMessage)
+    var rawMessage: RawMessage { get }
+}
+
+extension Message
+{
+    public init?(rawArguments: [Any])
+    {
+        var rawArguments = rawArguments
+        guard let funcName = rawArguments.popLast() as? String else { return nil }
+
+        self.init(rawMessage: RawMessage(funcName: funcName, arguments: rawArguments))
+    }
+
+    public var rawArguments: [Any]
+    {
+        var arguments = self.rawMessage.arguments
+        arguments.append(self.rawMessage.funcName)
+        return arguments
+    }
 }
 
 // MARK: RawMessage
@@ -40,12 +58,12 @@ public struct RawMessage
 /// "No message" type that conforms to `Message` protocol.
 public enum NoMsg: Message
 {
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
         return nil
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         return RawMessage(funcName: "", arguments: [])
     }
@@ -60,15 +78,15 @@ public struct AnyMsg: Message
 
     public init<Msg: Message>(_ base: Msg)
     {
-        self._rawMessage = base.rawValue
+        self._rawMessage = base.rawMessage
     }
 
-    public init?(rawValue: RawMessage)
+    public init?(rawMessage: RawMessage)
     {
         return nil
     }
 
-    public var rawValue: RawMessage
+    public var rawMessage: RawMessage
     {
         return self._rawMessage
     }
@@ -79,6 +97,6 @@ extension Message
     /// Converts from `AnyMsg`.
     public init?(_ anyMsg: AnyMsg)
     {
-        self.init(rawValue: anyMsg.rawValue)
+        self.init(rawMessage: anyMsg.rawMessage)
     }
 }

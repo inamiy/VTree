@@ -18,12 +18,12 @@ public final class VPhantom<👻>: VTree
         self.children = children
     }
 
-    public func createView<Msg2: Message>(_ config: ViewConfig<NoMsg, Msg2>) -> View
+    public func createView<Msg2: Message>(_ msgMapper: @escaping (NoMsg) -> Msg2) -> View
     {
         let view = View()
 
         for child in self.children {
-            view.addSubview(child.createView(config))
+            view.addSubview(child.createView(msgMapper))
         }
 
         return view

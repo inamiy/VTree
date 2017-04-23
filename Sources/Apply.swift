@@ -16,8 +16,7 @@
 public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
 {
     let patchIndexes = patch.steps.map { $0.key }.sorted()
-    let indexedViews = _indexViews(view, patch.oldTree, patchIndexes)
-
+    let indexedViews = _indexViews(view, patchIndexes)
     var newView: View? = view
 
     for index in patchIndexes {
@@ -32,15 +31,10 @@ public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
         }
     }
 
-    if newView != nil {
-        let flexboxFrames = patch.flexboxFrames.map { ($0, $1.map(_roundFrame)) }
-        let patchIndexes = flexboxFrames.map { $0.key }
-        let indexedViews = _indexViews(view, patch.oldTree, patchIndexes)
-
-        for (index, frames) in patch.flexboxFrames {
-            if let indexedView = indexedViews[index] {
-                applyFlexbox(frames: frames, to: indexedView)
-            }
+    if let newView = newView {
+        if patch.flexboxFrames.isEmpty == false {
+            let flexboxFrames = patch.flexboxFrames.map { _roundFrame($0) }
+            applyFlexbox(frames: flexboxFrames, to: newView)
         }
     }
 
@@ -196,12 +190,11 @@ private func _applyReorder(to view: View, reorder: Reorder)
 // MARK: _indexViews
 
 /// Create index-view-table.
-private func _indexViews<Msg: Message>(_ rootView: View, _ rootTree: AnyVTree<Msg>, _ patchIndexes: [Int]) -> [Int: View]
+private func _indexViews(_ rootView: View, _ patchIndexes: [Int]) -> [Int: View]
 {
     var indexedViews = [Int: View]()
     _accumulateRecursively(
         rootView: rootView,
-        rootTree: rootTree,
         rootIndex: 0,
         patchIndexes: patchIndexes,
         indexedViews: &indexedViews
@@ -209,7 +202,7 @@ private func _indexViews<Msg: Message>(_ rootView: View, _ rootTree: AnyVTree<Ms
     return indexedViews
 }
 
-private func _accumulateRecursively<Msg: Message>(rootView: View, rootTree: AnyVTree<Msg>, rootIndex: Int, patchIndexes: [Int], indexedViews: inout [Int: View])
+private func _accumulateRecursively(rootView: View, rootIndex: Int, patchIndexes: [Int], indexedViews: inout [Int: View])
 {
     if patchIndexes.contains(rootIndex) {
         indexedViews[rootIndex] = rootView
@@ -224,16 +217,21 @@ private func _accumulateRecursively<Msg: Message>(rootView: View, rootTree: AnyV
 
     var childIndex = rootIndex
 
-    for i in 0..<rootTree.children.count {
+    for (i, childView) in rootView.subviews.enumerated() {
         childIndex += 1
 
-        let childTree = rootTree.children[i]
-        let nextChildIndex = childIndex + childTree.children.count
+        func descendantCount(for view: View) -> Int
+        {
+            return view.subviews
+                .filter { $0.isVTreeView }
+                .reduce(0) { $0 + 1 + descendantCount(for: $1) }
+        }
+
+        let nextChildIndex = childIndex + descendantCount(for: childView)
 
         if _indexInRange(patchIndexes, childIndex, nextChildIndex) {
             _accumulateRecursively(
-                rootView: rootView.subviews[i],
-                rootTree: childTree,
+                rootView: childView,
                 rootIndex: childIndex,
                 patchIndexes: patchIndexes,
                 indexedViews: &indexedViews

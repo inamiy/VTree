@@ -60,11 +60,11 @@ func update(_ model: Model, _ msg: Msg) -> Model
 {
     print(msg)  // Warning: impure logging
 
-    let argsString = msg.rawValue.arguments.map { "\($0)" }.joined(separator: "\n")
+    let argsString = msg.rawMessage.arguments.map { "\($0)" }.joined(separator: "\n")
     let cursor = Model.Cursor(msg: msg)
 
     return Model(
-        message: "\(msg.rawValue.funcName)\n\(argsString)",
+        message: "\(msg.rawMessage.funcName)\n\(argsString)",
         cursor: cursor
     )
 }
@@ -87,6 +87,7 @@ func view(model: Model) -> VView<Msg>
     func label(_ message: String) -> VLabel<Msg>
     {
         return VLabel(
+            key: key("label"),
             frame: CGRect(x: 0, y: 40, width: rootWidth, height: 300),
             backgroundColor: .clear,
             text: message,
@@ -98,6 +99,7 @@ func view(model: Model) -> VView<Msg>
     func noteLabel() -> VLabel<Msg>
     {
         return VLabel(
+            key: key("noteLabel"),
             frame: CGRect(x: 0, y: 350, width: rootWidth, height: 80),
             backgroundColor: .clear,
             text: "Tap anywhere to test gesture.",

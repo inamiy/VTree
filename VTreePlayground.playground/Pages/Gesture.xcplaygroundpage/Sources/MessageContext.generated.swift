@@ -11,14 +11,14 @@ import VTree
 
 extension DummyContext: MessageContext
 {
-    public init?(rawValue: [Any])
+    public init?(rawArguments: [Any])
     {
-        guard rawValue.count == 0 else { return nil }
+        guard rawArguments.count == 0 else { return nil }
 
         self = DummyContext()
     }
 
-    public var rawValue: [Any]
+    public var rawArguments: [Any]
     {
         return []
     }
