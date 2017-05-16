@@ -7,16 +7,15 @@ extension VTree
     {
         view.isVTreeView = true
 
-        for prop in self.props {
-            view.setValue(_toOptionalAny(prop.value), forKey: prop.key)
+        // Set `nil` first
+        let props = self.props.map { ($0.key, _toOptionalAny($0.value)) }
+        for prop in props.sorted(by: { $1.1 != nil }) {
+            view.setValue(prop.1, forKey: prop.0)
         }
 
         for child in self.children {
             view.addSubview(child.createView(msgMapper))
         }
-
-        let frames = calculateFlexbox(self._flexboxTree)
-        applyFlexbox(frames: frames, to: view)
 
         for gesture in self.gestures {
             (view as View).vtree.addGesture(for: gesture) { msg in

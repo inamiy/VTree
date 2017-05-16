@@ -79,7 +79,13 @@ extension VTree
     /// Entrypoint of creating a root view from `VTree`.
     public func createView() -> ViewType
     {
-        return self.createView { $0 }
+        let view = self.createView { $0 }
+
+        let frames = calculateFlexbox(self._flexboxTree)
+        applyFlexbox(frames: frames, to: view)
+
+        return view
+
     }
 }
 
@@ -102,9 +108,10 @@ extension VTree
             }
         }
 
-        return {
-            return Flexbox.Node(size: $0.size, minSize: $0.minSize, maxSize: $0.maxSize, children: flexboxChildren(self.children), flexDirection: $0.flexDirection, flexWrap: $0.flexWrap, justifyContent: $0.justifyContent, alignContent: $0.alignContent, alignItems: $0.alignItems, alignSelf: $0.alignSelf, flex: $0.flex, flexGrow: $0.flexGrow, flexShrink: $0.flexShrink, flexBasis: $0.flexBasis, direction: $0.direction, overflow: $0.overflow, positionType: $0.positionType, position: $0.position, margin: $0.margin, padding: $0.padding, border: $0.border, measure: $0.measure)
-        }(self._canonicalFlexbox)
+        var flexbox = self._canonicalFlexbox
+        return flexbox.mutate {
+            $0.children = flexboxChildren(self.children)
+        }
     }
 
     /// Formal flexbox that also takes care of `props["frame"]`
@@ -114,10 +121,12 @@ extension VTree
     private var _canonicalFlexbox: Flexbox.Node
     {
         if let frame = self.props["frame"] as? CGRect, frame != .null {
-            return self.flexbox.map {
-                return Flexbox.Node(size: frame.size, minSize: $0.minSize, maxSize: $0.maxSize, children: $0.children, flexDirection: $0.flexDirection, flexWrap: $0.flexWrap, justifyContent: $0.justifyContent, alignContent: $0.alignContent, alignItems: $0.alignItems, alignSelf: $0.alignSelf, flex: $0.flex, flexGrow: $0.flexGrow, flexShrink: $0.flexShrink, flexBasis: $0.flexBasis, direction: $0.direction, overflow: $0.overflow, positionType: .absolute, position: Edges(left: frame.origin.x, top: frame.origin.y), margin: $0.margin, padding: $0.padding, border: $0.border, measure: $0.measure)
+            var flexbox = self.flexbox ?? Flexbox.Node()
+            return flexbox.mutate {
+                $0.size = frame.size
+                $0.positionType = .absolute
+                $0.position = Edges(left: frame.origin.x, top: frame.origin.y)
             }
-                ?? Flexbox.Node(size: frame.size, positionType: .absolute, position: Edges(left: frame.origin.x, top: frame.origin.y))
         }
         else {
             return self.flexbox ?? Flexbox.Node()

@@ -3,7 +3,6 @@
 public protocol PropsReflectable
 {
     associatedtype PropsData
-    associatedtype ViewType
 
     /// Props dataset that will be reflected to `VTree.props`.
     var propsData: PropsData { get }

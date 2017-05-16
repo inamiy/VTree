@@ -20,21 +20,16 @@ public final class VView<Msg: Message>: VTree, PropsReflectable
 
     public init(
         key: Key? = nil,
-        frame: CGRect = .null,
-        backgroundColor: Color? = nil,
-        alpha: CGFloat = 1,
-        isHidden: Bool = false,
-        cornerRadius: CGFloat = 0,
-        flexbox: Flexbox.Node? = nil,
+        styles: VViewStyles = .init(),
         gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )
     {
         self.key = key
-        self.flexbox = flexbox
+        self.flexbox = styles.flexbox
         self.gestures = gestures
         self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_cornerRadius: cornerRadius)
+        self.propsData = PropsData(styles: styles)
     }
 
     public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> View
@@ -45,16 +40,116 @@ public final class VView<Msg: Message>: VTree, PropsReflectable
     }
 }
 
+// MARK: Styles
+
+public protocol HasViewStyles
+{
+    var viewStyles: VViewStyles { get set }
+}
+
+extension HasViewStyles
+{
+    public var frame: CGRect
+    {
+        get {
+            return self.viewStyles.frame
+        }
+        set {
+            self.viewStyles.frame = newValue
+        }
+    }
+
+    public var backgroundColor: Color?
+    {
+        get {
+            return self.viewStyles.backgroundColor
+        }
+        set {
+            self.viewStyles.backgroundColor = newValue
+        }
+    }
+
+    public var alpha: CGFloat
+    {
+        get {
+            return self.viewStyles.alpha
+        }
+        set {
+            self.viewStyles.alpha = newValue
+        }
+    }
+
+    public var isHidden: Bool
+    {
+        get {
+            return self.viewStyles.isHidden
+        }
+        set {
+            self.viewStyles.isHidden = newValue
+        }
+    }
+
+    public var cornerRadius: CGFloat
+    {
+        get {
+            return self.viewStyles.cornerRadius
+        }
+        set {
+            self.viewStyles.cornerRadius = newValue
+        }
+    }
+
+    public var flexbox: Flexbox.Node?
+    {
+        get {
+            return self.viewStyles.flexbox
+        }
+        set {
+            self.viewStyles.flexbox = newValue
+        }
+    }
+}
+
+public struct VViewStyles
+{
+    public var frame: CGRect = .null
+    public var backgroundColor: Color? = nil
+    public var alpha: CGFloat = 1
+    public var isHidden: Bool = false
+
+    public var cornerRadius: CGFloat = 0
+
+    public var flexbox: Flexbox.Node? = nil
+}
+
+extension VViewStyles: InoutMutable
+{
+    public static func emptyInit() -> VViewStyles
+    {
+        return self.init()
+    }
+}
+
 // MARK: PropsData
 
 public struct VViewPropsData
 {
-    public typealias ViewType = View
-
     fileprivate let frame: CGRect
     fileprivate let backgroundColor: Color?
     fileprivate let alpha: CGFloat
     fileprivate let hidden: Bool
 
     fileprivate let vtree_cornerRadius: CGFloat
+}
+
+extension VViewPropsData
+{
+    public init(styles: VViewStyles)
+    {
+        self.frame = styles.frame
+        self.backgroundColor = styles.backgroundColor
+        self.alpha = styles.alpha
+        self.hidden = styles.isHidden
+        self.vtree_cornerRadius = styles.cornerRadius
+    }
 }

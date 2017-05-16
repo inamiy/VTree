@@ -20,22 +20,17 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
 
     public init(
         key: Key? = nil,
-        frame: CGRect = .null,
-        backgroundColor: Color? = nil,
-        alpha: CGFloat = 1,
-        isHidden: Bool = false,
-        cornerRadius: CGFloat = 0,
         image: Image? = nil,
-        flexbox: Flexbox.Node? = nil,
+        styles: VImageViewStyles = .init(),
         gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )
     {
         self.key = key
-        self.flexbox = flexbox
+        self.flexbox = styles.flexbox
         self.gestures = gestures
         self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_cornerRadius: cornerRadius, image: image)
+        self.propsData = PropsData(styles: styles)
     }
 
     public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> ImageView
@@ -46,12 +41,27 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
     }
 }
 
+// MARK: Styles
+
+public struct VImageViewStyles: HasViewStyles
+{
+    public var viewStyles = VViewStyles()
+
+    public var image: Image? = nil
+}
+
+extension VImageViewStyles: InoutMutable
+{
+    public static func emptyInit() -> VImageViewStyles
+    {
+        return self.init()
+    }
+}
+
 // MARK: PropsData
 
 public struct VImageViewPropsData
 {
-    public typealias ViewType = ImageView
-
     fileprivate let frame: CGRect
     fileprivate let backgroundColor: Color?
     fileprivate let alpha: CGFloat
@@ -60,4 +70,18 @@ public struct VImageViewPropsData
     fileprivate let vtree_cornerRadius: CGFloat
 
     fileprivate let image: Image?
+}
+
+extension VImageViewPropsData
+{
+    fileprivate init(styles: VImageViewStyles)
+    {
+        self.frame = styles.frame
+        self.backgroundColor = styles.backgroundColor
+        self.alpha = styles.alpha
+        self.hidden = styles.isHidden
+        self.vtree_cornerRadius = styles.cornerRadius
+
+        self.image = styles.image
+    }
 }
