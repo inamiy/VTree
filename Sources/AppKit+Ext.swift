@@ -37,6 +37,16 @@ extension NSTextField
         }
     }
 
+    internal var attributedText: NSAttributedString?
+    {
+        get {
+            return self.attributedStringValue
+        }
+        set {
+            self.attributedStringValue = newValue ?? NSAttributedString()
+        }
+    }
+
     internal var textAlignment: NSTextAlignment
     {
         get {
