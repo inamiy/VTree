@@ -57,6 +57,7 @@
 		1F4C6F5E1EABA15700D641AC /* VTreeDebugger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F4C6F471EAB8EA700D641AC /* VTreeDebugger.framework */; };
 		1F4C6F601EABB08E00D641AC /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4C6F5F1EABB08E00D641AC /* Slider.swift */; };
 		1F517BD31E3B926A00A77053 /* Message.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F517BD21E3B926A00A77053 /* Message.generated.swift */; };
+		1F559FEE1EC92F5D0066D07F /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F559FED1EC92F5D0066D07F /* Text.swift */; };
 		1F5DECAD1DEAA19500BC6B1B /* KeyCacheSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DECAB1DEAA16200BC6B1B /* KeyCacheSpec.swift */; };
 		1F5DECAF1DEAA58A00BC6B1B /* LazyMapSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DECAE1DEAA58A00BC6B1B /* LazyMapSpec.swift */; };
 		1F5DED101DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5DED0F1DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift */; };
@@ -256,6 +257,7 @@
 		1F4C6F571EAB8F9800D641AC /* MessageContext.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContext.generated.swift; sourceTree = "<group>"; };
 		1F4C6F5F1EABB08E00D641AC /* Slider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Slider.swift; sourceTree = "<group>"; };
 		1F517BD21E3B926A00A77053 /* Message.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.generated.swift; sourceTree = "<group>"; };
+		1F559FED1EC92F5D0066D07F /* Text.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		1F5DECAB1DEAA16200BC6B1B /* KeyCacheSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCacheSpec.swift; sourceTree = "<group>"; };
 		1F5DECAE1DEAA58A00BC6B1B /* LazyMapSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazyMapSpec.swift; sourceTree = "<group>"; };
 		1F5DED0F1DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIControl+EnableSendActionsForControlEvents.swift"; sourceTree = "<group>"; };
@@ -645,6 +647,7 @@
 				48034A631DD5ACEC00B8013D /* Typealias.swift */,
 				1F49DC351DDFECBB0036D22C /* Key.swift */,
 				1F8602E11DFCCF3F0007911E /* FuncBox.swift */,
+				1F559FED1EC92F5D0066D07F /* Text.swift */,
 				1F8F783B1DD6EB97008D8B67 /* Internals */,
 				1FB7F4E01DD817B4007B8E53 /* VTree (immutable) */,
 				1F34452C1DF3ADC000D792E3 /* Views (mutable) */,
@@ -1131,6 +1134,7 @@
 				487FB0CD1DE2A51700F3465F /* SimpleEvent.swift in Sources */,
 				1FB7F4DF1DD814DB007B8E53 /* VGeneric.swift in Sources */,
 				1F3EBCD31E11626B002C0B29 /* AutoMessage.swift in Sources */,
+				1F559FEE1EC92F5D0066D07F /* Text.swift in Sources */,
 				484497181DDD806B00F5BB99 /* VTree+Reflection.swift in Sources */,
 				48034A601DD5ABEA00B8013D /* Diff.swift in Sources */,
 				1F06F75A1E4B5DBC0020F52B /* RLabel.swift in Sources */,

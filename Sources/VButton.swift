@@ -14,7 +14,6 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
     public let key: Key?
     public let flexbox: Flexbox.Node?
     //public let gestures: [GestureEvent<Msg>]  // Comment-Out: Use `handlers` instead.
-    public let children: [AnyVTree<Msg>]
 
     public let propsData: PropsData
 
@@ -22,18 +21,9 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
 
     public init(
         key: Key? = nil,
-        frame: CGRect = .null,
-        backgroundColor: Color? = nil,
-        alpha: CGFloat = 1,
-        isHidden: Bool = false,
-        cornerRadius: CGFloat = 0,
-        title: String? = nil,
-        titleColor: Color? = nil,
-        font: Font? = nil,
-        numberOfLines: Int = 0,
-        flexbox: Flexbox.Node? = nil,
-        handlers: [UIControlEvents: Msg] = [:],
-        children: [AnyVTree<Msg>] = []
+        title: Text? = nil,
+        styles: VButtonStyles = .init(),
+        handlers: [UIControlEvents: Msg] = [:]
         )
     {
         self.key = key
@@ -42,31 +32,48 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
             objc_sync_enter(_calcView)
             defer { objc_sync_exit(_calcView) }
 
-            _calcView.setTitle(title, for: .normal)
-            _calcView.titleLabel?.font = font
-            _calcView.titleLabel?.numberOfLines = numberOfLines
+            switch title {
+                case let .text(text)?:
+                    _calcView.setAttributedTitle(nil, for: .normal)
+                    _calcView.setTitle(text, for: .normal)
+                case let .attributedText(attributedText)?:
+                    _calcView.setTitle(nil, for: .normal)
+                    _calcView.setAttributedTitle(attributedText, for: .normal)
+                case .none:
+                    _calcView.setTitle(nil, for: .normal)
+                    _calcView.setAttributedTitle(nil, for: .normal)
+            }
+            _calcView.titleLabel?.font = styles.font
+            _calcView.titleLabel?.numberOfLines = styles.numberOfLines
 
             let calcSize = _calcView.sizeThatFits(maxSize)
             return calcSize
         }
 
-        self.flexbox = flexbox.map {
-            return Flexbox.Node(size: $0.size, minSize: $0.minSize, maxSize: $0.maxSize, children: $0.children, flexDirection: $0.flexDirection, flexWrap: $0.flexWrap, justifyContent: $0.justifyContent, alignContent: $0.alignContent, alignItems: $0.alignItems, alignSelf: $0.alignSelf, flex: $0.flex, flexGrow: $0.flexGrow, flexShrink: $0.flexShrink, flexBasis: $0.flexBasis, direction: $0.direction, overflow: $0.overflow, positionType: $0.positionType, position: $0.position, margin: $0.margin, padding: $0.padding, border: $0.border, measure: measure)
+        self.flexbox = (styles.flexbox ?? Flexbox.Node()).map {
+            var flexbox = $0
+            return flexbox.mutate {
+                $0.measure = measure
+            }
         }
 
         self._handlers = handlers
-        self.children = children
-        self.propsData = PropsData(frame: frame, backgroundColor: backgroundColor, alpha: alpha, hidden: isHidden, vtree_cornerRadius: cornerRadius, vtree_title: title, vtree_titleColor: titleColor, vtree_font: font, vtree_numberOfLines: numberOfLines)
+        self.propsData = PropsData(title: title, styles: styles)
     }
 
     public var propsKeysForMeasure: [String]
     {
-        return ["vtree_title", "vtree_font", "vtree_numberOfLines"]
+        return ["vtree_title", "vtree_attributedTitle", "vtree_font", "vtree_numberOfLines"]
     }
 
     public var handlers: HandlerMapping<Msg>
     {
         return self._handlers.map { (.control($0), $1) }
+    }
+
+    public var children: [AnyVTree<Msg>]
+    {
+        return []
     }
 
     public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> Button
@@ -85,12 +92,29 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
     }
 }
 
+// MARK: Styles
+
+public struct VButtonStyles: HasViewStyles
+{
+    public var viewStyles = VViewStyles()
+
+    public var titleColor: Color? = nil
+    public var font: Font? = nil
+    public var numberOfLines: Int = 0
+}
+
+extension VButtonStyles: InoutMutable
+{
+    public static func emptyInit() -> VButtonStyles
+    {
+        return self.init()
+    }
+}
+
 // MARK: PropsData
 
 public struct VButtonPropsData
 {
-    public typealias ViewType = Button
-
     fileprivate let frame: CGRect
     fileprivate let backgroundColor: Color?
     fileprivate let alpha: CGFloat
@@ -99,9 +123,38 @@ public struct VButtonPropsData
     fileprivate let vtree_cornerRadius: CGFloat
 
     fileprivate let vtree_title: String?
+    fileprivate let vtree_attributedTitle: NSAttributedString?
     fileprivate let vtree_titleColor: Color?
     fileprivate let vtree_font: Font?
+
     fileprivate let vtree_numberOfLines: Int
+}
+
+extension VButtonPropsData
+{
+    fileprivate init(title: Text?, styles: VButtonStyles)
+    {
+        self.frame = styles.frame
+        self.backgroundColor = styles.backgroundColor
+        self.alpha = styles.alpha
+        self.hidden = styles.isHidden
+        self.vtree_cornerRadius = styles.cornerRadius
+
+        switch title {
+            case let .text(text)?:
+                self.vtree_attributedTitle = nil
+                self.vtree_title = text
+            case let .attributedText(attributedText)?:
+                self.vtree_title = nil
+                self.vtree_attributedTitle = attributedText
+            case .none:
+                self.vtree_title = nil
+                self.vtree_attributedTitle = nil
+        }
+        self.vtree_titleColor = styles.titleColor
+        self.vtree_font = styles.font
+        self.vtree_numberOfLines = styles.numberOfLines
+    }
 }
 
 #endif

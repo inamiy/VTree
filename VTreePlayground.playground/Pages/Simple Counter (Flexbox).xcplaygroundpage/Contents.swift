@@ -6,8 +6,6 @@ import DemoFramework
 
 struct Model
 {
-    static let initial = Model(count: 0)
-
     let rootSize = CGSize(width: 320, height: 480)
     let count: Int
 }
@@ -33,14 +31,16 @@ func view(model: Model) -> VView<Msg>
     func rootView(_ children: [AnyVTree<Msg>] = []) -> VView<Msg>
     {
         return VView(
-            backgroundColor: .white,
-            flexbox: Flexbox.Node(
-                size: model.rootSize,
-                flexDirection: .column,
-                justifyContent: .center,
-                alignItems: .center,
-                padding: Edges(uniform: space)
-            ),
+            styles: .init {
+                $0.backgroundColor = .white
+                $0.flexbox = Flexbox.Node(
+                    size: model.rootSize,
+                    flexDirection: .column,
+                    justifyContent: .center,
+                    alignItems: .center,
+                    padding: Edges(uniform: space)
+                )
+            },
             children: children
         )
     }
@@ -48,26 +48,31 @@ func view(model: Model) -> VView<Msg>
     func label(_ count: Int) -> VLabel<Msg>
     {
         return VLabel(
-            backgroundColor: .clear,
-            text: "\(count)",
-            textAlignment: .center,
-            font: .systemFont(ofSize: 48),
-            flexbox: Flexbox.Node(
-                maxSize: CGSize(width: rootWidth - space*2, height: CGFloat.nan),
-                padding: Edges(left: 50, right: 50)
-            )
+            text: .text("\(count)"),
+            styles: .init {
+                $0.backgroundColor = .clear
+                $0.textAlignment = .center
+                $0.font = .systemFont(ofSize: 48)
+                $0.flexbox = Flexbox.Node(
+                    maxSize: CGSize(width: rootWidth - space*2, height: CGFloat.nan),
+                    padding: Edges(left: 50, right: 50)
+                )
+            }
         )
     }
 
     func buttons(_ children: [AnyVTree<Msg>]) -> VView<Msg>
     {
         return VView(
-            flexbox: Flexbox.Node(
-                size: CGSize(width: CGFloat.nan, height: 70),
-                flexDirection: .row,
-                justifyContent: .spaceBetween,
-                alignSelf: .stretch
-            ),
+            styles: .init {
+                $0.flexbox = Flexbox.Node(
+                    size: CGSize(width: CGFloat.nan, height: 70),
+                    flexDirection: .row,
+                    justifyContent: .spaceBetween,
+                    alignSelf: .stretch
+                )
+                return
+            },
             children: children
         )
     }
@@ -75,13 +80,15 @@ func view(model: Model) -> VView<Msg>
     func incrementButton() -> VButton<Msg>
     {
         return VButton(
-            backgroundColor: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1),
             title: "+",
-            font: .systemFont(ofSize: 24),
-            flexbox: Flexbox.Node(
-                flexGrow: 1,
-                margin: Edges(uniform: 10)
-            ),
+            styles: .init {
+                $0.backgroundColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+                $0.font = .systemFont(ofSize: 24)
+                $0.flexbox = Flexbox.Node(
+                    flexGrow: 1,
+                    margin: Edges(uniform: 10)
+                )
+            },
             handlers: [.touchUpInside: .increment]
         )
     }
@@ -89,13 +96,15 @@ func view(model: Model) -> VView<Msg>
     func decrementButton() -> VButton<Msg>
     {
         return VButton(
-            backgroundColor: #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1),
             title: "-",
-            font: .systemFont(ofSize: 24),
-            flexbox: Flexbox.Node(
-                flexGrow: 1,
-                margin: Edges(uniform: 10)
-            ),
+            styles: .init {
+                $0.backgroundColor = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+                $0.font = .systemFont(ofSize: 24)
+                $0.flexbox = Flexbox.Node(
+                    flexGrow: 1,
+                    margin: Edges(uniform: 10)
+                )
+            },
             handlers: [.touchUpInside: .decrement]
         )
     }
@@ -113,6 +122,7 @@ func view(model: Model) -> VView<Msg>
 
 // MARK: Main
 
-let program = Program(model: .initial, update: update, view: view)
+let initial = Model(count: 0)
+let program = Program(model: initial, update: update, view: view)
 
 PlaygroundPage.current.liveView = program.rootView

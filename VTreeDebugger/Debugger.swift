@@ -79,13 +79,16 @@ public func debugView<Model: DebuggableModel, Msg: Message, T: VTree>(_ view: @e
         let originalTree = (*view(model)).map(DebugMsg.original)
 
         return *VView(
-            frame: CGRect(origin: .zero, size: model.rootSize),
+            styles: .init {
+                $0.frame = CGRect(origin: .zero, size: model.rootSize)
+                return
+            },
             children: {
                 let text = debugModel.historyIndex
-                    .map { index -> String in
+                    .map { index -> Text in
                         let history = debugModel.histories[index]
                         let msgName = history.msg?.rawMessage.funcName ?? "Initial"
-                        return "[\(index)] \(msgName), \(history.model.description)"
+                        return .text("[\(index)] \(msgName), \(history.model.description)")
                     }
 
                 return [

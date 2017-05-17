@@ -26,6 +26,16 @@ public final class RButton: UIButton
         }
     }
 
+    public var vtree_attributedTitle: NSAttributedString?
+    {
+        get {
+            return self.attributedTitle(for: .normal)
+        }
+        set {
+            self.setAttributedTitle(newValue, for: .normal)
+        }
+    }
+
     public var vtree_titleColor: UIColor?
     {
         get {

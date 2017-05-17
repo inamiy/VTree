@@ -44,8 +44,8 @@ class ApplySpec: QuickSpec
             }
 
             it("root property (value type) changed") {
-                let tree1 = VView(isHidden: false, children: defaultChildren)
-                let tree2 = VView(isHidden: true, children: defaultChildren)
+                let tree1 = VView(styles: VViewStyles { $0.isHidden = false }, children: defaultChildren)
+                let tree2 = VView(styles: VViewStyles { $0.isHidden = true }, children: defaultChildren)
 
                 let view1 = tree1.createView()
 
@@ -57,8 +57,8 @@ class ApplySpec: QuickSpec
             }
 
             it("root property (value type) changed to nil") {
-                let tree1 = VLabel(text: "hello", children: defaultChildren)
-                let tree2 = VLabel(text: nil, children: defaultChildren)
+                let tree1 = VLabel<NoMsg>(text: "hello")
+                let tree2 = VLabel<NoMsg>(text: nil)
 
                 let view1 = tree1.createView()
 
@@ -73,8 +73,8 @@ class ApplySpec: QuickSpec
             }
 
             it("root property (reference type) changed") {
-                let tree1 = VView<NoMsg>(backgroundColor: .white)
-                let tree2 = VView<NoMsg>(backgroundColor: .black)
+                let tree1 = VView<NoMsg>(styles: VViewStyles { $0.backgroundColor = .white })
+                let tree2 = VView<NoMsg>(styles: VViewStyles { $0.backgroundColor = .black })
 
                 let view1 = tree1.createView()
 
@@ -89,8 +89,8 @@ class ApplySpec: QuickSpec
             }
 
             it("root property (reference type) changed to nil") {
-                let tree1 = VView<NoMsg>(backgroundColor: .white)
-                let tree2 = VView<NoMsg>(backgroundColor: nil)
+                let tree1 = VView<NoMsg>(styles: VViewStyles { $0.backgroundColor = .white })
+                let tree2 = VView<NoMsg>(styles: VViewStyles { $0.backgroundColor = nil })
 
                 let view1 = tree1.createView()
 

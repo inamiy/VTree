@@ -10,8 +10,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool
     {
-//        let program = Program(model: .initial, update: update, view: view)
-        let program = debugProgram(debug: false, model: .initial, update: update, view: view)
+        let initial = Model(message: "Initial", cursor: nil)
+
+//        let program = Program(model: initial, update: update, view: view)
+        let program = debugProgram(debug: false, model: initial, update: update, view: view)
         self.program = program
 
         let mainView = self.window?.rootViewController?.view
