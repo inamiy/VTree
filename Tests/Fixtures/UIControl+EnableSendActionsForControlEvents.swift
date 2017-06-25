@@ -3,9 +3,10 @@
 import UIKit
 
 // From ReactiveCocoa:
-// https://github.com/ReactiveCocoa/ReactiveCocoa/blob/0bf7b7e4a8cd6becd0eb283c81044eb20d60fd4f/ReactiveCocoaTests/UIKit/UIControl%2BEnableSendActionsForControlEvents.swift
+// https://github.com/ReactiveCocoa/ReactiveCocoa/blob/61a732b0457aa35cc96a31c76b65165971e7abed/ReactiveCocoaTests/UIKit/UIControl%2BEnableSendActionsForControlEvents.swift
 
-private let rac_swizzleToken: Void = {
+private func rac_swizzle()
+{
     let originalSelector = #selector(UIControl.sendAction(_:to:for:))
     let swizzledSelector = #selector(UIControl.rac_sendAction(_:to:forEvent:))
 
@@ -25,9 +26,7 @@ private let rac_swizzleToken: Void = {
     } else {
         method_exchangeImplementations(originalMethod, swizzledMethod)
     }
-
-    return ()
-}()
+}
 
 /// Unfortunately, there's an apparent limitation in using `sendActionsForControlEvents`
 /// on unit-tests for any control besides `UIButton` which is very unfortunate since we
@@ -36,13 +35,9 @@ private let rac_swizzleToken: Void = {
 /// the pair target+action.
 extension UIControl
 {
-    override open class func initialize()
+    static func _initialize()
     {
-        guard self === UIControl.self else {
-            return
-        }
-
-        _ = rac_swizzleToken
+        rac_swizzle()
     }
 
     // MARK: - Method Swizzling

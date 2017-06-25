@@ -73,6 +73,7 @@
 		1F8F783F1DD74004008D8B67 /* VButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F783E1DD74004008D8B67 /* VButton.swift */; };
 		1F9893551DD8747000C06825 /* VGenericSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9893541DD8747000C06825 /* VGenericSpec.swift */; };
 		1FA623E81DE00DED00DEBF73 /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F49DC371DDFF26E0036D22C /* Keys.swift */; };
+		1FB1D11C1EFF620200346CF0 /* VTreeSpecConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB1D11A1EFF615E00346CF0 /* VTreeSpecConfiguration.swift */; };
 		1FB7F4DD1DD7FEE7007B8E53 /* VPhantom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7F4DC1DD7FEE7007B8E53 /* VPhantom.swift */; };
 		1FB7F4DF1DD814DB007B8E53 /* VGeneric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7F4DE1DD814DB007B8E53 /* VGeneric.swift */; };
 		1FB7F4E21DD817C4007B8E53 /* VTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB7F4E11DD817C4007B8E53 /* VTree.swift */; };
@@ -271,6 +272,7 @@
 		1F8F783C1DD73743008D8B67 /* DiffInternalSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffInternalSpec.swift; sourceTree = "<group>"; };
 		1F8F783E1DD74004008D8B67 /* VButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VButton.swift; sourceTree = "<group>"; };
 		1F9893541DD8747000C06825 /* VGenericSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VGenericSpec.swift; sourceTree = "<group>"; };
+		1FB1D11A1EFF615E00346CF0 /* VTreeSpecConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VTreeSpecConfiguration.swift; sourceTree = "<group>"; };
 		1FB7F4DC1DD7FEE7007B8E53 /* VPhantom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VPhantom.swift; sourceTree = "<group>"; };
 		1FB7F4DE1DD814DB007B8E53 /* VGeneric.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VGeneric.swift; sourceTree = "<group>"; };
 		1FB7F4E11DD817C4007B8E53 /* VTree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VTree.swift; sourceTree = "<group>"; };
@@ -519,8 +521,9 @@
 				1FB7F4DC1DD7FEE7007B8E53 /* VPhantom.swift */,
 				1F49DC371DDFF26E0036D22C /* Keys.swift */,
 				1FBFDA9E1DE5738E00094059 /* MyMsg.swift */,
-				1F5DED0F1DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift */,
 				1F3FC83B1E463F7B00AACDB5 /* VTree+Helper.swift */,
+				1F5DED0F1DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift */,
+				1FB1D11A1EFF615E00346CF0 /* VTreeSpecConfiguration.swift */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -1170,6 +1173,7 @@
 				48956F961DD5F07B00ED31B8 /* DiffSpec.swift in Sources */,
 				1FB7F4DD1DD7FEE7007B8E53 /* VPhantom.swift in Sources */,
 				1FBFDAA01DE573A500094059 /* MyMsg.swift in Sources */,
+				1FB1D11C1EFF620200346CF0 /* VTreeSpecConfiguration.swift in Sources */,
 				1F5DED101DEAB3FE00BC6B1B /* UIControl+EnableSendActionsForControlEvents.swift in Sources */,
 				1F5DECAF1DEAA58A00BC6B1B /* LazyMapSpec.swift in Sources */,
 				1F5DECAD1DEAA19500BC6B1B /* KeyCacheSpec.swift in Sources */,
