@@ -36,7 +36,7 @@ internal func _indexInRange(_ indexes: [Int], _ left: Int, _ right: Int) -> Bool
     var currentItem: Int
 
     while minIndex <= maxIndex {
-        currentIndex = (maxIndex + minIndex) / 2
+        currentIndex = minIndex + (maxIndex - minIndex) / 2
         currentItem = indexes[currentIndex]
 
         if minIndex == maxIndex {
