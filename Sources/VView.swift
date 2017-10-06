@@ -20,7 +20,7 @@ public final class VView<Msg: Message>: VTree, PropsReflectable
 
     public init(
         key: Key? = nil,
-        styles: VViewStyles = .init(),
+        styles: VViewStyles = .emptyInit(),
         gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )

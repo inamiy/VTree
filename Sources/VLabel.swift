@@ -23,7 +23,7 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
     public init(
         key: Key? = nil,
         text: Text? = nil,
-        styles: VLabelStyles = .init(),
+        styles: VLabelStyles = .emptyInit(),
         gestures: [GestureEvent<Msg>] = []
         )
     {

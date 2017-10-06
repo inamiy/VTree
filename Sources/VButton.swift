@@ -22,7 +22,7 @@ public final class VButton<Msg: Message>: VTree, PropsReflectable
     public init(
         key: Key? = nil,
         title: Text? = nil,
-        styles: VButtonStyles = .init(),
+        styles: VButtonStyles = .emptyInit(),
         handlers: [UIControlEvents: Msg] = [:]
         )
     {

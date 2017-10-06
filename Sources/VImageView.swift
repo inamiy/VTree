@@ -21,7 +21,7 @@ public final class VImageView<Msg: Message>: VTree, PropsReflectable
     public init(
         key: Key? = nil,
         image: Image? = nil,
-        styles: VImageViewStyles = .init(),
+        styles: VImageViewStyles = .emptyInit(),
         gestures: [GestureEvent<Msg>] = [],
         children: [AnyVTree<Msg>] = []
         )

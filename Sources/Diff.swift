@@ -84,7 +84,7 @@ private func _diffProps<Msg: Message>(
                     }
                 }
                 return .none
-            }()
+            }(())
         }
 
     }

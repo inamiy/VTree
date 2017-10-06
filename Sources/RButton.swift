@@ -15,8 +15,8 @@ public final class RButton: UIButton
     }
 
     // MARK: KVC-compliant properties
-
-    public var vtree_title: String?
+    
+    @objc public var vtree_title: String?
     {
         get {
             return self.title(for: .normal)
@@ -26,7 +26,7 @@ public final class RButton: UIButton
         }
     }
 
-    public var vtree_attributedTitle: NSAttributedString?
+    @objc public var vtree_attributedTitle: NSAttributedString?
     {
         get {
             return self.attributedTitle(for: .normal)
@@ -36,7 +36,7 @@ public final class RButton: UIButton
         }
     }
 
-    public var vtree_titleColor: UIColor?
+    @objc public var vtree_titleColor: UIColor?
     {
         get {
             return self.titleColor(for: .normal)
@@ -46,7 +46,7 @@ public final class RButton: UIButton
         }
     }
 
-    public var vtree_font: UIFont?
+    @objc public var vtree_font: UIFont?
     {
         get {
             return self.titleLabel?.font
@@ -56,7 +56,7 @@ public final class RButton: UIButton
         }
     }
 
-    public var vtree_numberOfLines: Int
+    @objc public var vtree_numberOfLines: Int
     {
         get {
             return self.titleLabel?.numberOfLines ?? 0

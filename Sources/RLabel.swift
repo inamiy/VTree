@@ -16,7 +16,7 @@ public final class RLabel: UILabel
 
     // MARK: KVC-compliant properties
 
-    public var vtree_numberOfLines: Int
+    @objc public var vtree_numberOfLines: Int
     {
         get {
             return self.numberOfLines
@@ -46,7 +46,7 @@ public final class RLabel: NSTextField
 
     // MARK: KVC-compliant properties
 
-    public var vtree_numberOfLines: Int
+    @objc public var vtree_numberOfLines: Int
     {
         get {
             return self.maximumNumberOfLines
