@@ -37,22 +37,22 @@ public final class VLabel<Msg: Message>: VTree, PropsReflectable
             defer { objc_sync_exit(_calcView) }
 
             switch text {
-                case let .text(text)?:
-                    _calcView.attributedText = nil
-                    _calcView.text = text
-                case let .attributedText(attributedText)?:
-                    _calcView.text = nil
-                    _calcView.attributedText = attributedText
-                case .none:
-                    _calcView.text = nil
-                    _calcView.attributedText = nil
+            case let .text(text)?:
+                _calcView.attributedText = nil
+                _calcView.text = text
+            case let .attributedText(attributedText)?:
+                _calcView.text = nil
+                _calcView.attributedText = attributedText
+            case .none:
+                _calcView.text = nil
+                _calcView.attributedText = nil
             }
             _calcView.font = font
 
             #if os(iOS) || os(tvOS)
-            _calcView.numberOfLines = numberOfLines
+                _calcView.numberOfLines = numberOfLines
             #elseif os(macOS)
-            _calcView.maximumNumberOfLines = numberOfLines
+                _calcView.maximumNumberOfLines = numberOfLines
             #endif
 
             let calcSize = _calcView.sizeThatFits(maxSize)
@@ -94,9 +94,9 @@ public struct VLabelStyles: HasViewStyles
 {
     public var viewStyles = VViewStyles()
 
-    public var textColor: Color? = nil
+    public var textColor: Color?
     public var textAlignment: NSTextAlignment = .left
-    public var font: Font? = nil
+    public var font: Font?
 
     public var numberOfLines: Int = 0
 }
@@ -140,15 +140,15 @@ extension VLabelPropsData
         self.vtree_cornerRadius = styles.cornerRadius
 
         switch text {
-            case let .text(text)?:
-                self.attributedText = nil
-                self.text = text
-            case let .attributedText(attributedText)?:
-                self.text = nil
-                self.attributedText = attributedText
-            case .none:
-                self.text = nil
-                self.attributedText = nil
+        case let .text(text)?:
+            self.attributedText = nil
+            self.text = text
+        case let .attributedText(attributedText)?:
+            self.text = nil
+            self.attributedText = attributedText
+        case .none:
+            self.text = nil
+            self.attributedText = nil
         }
         self.textColor = styles.textColor
         self.textAlignment = styles.textAlignment.rawValue

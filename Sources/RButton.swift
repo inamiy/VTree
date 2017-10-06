@@ -15,7 +15,7 @@ public final class RButton: UIButton
     }
 
     // MARK: KVC-compliant properties
-    
+
     @objc public var vtree_title: String?
     {
         get {

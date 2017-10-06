@@ -98,129 +98,129 @@ class DiffInternalSpec: QuickSpec
             }
 
             #if os(iOS) || os(tvOS)
-            it("handlers are added/changed/removed") {
+                it("handlers are added/changed/removed") {
 
-                let oldChildren: [AnyVTree<MyMsg>] = [
-                    *VButton(key: key1),
-                    *VButton(key: key2, handlers: [.touchDown: .msg2]),
-                    *VButton(key: key3, handlers: [.valueChanged: .msg3]),
-                    *VButton(title: "h1", handlers: [.touchDragExit: .msg3]),
-                    *VButton(title: "h2", handlers: [.touchDragEnter: .msg4])
-                ]
-                let newChildren: [AnyVTree<MyMsg>] = [
-                    *VButton(key: key1, handlers: [.touchUpInside: .msg1]),     // added
-                    *VButton(key: key2),                                        // removed
-                    *VButton(key: key3, handlers: [.valueChanged: .msg3]),      // not changed
-                    *VButton(title: "h1", handlers: [.touchDragExit: .msg4]),   // value changed
-                    *VButton(title: "h2", handlers: [.touchCancel: .msg4])      // key changed
-                ]
+                    let oldChildren: [AnyVTree<MyMsg>] = [
+                        *VButton(key: key1),
+                        *VButton(key: key2, handlers: [.touchDown: .msg2]),
+                        *VButton(key: key3, handlers: [.valueChanged: .msg3]),
+                        *VButton(title: "h1", handlers: [.touchDragExit: .msg3]),
+                        *VButton(title: "h2", handlers: [.touchDragEnter: .msg4])
+                    ]
+                    let newChildren: [AnyVTree<MyMsg>] = [
+                        *VButton(key: key1, handlers: [.touchUpInside: .msg1]),     // added
+                        *VButton(key: key2),                                        // removed
+                        *VButton(key: key3, handlers: [.valueChanged: .msg3]),      // not changed
+                        *VButton(title: "h1", handlers: [.touchDragExit: .msg4]),   // value changed
+                        *VButton(title: "h2", handlers: [.touchCancel: .msg4])      // key changed
+                    ]
 
-                var steps = Patch<MyMsg>.Steps()
-                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+                    var steps = Patch<MyMsg>.Steps()
+                    testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
 
-                expect(steps.count) == 4
+                    expect(steps.count) == 4
 
-                do {
-                    expect(steps[0]).to(beNil())
+                    do {
+                        expect(steps[0]).to(beNil())
+                    }
+                    do {
+                        expect(steps[1]!.count) == 1
+
+                        let handlers = steps[1]?[0].handlers
+                        expect(handlers?.removes) == []
+                        expect(handlers?.updates) == [:]
+                        expect(handlers?.inserts) == [.control(.touchUpInside): .msg1]
+                    }
+                    do {
+                        expect(steps[2]?.count) == 1
+
+                        let handlers = steps[2]?[0].handlers
+                        expect(handlers?.removes) == [.control(.touchDown)]
+                        expect(handlers?.updates) == [:]
+                        expect(handlers?.inserts) == [:]
+                    }
+                    do {
+                        expect(steps[3]).to(beNil())
+                    }
+                    do {
+                        expect(steps[4]?.count) == 1
+
+                        let handlers = steps[4]?[0].handlers
+                        expect(handlers?.removes) == []
+                        expect(handlers?.updates) == [.control(.touchDragExit): .msg4]
+                        expect(handlers?.inserts) == [:]
+                    }
+                    do {
+                        expect(steps[5]?.count) == 1
+
+                        let handlers = steps[5]?[0].handlers
+                        expect(handlers?.removes) == [.control(.touchDragEnter)]
+                        expect(handlers?.updates) == [:]
+                        expect(handlers?.inserts) == [.control(.touchCancel): .msg4]
+                    }
                 }
-                do {
-                    expect(steps[1]!.count) == 1
 
-                    let handlers = steps[1]?[0].handlers
-                    expect(handlers?.removes) == []
-                    expect(handlers?.updates) == [:]
-                    expect(handlers?.inserts) == [.control(.touchUpInside): .msg1]
+                it("gestures are added/changed/removed") {
+
+                    // NOTE: Needs to be declared & reused here for equality test, which requires same callsite.
+                    let msg1Func = ^MyGestureMsg.msg1
+                    let msg2Func = ^MyGestureMsg.msg2
+                    let msg3Func = ^MyGestureMsg.msg3
+                    let msg4Func = ^MyGestureMsg.msg4
+
+                    let oldChildren: [AnyVTree<MyGestureMsg>] = [
+                        *VLabel(),
+                        *VLabel(gestures: [.tap(msg2Func)]),
+                        *VLabel(gestures: [.tap(msg3Func)]),
+                        *VLabel(gestures: [.tap(msg3Func)])
+                    ]
+
+                    let newChildren: [AnyVTree<MyGestureMsg>] = [
+                        *VLabel(gestures: [.tap(msg1Func)]),    // added
+                        *VLabel(),                              // removed
+                        *VLabel(gestures: [.tap(msg3Func)]),    // not changed
+                        *VLabel(gestures: [.tap(msg4Func)])     // func changed
+                    ]
+
+                    var steps = Patch<MyGestureMsg>.Steps()
+                    testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+
+                    expect(steps.count) == 3
+
+                    do {
+                        expect(steps[0]).to(beNil())
+                    }
+                    do {
+                        expect(steps[1]!.count) == 1
+
+                        let gestures = steps[1]?[0].gestures
+                        expect(gestures?.removes) == []
+                        expect(gestures?.inserts) == [.tap(msg1Func)]
+                    }
+                    do {
+                        expect(steps[2]?.count) == 1
+
+                        let gestures = steps[2]?[0].gestures
+                        expect(gestures?.removes) == [.tap(msg2Func)]
+                        expect(gestures?.inserts) == []
+                    }
+                    do {
+                        expect(steps[3]).to(beNil())
+                    }
+                    do {
+                        expect(steps[4]?.count) == 1
+
+                        let gestures = steps[4]?[0].gestures
+                        expect(gestures?.removes) == [.tap(msg3Func)]
+                        expect(gestures?.inserts) == [.tap(msg4Func)]
+                    }
                 }
-                do {
-                    expect(steps[2]?.count) == 1
 
-                    let handlers = steps[2]?[0].handlers
-                    expect(handlers?.removes) == [.control(.touchDown)]
-                    expect(handlers?.updates) == [:]
-                    expect(handlers?.inserts) == [:]
-                }
-                do {
-                    expect(steps[3]).to(beNil())
-                }
-                do {
-                    expect(steps[4]?.count) == 1
+                it("gestures are added/changed/removed + AnyVTrees are mapped") {
 
-                    let handlers = steps[4]?[0].handlers
-                    expect(handlers?.removes) == []
-                    expect(handlers?.updates) == [.control(.touchDragExit): .msg4]
-                    expect(handlers?.inserts) == [:]
-                }
-                do {
-                    expect(steps[5]?.count) == 1
-
-                    let handlers = steps[5]?[0].handlers
-                    expect(handlers?.removes) == [.control(.touchDragEnter)]
-                    expect(handlers?.updates) == [:]
-                    expect(handlers?.inserts) == [.control(.touchCancel): .msg4]
-                }
-            }
-
-            it("gestures are added/changed/removed") {
-
-                // NOTE: Needs to be declared & reused here for equality test, which requires same callsite.
-                let msg1Func = ^MyGestureMsg.msg1
-                let msg2Func = ^MyGestureMsg.msg2
-                let msg3Func = ^MyGestureMsg.msg3
-                let msg4Func = ^MyGestureMsg.msg4
-
-                let oldChildren: [AnyVTree<MyGestureMsg>] = [
-                    *VLabel(),
-                    *VLabel(gestures: [.tap(msg2Func)]),
-                    *VLabel(gestures: [.tap(msg3Func)]),
-                    *VLabel(gestures: [.tap(msg3Func)])
-                ]
-
-                let newChildren: [AnyVTree<MyGestureMsg>] = [
-                    *VLabel(gestures: [.tap(msg1Func)]),    // added
-                    *VLabel(),                              // removed
-                    *VLabel(gestures: [.tap(msg3Func)]),    // not changed
-                    *VLabel(gestures: [.tap(msg4Func)])     // func changed
-                ]
-
-                var steps = Patch<MyGestureMsg>.Steps()
-                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
-
-                expect(steps.count) == 3
-
-                do {
-                    expect(steps[0]).to(beNil())
-                }
-                do {
-                    expect(steps[1]!.count) == 1
-
-                    let gestures = steps[1]?[0].gestures
-                    expect(gestures?.removes) == []
-                    expect(gestures?.inserts) == [.tap(msg1Func)]
-                }
-                do {
-                    expect(steps[2]?.count) == 1
-
-                    let gestures = steps[2]?[0].gestures
-                    expect(gestures?.removes) == [.tap(msg2Func)]
-                    expect(gestures?.inserts) == []
-                }
-                do {
-                    expect(steps[3]).to(beNil())
-                }
-                do {
-                    expect(steps[4]?.count) == 1
-
-                    let gestures = steps[4]?[0].gestures
-                    expect(gestures?.removes) == [.tap(msg3Func)]
-                    expect(gestures?.inserts) == [.tap(msg4Func)]
-                }
-            }
-
-            it("gestures are added/changed/removed + AnyVTrees are mapped") {
-
-                func msgTransform(msg: MyGestureMsg) -> MyGestureMsg2
-                {
-                    switch msg {
+                    func msgTransform(msg: MyGestureMsg) -> MyGestureMsg2
+                    {
+                        switch msg {
                         case let .msg1(context):
                             return .msg1(context)
                         case let .msg2(context):
@@ -229,63 +229,63 @@ class DiffInternalSpec: QuickSpec
                             return .msg3(context)
                         case let .msg4(context):
                             return .msg4(context)
+                        }
+                    }
+
+                    let msg1Func = ^MyGestureMsg.msg1
+                    let msg2Func = ^MyGestureMsg.msg2
+                    let msg3Func = ^MyGestureMsg.msg3
+                    let msg4Func = ^MyGestureMsg.msg4
+
+                    let oldChildren: [AnyVTree<MyGestureMsg2>] = [
+                        *VLabel(),
+                        *VLabel(gestures: [.tap(msg2Func)]),
+                        *VLabel(gestures: [.tap(msg3Func)]),
+                        *VLabel(gestures: [.tap(msg3Func)])
+                        ]
+                        .map { $0.map(msgTransform) }
+
+                    let newChildren: [AnyVTree<MyGestureMsg2>] = [
+                        *VLabel(gestures: [.tap(msg1Func)]),    // added
+                        *VLabel(),                              // removed
+                        *VLabel(gestures: [.tap(msg3Func)]),    // not changed
+                        *VLabel(gestures: [.tap(msg4Func)])     // func changed
+                        ]
+                        .map { $0.map(msgTransform) }
+
+                    var steps = Patch<MyGestureMsg2>.Steps()
+                    testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
+
+                    expect(steps.count) == 3
+
+                    do {
+                        expect(steps[0]).to(beNil())
+                    }
+                    do {
+                        expect(steps[1]!.count) == 1
+
+                        let gestures = steps[1]?[0].gestures
+                        expect(gestures?.removes) == []
+                        expect(gestures?.inserts) == [GestureEvent<MyGestureMsg>.tap(msg1Func).map(msgTransform)]
+                    }
+                    do {
+                        expect(steps[2]?.count) == 1
+
+                        let gestures = steps[2]?[0].gestures
+                        expect(gestures?.removes) == [GestureEvent<MyGestureMsg>.tap(msg2Func).map(msgTransform)]
+                        expect(gestures?.inserts) == []
+                    }
+                    do {
+                        expect(steps[3]).to(beNil())
+                    }
+                    do {
+                        expect(steps[4]?.count) == 1
+
+                        let gestures = steps[4]?[0].gestures
+                        expect(gestures?.removes) == [GestureEvent<MyGestureMsg>.tap(msg3Func).map(msgTransform)]
+                        expect(gestures?.inserts) == [GestureEvent<MyGestureMsg>.tap(msg4Func).map(msgTransform)]
                     }
                 }
-
-                let msg1Func = ^MyGestureMsg.msg1
-                let msg2Func = ^MyGestureMsg.msg2
-                let msg3Func = ^MyGestureMsg.msg3
-                let msg4Func = ^MyGestureMsg.msg4
-
-                let oldChildren: [AnyVTree<MyGestureMsg2>] = [
-                    *VLabel(),
-                    *VLabel(gestures: [.tap(msg2Func)]),
-                    *VLabel(gestures: [.tap(msg3Func)]),
-                    *VLabel(gestures: [.tap(msg3Func)])
-                ]
-                    .map { $0.map(msgTransform) }
-
-                let newChildren: [AnyVTree<MyGestureMsg2>] = [
-                    *VLabel(gestures: [.tap(msg1Func)]),    // added
-                    *VLabel(),                              // removed
-                    *VLabel(gestures: [.tap(msg3Func)]),    // not changed
-                    *VLabel(gestures: [.tap(msg4Func)])     // func changed
-                ]
-                    .map { $0.map(msgTransform) }
-
-                var steps = Patch<MyGestureMsg2>.Steps()
-                testDiffChildren(old: oldChildren, new: newChildren, steps: &steps, parentIndex: 0)
-
-                expect(steps.count) == 3
-
-                do {
-                    expect(steps[0]).to(beNil())
-                }
-                do {
-                    expect(steps[1]!.count) == 1
-
-                    let gestures = steps[1]?[0].gestures
-                    expect(gestures?.removes) == []
-                    expect(gestures?.inserts) == [GestureEvent<MyGestureMsg>.tap(msg1Func).map(msgTransform)]
-                }
-                do {
-                    expect(steps[2]?.count) == 1
-
-                    let gestures = steps[2]?[0].gestures
-                    expect(gestures?.removes) == [GestureEvent<MyGestureMsg>.tap(msg2Func).map(msgTransform)]
-                    expect(gestures?.inserts) == []
-                }
-                do {
-                    expect(steps[3]).to(beNil())
-                }
-                do {
-                    expect(steps[4]?.count) == 1
-
-                    let gestures = steps[4]?[0].gestures
-                    expect(gestures?.removes) == [GestureEvent<MyGestureMsg>.tap(msg3Func).map(msgTransform)]
-                    expect(gestures?.inserts) == [GestureEvent<MyGestureMsg>.tap(msg4Func).map(msgTransform)]
-                }
-            }
             #endif
         }
 

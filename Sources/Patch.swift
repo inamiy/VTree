@@ -34,25 +34,25 @@ internal enum PatchStep<Msg: Message>: Equatable
     internal static func == (lhs: PatchStep, rhs: PatchStep) -> Bool
     {
         switch (lhs, rhs) {
-            case let (.replace(l), .replace(r)) where l.key === r.key:
-                return true
-            case let (.props(l), .props(r)) where l.0 == r.0 && _objcEqual(l.1, r.1) && _objcEqual(l.2, r.2):
-                return true
-            case let (.handlers(l), .handlers(r)) where l.0 == r.0 && _objcEqual(l.1, r.1) && _objcEqual(l.2, r.2):
-                return true
-            case let (.gestures(l), .gestures(r)) where l.0 == r.0 && l.1 == r.1:
-                return true
-            case let (.removeChild(l), .removeChild(r)) where l.key === r.key:
-                return true
-            case let (.insertChild(l), .insertChild(r)) where l.key === r.key:
-                return true
-            case let (.reorderChildren(l), .reorderChildren(r)) where l == r:
-                return true
-            default:
-                return false
+        case let (.replace(l), .replace(r)) where l.key === r.key:
+            return true
+        case let (.props(l), .props(r)) where l.0 == r.0 && _objcEqual(l.1, r.1) && _objcEqual(l.2, r.2):
+            return true
+        case let (.handlers(l), .handlers(r)) where l.0 == r.0 && _objcEqual(l.1, r.1) && _objcEqual(l.2, r.2):
+            return true
+        case let (.gestures(l), .gestures(r)) where l.0 == r.0 && l.1 == r.1:
+            return true
+        case let (.removeChild(l), .removeChild(r)) where l.key === r.key:
+            return true
+        case let (.insertChild(l), .insertChild(r)) where l.key === r.key:
+            return true
+        case let (.reorderChildren(l), .reorderChildren(r)) where l == r:
+            return true
+        default:
+            return false
         }
     }
-
+    // swiftlint:disable:next large_tuple
     internal var handlers: (removes: [SimpleEvent], updates: HandlerMapping<Msg>, inserts: HandlerMapping<Msg>)?
     {
         guard case let .handlers(removes, updates, inserts) = self else {

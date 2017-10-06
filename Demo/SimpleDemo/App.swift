@@ -17,10 +17,10 @@ struct Model
 func update(_ model: Model, _ msg: Msg) -> Model?
 {
     switch msg {
-        case .increment:
-            return Model(count: model.count + 1)
-        case .decrement:
-            return Model(count: model.count - 1)
+    case .increment:
+        return Model(count: model.count + 1)
+    case .decrement:
+        return Model(count: model.count - 1)
     }
 }
 
@@ -120,6 +120,6 @@ func view(model: Model) -> VView<Msg>
         *buttons([
             *decrementButton(),
             *incrementButton()
+            ])
         ])
-    ])
 }

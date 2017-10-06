@@ -1,7 +1,7 @@
 import Flexbox
 
 /// Create `Patch` by diff-ing `oldTree` and `newTree`.
-public func diff<OldTree: VTree, NewTree: VTree, Msg: Message>(old oldTree: OldTree, new newTree: NewTree) -> Patch<Msg>
+public func diff<OldTree: VTree, NewTree: VTree, Msg>(old oldTree: OldTree, new newTree: NewTree) -> Patch<Msg>
     where OldTree.MsgType == Msg, NewTree.MsgType == Msg
 {
     let oldTree_ = *oldTree
@@ -16,7 +16,7 @@ public func diff<OldTree: VTree, NewTree: VTree, Msg: Message>(old oldTree: OldT
     return Patch(oldTree: oldTree_, steps: steps, flexboxFrames: flexboxFrames)
 }
 
-private func _diffTree<Msg: Message>(
+private func _diffTree<Msg>(
     old oldTree: AnyVTree<Msg>,
     new newTree: AnyVTree<Msg>,
     index: Int,
@@ -37,7 +37,7 @@ private func _diffTree<Msg: Message>(
     _diffChildren(old: oldTree.children, new: newTree.children, parentIndex: index, steps: &steps, layoutDirty: &layoutDirty)
 }
 
-private func _diffProps<Msg: Message>(
+private func _diffProps<Msg>(
     old oldTree: AnyVTree<Msg>,
     new newTree: AnyVTree<Msg>,
     index: Int,
@@ -90,7 +90,7 @@ private func _diffProps<Msg: Message>(
     }
 }
 
-private func _diffHandlers<Msg: Message>(
+private func _diffHandlers<Msg>(
     old oldTree: AnyVTree<Msg>,
     new newTree: AnyVTree<Msg>,
     index: Int,
@@ -120,7 +120,7 @@ private func _diffHandlers<Msg: Message>(
     }
 }
 
-private func _diffGestures<Msg: Message>(
+private func _diffGestures<Msg>(
     old oldTree: AnyVTree<Msg>,
     new newTree: AnyVTree<Msg>,
     index: Int,
@@ -147,7 +147,7 @@ private func _diffGestures<Msg: Message>(
     }
 }
 
-private func _diffFlexbox<Msg: Message>(
+private func _diffFlexbox<Msg>(
     old oldTree: AnyVTree<Msg>,
     new newTree: AnyVTree<Msg>,
     layoutDirty: inout LayoutDirtyReason
@@ -158,7 +158,7 @@ private func _diffFlexbox<Msg: Message>(
     }
 }
 
-internal func _diffChildren<Msg: Message>(
+internal func _diffChildren<Msg>(
     old oldChildren: [AnyVTree<Msg>],
     new newChildren: [AnyVTree<Msg>],
     parentIndex: Int,
@@ -219,7 +219,7 @@ internal func calculateFlexbox(_ flexboxTree: Flexbox.Node) -> [CGRect]
     return flatten(layout)
 }
 
-private func _appendSteps<Msg: Message>(_ steps: inout Patch<Msg>.Steps, step: PatchStep<Msg>, at index: Int)
+private func _appendSteps<Msg>(_ steps: inout Patch<Msg>.Steps, step: PatchStep<Msg>, at index: Int)
 {
     if steps[index] == nil {
         steps[index] = []
@@ -230,7 +230,7 @@ private func _appendSteps<Msg: Message>(_ steps: inout Patch<Msg>.Steps, step: P
 /// Compare `oldChildren` and `newChildren`, then return a tuple of:
 /// - `midChildren`: reordered, intermediate state of `newChildren`
 /// - `reorder`: removals & insertions from `midChildren` to `newChildren`
-internal func _reorder<Msg: Message>(
+internal func _reorder<Msg>(
     old oldChildren: [AnyVTree<Msg>],
     new newChildren: [AnyVTree<Msg>]
     ) -> (midChildren: [AnyVTree<Msg>?], reorder: Reorder)
@@ -275,7 +275,7 @@ internal func _reorder<Msg: Message>(
                     deletedCount += 1
                 }
             }
-            // If `oldChild` has no key, append no-key-`newChild` (if possible) or `nil`.
+                // If `oldChild` has no key, append no-key-`newChild` (if possible) or `nil`.
             else {
                 if newFreeCursor < newFreeCount {
                     let newChildIndex = newFreeIndexes[newFreeCursor]
@@ -307,7 +307,7 @@ internal func _reorder<Msg: Message>(
                         midChildren.append(newChild)
                     }
                 }
-                // Append "unkeyed newChild" which is not added yet.
+                    // Append "unkeyed newChild" which is not added yet.
                 else if newCursor >= remainingNewCursor {
                     midChildren.append(newChild)
                 }
@@ -346,33 +346,35 @@ internal func _reorder<Msg: Message>(
 
             switch (midChild?.key, newChild.key) {
 
-                case let (midKey?, newKey?) where midKey !== newKey:
-                    // If `midChild` is same as "next newChild"...
-                    if newKeyIndexes[ObjectIdentifier(midKey)] == newCursor + 1 {
-                        inserts.append(Reorder.Insert(key: newKey, to: newCursor))
-                        newCursor += 1
-                    }
-                    else {
-                        removes.append(Reorder.Remove(key: midKey, from: midCursor - midRemovedCount))
-                        midCursor += 1
-                        midRemovedCount += 1
-                    }
-
-                // If "same key" or "neither has key"...
-                case (_?, _?) /* where midKey == newKey */ :
-                    fallthrough
-                case (nil, nil):
-                    midCursor += 1
-                    newCursor += 1
-
-                case let (nil, newKey?):
+            case let (midKey?, newKey?) where midKey !== newKey:
+                // If `midChild` is same as "next newChild"...
+                if newKeyIndexes[ObjectIdentifier(midKey)] == newCursor + 1 {
                     inserts.append(Reorder.Insert(key: newKey, to: newCursor))
                     newCursor += 1
-
-                case let (midKey?, nil):
+                }
+                else {
                     removes.append(Reorder.Remove(key: midKey, from: midCursor - midRemovedCount))
                     midCursor += 1
                     midRemovedCount += 1
+                }
+
+            // If "same key" or "neither has key"...
+            // TODO: is this the correct implementation or does this require additional changes?
+            case (_?, _?) /* where midKey == newKey */ :
+                // swiftlint:disable:next fallthrough
+                fallthrough
+            case (nil, nil):
+                midCursor += 1
+                newCursor += 1
+
+            case let (nil, newKey?):
+                inserts.append(Reorder.Insert(key: newKey, to: newCursor))
+                newCursor += 1
+
+            case let (midKey?, nil):
+                removes.append(Reorder.Remove(key: midKey, from: midCursor - midRemovedCount))
+                midCursor += 1
+                midRemovedCount += 1
             }
         }
 
@@ -405,7 +407,7 @@ internal func _reorder<Msg: Message>(
 
 /// Create a tuple of "key-index-table" and "remainder (array)",
 /// e.g. `trees = ["key2", div, "key1", span]` will return `(keys: ["key1": 2, "key2": 0], frees: [1, 3])`.
-internal func _keyIndexes<Msg: Message>(_ trees: [AnyVTree<Msg>]) -> (keys: [ObjectIdentifier: Int], frees: [Int])
+internal func _keyIndexes<Msg>(_ trees: [AnyVTree<Msg>]) -> (keys: [ObjectIdentifier: Int], frees: [Int])
 {
     var keys = [ObjectIdentifier: Int]()
     var frees = [Int]() // remaining no-key indexes

@@ -13,7 +13,7 @@
 ///     This reuse also occurs when `view`'s property changed or it's childrens are changed.
 ///   - New view (replaced)
 ///   - `nil` (removed)
-public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
+public func apply<Msg>(patch: Patch<Msg>, to view: View) -> View?
 {
     let patchIndexes = patch.steps.map { $0.key }.sorted()
     let indexedViews = _indexViews(view, patchIndexes)
@@ -45,61 +45,61 @@ public func apply<Msg: Message>(patch: Patch<Msg>, to view: View) -> View?
 ///   - new view, i.e. `.some(.some(newView))`
 ///   - removed, i.e. `.some(.none)`
 ///   - same view (reused), i.e. `.none`
-private func _applyStep<Msg: Message>(_ step: PatchStep<Msg>, to view: View) -> View??
+private func _applyStep<Msg>(_ step: PatchStep<Msg>, to view: View) -> View??
 {
     switch step {
-        case let .replace(newTree):
-            let newView = newTree.createView()
-            if let parentView = view.superview {
-                parentView.replaceSubview(view, with: newView)
-            }
-            return newView
+    case let .replace(newTree):
+        let newView = newTree.createView()
+        if let parentView = view.superview {
+            parentView.replaceSubview(view, with: newView)
+        }
+        return newView
 
-        case let .props(removes, updates, inserts):
-            for removeKey in removes {
-                view.setValue(nil, forKey: removeKey)
-            }
-            for update in updates {
-                view.setValue(_toOptionalAny(update.value), forKey: update.key)
-            }
-            for insert in inserts {
-                view.setValue(_toOptionalAny(insert.value), forKey: insert.key)
-            }
-            return nil
+    case let .props(removes, updates, inserts):
+        for removeKey in removes {
+            view.setValue(nil, forKey: removeKey)
+        }
+        for update in updates {
+            view.setValue(_toOptionalAny(update.value), forKey: update.key)
+        }
+        for insert in inserts {
+            view.setValue(_toOptionalAny(insert.value), forKey: insert.key)
+        }
+        return nil
 
-        case let .handlers(removes, updates, inserts):
-            for removeEvent in removes {
-                _removeHandler(for: removeEvent, in: view)
-            }
-            for update in updates {
-                _updateHandler(msg: update.value, for: update.key, in: view)
-            }
-            for insert in inserts {
-                _insertHandler(msg: insert.value, for: insert.key, in: view)
-            }
-            return nil
+    case let .handlers(removes, updates, inserts):
+        for removeEvent in removes {
+            _removeHandler(for: removeEvent, in: view)
+        }
+        for update in updates {
+            _updateHandler(msg: update.value, for: update.key, in: view)
+        }
+        for insert in inserts {
+            _insertHandler(msg: insert.value, for: insert.key, in: view)
+        }
+        return nil
 
-        case let .gestures(removes, inserts):
-            for removeEvent in removes {
-                _removeGesture(for: removeEvent, in: view)
-            }
-            for insert in inserts {
-                _insertGesture(for: insert, in: view)
-            }
-            return nil
+    case let .gestures(removes, inserts):
+        for removeEvent in removes {
+            _removeGesture(for: removeEvent, in: view)
+        }
+        for insert in inserts {
+            _insertGesture(for: insert, in: view)
+        }
+        return nil
 
-        case .removeChild:
-            view.removeFromSuperview()
-            return .some(nil)
+    case .removeChild:
+        view.removeFromSuperview()
+        return .some(nil)
 
-        case let .insertChild(newTree):
-            let newChildView = newTree.createView()
-            view.addSubview(newChildView)
-            return nil
+    case let .insertChild(newTree):
+        let newChildView = newTree.createView()
+        view.addSubview(newChildView)
+        return nil
 
-        case let .reorderChildren(reorder):
-            _applyReorder(to: view, reorder: reorder)
-            return nil
+    case let .reorderChildren(reorder):
+        _applyReorder(to: view, reorder: reorder)
+        return nil
     }
 }
 

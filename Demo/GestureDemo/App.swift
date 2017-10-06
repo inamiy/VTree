@@ -39,16 +39,16 @@ extension Model.Cursor
     init?(msg: Msg)
     {
         switch msg {
-            case let .tap(context):
-                let frame = CGRect(origin: context.location, size: .zero)
-                    .insetBy(dx: -20, dy: -20)
-                self = Model.Cursor(frame: frame, backgroundColor: .orange)
-            case let .pan(context) where context.state == .changed:
-                let frame = CGRect(origin: context.location, size: .zero)
-                    .insetBy(dx: -20, dy: -20)
-                self = Model.Cursor(frame: frame, backgroundColor: .green)
-            default:
-                return nil
+        case let .tap(context):
+            let frame = CGRect(origin: context.location, size: .zero)
+                .insetBy(dx: -20, dy: -20)
+            self = Model.Cursor(frame: frame, backgroundColor: .orange)
+        case let .pan(context) where context.state == .changed:
+            let frame = CGRect(origin: context.location, size: .zero)
+                .insetBy(dx: -20, dy: -20)
+            self = Model.Cursor(frame: frame, backgroundColor: .green)
+        default:
+            return nil
         }
     }
 }
@@ -126,5 +126,5 @@ func view(model: Model) -> VView<Msg>
         *label(model.message),
         *noteLabel(),
         model.cursor.map(cursorView).map(*)
-    ])
+        ])
 }

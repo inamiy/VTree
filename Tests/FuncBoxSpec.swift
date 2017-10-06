@@ -107,7 +107,7 @@ class FuncBoxSpec: QuickSpec
                 let f2 = { $0 * 2 }
 
                 it("FuncBox Set should not increase when inserting existing element") {
-                    var set = Set(arrayLiteral: FuncBox(f1), FuncBox(f2))
+                    var set: Set = [FuncBox(f1), FuncBox(f2)]
                     expect(set.count) == 2
 
                     set.insert(FuncBox(f1))
@@ -115,8 +115,8 @@ class FuncBoxSpec: QuickSpec
                 }
 
                 it("FuncBox Sets should be equal when elements are swapped") {
-                    let set = Set(arrayLiteral: FuncBox(f1), FuncBox(f2))
-                    let set2 = Set(arrayLiteral: FuncBox(f2), FuncBox(f1))
+                    let set: Set = [FuncBox(f1), FuncBox(f2)]
+                    let set2: Set = [FuncBox(f2), FuncBox(f1)]
                     expect(set) == set2
                 }
 

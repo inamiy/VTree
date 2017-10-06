@@ -11,7 +11,7 @@ extension VTree
 }
 
 /// `_diffChildren` helper which ignores flexbox.
-func testDiffChildren<Msg: Message>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>], steps: inout Patch<Msg>.Steps, parentIndex: Int)
+func testDiffChildren<Msg>(old oldChildren: [AnyVTree<Msg>], new newChildren: [AnyVTree<Msg>], steps: inout Patch<Msg>.Steps, parentIndex: Int)
 {
     var layoutDirty = LayoutDirtyReason.none
 

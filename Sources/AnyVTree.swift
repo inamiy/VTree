@@ -123,7 +123,7 @@ extension AnyVTree: CustomDebugStringConvertible
 prefix operator *
 
 /// Shortcut for creating `AnyVTree` from `VTree`.
-public prefix func * <T: VTree, Msg: Message>(tree: T) -> AnyVTree<Msg>
+public prefix func * <T: VTree, Msg>(tree: T) -> AnyVTree<Msg>
     where T.MsgType == Msg
 {
     if let tree = tree as? AnyVTree<Msg> {

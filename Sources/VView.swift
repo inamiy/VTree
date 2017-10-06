@@ -113,13 +113,13 @@ extension HasViewStyles
 public struct VViewStyles
 {
     public var frame: CGRect = .null
-    public var backgroundColor: Color? = nil
+    public var backgroundColor: Color?
     public var alpha: CGFloat = 1
     public var isHidden: Bool = false
 
     public var cornerRadius: CGFloat = 0
 
-    public var flexbox: Flexbox.Node? = nil
+    public var flexbox: Flexbox.Node?
 }
 
 extension VViewStyles: InoutMutable

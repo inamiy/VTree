@@ -47,7 +47,7 @@ public struct VImageViewStyles: HasViewStyles
 {
     public var viewStyles = VViewStyles()
 
-    public var image: Image? = nil
+    public var image: Image?
 }
 
 extension VImageViewStyles: InoutMutable
