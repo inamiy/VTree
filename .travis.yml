@@ -4,8 +4,9 @@ env:
     - XCPROJ="-workspace VTree.xcworkspace -scheme VTree"
 
 before_install:
-  - brew update
+  # - brew update # Comment-Out: Too slow
   - brew install sourcery
+  - sourcery --version
 
 matrix:
   include:
