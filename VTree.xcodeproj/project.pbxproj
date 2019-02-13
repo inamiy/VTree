@@ -985,7 +985,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Scripts/generate-message.sh -a internal ./Sources ./Sources/CodeGenerated";
+			shellScript = "./Scripts/generate-message.sh -a internal ./Sources ./Sources/CodeGenerated\n";
 		};
 		1F43BE2E1E0BE15500312DE7 /* Run Script: VTree generate-message.sh */ = {
 			isa = PBXShellScriptBuildPhase;
