@@ -3,10 +3,15 @@ env:
     - LC_CTYPE=en_US.UTF-8
     - XCPROJ="-workspace VTree.xcworkspace -scheme VTree"
 
+before_install:
+  # - brew update # Comment-Out: Too slow
+  - brew install sourcery
+  - sourcery --version
+
 matrix:
   include:
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode10.1
       language: objective-c
       script:
         - set -o pipefail
@@ -15,19 +20,19 @@ matrix:
         - JOB=xcodebuild-macOS
 
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode10.1
       language: objective-c
       script:
         - set -o pipefail
-        - xcodebuild build-for-testing test-without-building -destination 'platform=iOS Simulator,name=iPhone 7' ENABLE_TESTABILITY=YES $XCPROJ | xcpretty
+        - xcodebuild build-for-testing test-without-building -destination 'platform=iOS Simulator,name=iPhone XS' ENABLE_TESTABILITY=YES $XCPROJ | xcpretty
       env:
         - JOB=xcodebuild-iOS
 
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode10.1
       language: objective-c
       script:
         - set -o pipefail
-        - xcodebuild build-for-testing test-without-building -destination 'platform=tvOS Simulator,name=Apple TV 1080p' ENABLE_TESTABILITY=YES $XCPROJ | xcpretty
+        - xcodebuild build-for-testing test-without-building -destination 'platform=tvOS Simulator,name=Apple TV 4K' ENABLE_TESTABILITY=YES $XCPROJ | xcpretty
       env:
         - JOB=xcodebuild-tvOS

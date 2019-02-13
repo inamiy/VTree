@@ -108,7 +108,7 @@ public prefix func ^ <T, U>(f: @escaping (T) -> U) -> FuncBox<T, U>
 /// Hacky function equality.
 /// - https://gist.github.com/dankogai/b03319ce427544beb5a4
 /// - http://qiita.com/dankogai/items/ab407918dba590016058 (Japanese)
-private func _peekFunc<A, R>(_ f: (A) -> R) -> (fp: Int, ctx: Int)
+private func _peekFunc<A, R>(_ f: @escaping (A) -> R) -> (fp: Int, ctx: Int)
 {
     let (hi, low) = unsafeBitCast(f, to: (Int, Int).self)
     if low == 0 {   // optimized
