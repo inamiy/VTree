@@ -3,6 +3,10 @@ env:
     - LC_CTYPE=en_US.UTF-8
     - XCPROJ="-workspace VTree.xcworkspace -scheme VTree"
 
+before_install:
+  - brew update
+  - brew install sourcery
+
 matrix:
   include:
     - os: osx
