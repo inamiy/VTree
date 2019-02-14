@@ -9,14 +9,9 @@ public final class AnyVTree<Msg: Message>: VTree
     public let propsKeysForMeasure: [String]
     public let flexbox: Flexbox.Node?
 
-    private let _children: [Any]
-    private let _childrenTransform: (Any) -> AnyVTree<Msg>
-
-    private let _handlers: [SimpleEvent: Any]
-    private let _handlersTransform: (Any) -> Msg
-
-    private let _gestures: [Any]
-    private let _gesturesTransform: (Any) -> GestureEvent<Msg>
+    private let _children: () -> [AnyVTree<Msg>]
+    private let _handlers: () -> [SimpleEvent: Msg]
+    private let _gestures: () -> [GestureEvent<Msg>]
 
     private let _createView: (@escaping (Msg) -> AnyMsg) -> View
 
@@ -32,14 +27,9 @@ public final class AnyVTree<Msg: Message>: VTree
         self.propsKeysForMeasure = base.propsKeysForMeasure
         self.flexbox = base.flexbox
 
-        self._handlers = base.handlers
-        self._handlersTransform = { $0 as! Base.MsgType }
-
-        self._gestures = base.gestures
-        self._gesturesTransform = { $0 as! GestureEvent<Msg> }
-
-        self._children = base.children
-        self._childrenTransform = { $0 as! AnyVTree<Base.MsgType> }
+        self._handlers = { base.handlers }
+        self._gestures = { base.gestures }
+        self._children = { base.children }
 
         self._createView = base.createView
     }
@@ -53,22 +43,9 @@ public final class AnyVTree<Msg: Message>: VTree
         self.propsKeysForMeasure = base.propsKeysForMeasure
         self.flexbox = base.flexbox
 
-        if let base = base as? AnyVTree<Base.MsgType> {
-            self._handlers = base._handlers
-            self._handlersTransform = { transform(base._handlersTransform($0)) }
-            self._gestures = base._gestures
-            self._gesturesTransform = { base._gesturesTransform($0).map(transform) }
-            self._children = base._children
-            self._childrenTransform = { base._childrenTransform($0).map(transform) }
-        }
-        else {
-            self._handlers = base.handlers
-            self._handlersTransform = { transform($0 as! Base.MsgType) }
-            self._gestures = base.gestures
-            self._gesturesTransform = { ($0 as! GestureEvent<Base.MsgType>).map(transform) }
-            self._children = base.children
-            self._childrenTransform = { ($0 as! AnyVTree<Base.MsgType>).map(transform) }
-        }
+        self._handlers = { base.handlers.mapValues(transform) }
+        self._gestures = { base.gestures.map { $0.map(transform) } }
+        self._children = { base.children.map { $0.map(transform) } }
 
         self._createView = { msgMapper in
             return base.createView { msgMapper(transform($0)) }
@@ -77,20 +54,17 @@ public final class AnyVTree<Msg: Message>: VTree
 
     public var handlers: HandlerMapping<Msg>
     {
-        let transform = self._handlersTransform
-        return self._handlers.map { ($0, transform($1)) }
+        return self._handlers()
     }
 
     public var gestures: [GestureEvent<Msg>]
     {
-        let transform = self._gesturesTransform
-        return self._gestures.map { transform($0) }
+        return self._gestures()
     }
 
     public var children: [AnyVTree<Msg>]
     {
-        let transform = self._childrenTransform
-        return self._children.map { transform($0) }
+        return self._children()
     }
 
     public func createView<Msg2: Message>(_ msgMapper: @escaping (Msg) -> Msg2) -> View
